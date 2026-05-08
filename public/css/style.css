@@ -1,0 +1,974 @@
+/* FONT & BODY */
+body {
+    font-family: 'Poppins', sans-serif;
+    background: #f8fbff;
+    color: #0f172a;
+}
+
+/* NAVBAR */
+.navbar-brand {
+    font-size: 24px;
+    font-weight: 800;
+}
+
+.navbar .nav-link {
+    font-size: 16px;
+    font-weight: 500;
+    margin-left: 18px;
+}
+
+/* HERO */
+.hero-section {
+    min-height: 100vh;
+    padding-top: 90px;
+    background: linear-gradient(135deg, #0b1f3a, #123c69);
+    color: white;
+}
+
+.hero-title {
+    font-size: 58px;
+    font-weight: 800;
+    line-height: 1.15;
+}
+
+.hero-text {
+    font-size: 20px;
+    line-height: 1.7;
+    color: #dbeafe;
+}
+
+.hero-img {
+    width: 280px;
+    height: 280px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 6px solid white;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    transition: 0.3s;
+}
+
+.hero-img:hover {
+    transform: scale(1.05);
+}
+
+/* BUTTON */
+.btn-main,
+.btn-view-all,
+.btn-sertifikasi {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 28px;
+    background: #0b1f3a;
+    color: white;
+    border-radius: 30px;
+    text-decoration: none;
+    font-weight: 700;
+    transition: 0.3s;
+}
+
+.btn-main {
+    background: white;
+    color: #0b1f3a;
+}
+
+.btn-main:hover,
+.btn-view-all:hover,
+.btn-sertifikasi:hover {
+    background: #123c69;
+    color: white;
+    transform: translateY(-3px);
+}
+
+.btn-outline-main {
+    border: 2px solid white;
+    color: white;
+    border-radius: 30px;
+    padding: 12px 28px;
+    text-decoration: none;
+}
+
+.btn-outline-main:hover {
+    background: white;
+    color: #0b1f3a;
+}
+
+/* SECTION */
+.section-padding {
+    padding: 90px 0;
+}
+
+/* CARD */
+.card-custom {
+    border: none;
+    border-radius: 18px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    transition: 0.3s;
+}
+
+.card-custom:hover {
+    transform: translateY(-8px);
+}
+
+/* ABOUT */
+.about-section {
+    padding: 110px 0;
+    background: linear-gradient(135deg, #f8fbff, #eaf4ff);
+}
+
+.section-label {
+    display: inline-block;
+    background: #dbeafe;
+    color: #0b1f3a;
+    padding: 8px 18px;
+    border-radius: 30px;
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 18px;
+}
+
+.about-title {
+    font-size: 44px;
+    font-weight: 800;
+    color: #0b1f3a;
+}
+
+.about-desc {
+    font-size: 17px;
+    line-height: 1.8;
+    color: #334155;
+}
+
+.about-photo {
+    width: 100%;
+    max-width: 420px;
+    height: 520px;
+
+    object-fit: cover;
+
+    border-radius: 30px;
+
+    display: block;
+
+    margin: auto;
+
+    border: 8px solid white;
+
+    box-shadow: 0 25px 60px rgba(11,31,58,0.18);
+}
+
+.about-photo-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+.about-badge {
+    position: absolute;
+    bottom: 22px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: white;
+    color: #0b1f3a;
+    padding: 12px 18px;
+    border-radius: 30px;
+    font-size: 14px;
+    font-weight: 700;
+    box-shadow: 0 12px 30px rgba(0,0,0,0.15);
+    white-space: nowrap;
+}
+
+.about-info-card {
+    background: white;
+    padding: 22px;
+    border-radius: 20px;
+    box-shadow: 0 15px 35px rgba(11,31,58,0.08);
+    height: 100%;
+}
+
+.btn-about-primary,
+.btn-about-outline {
+    display: inline-block;
+    padding: 12px 26px;
+    border-radius: 30px;
+    font-weight: 700;
+    text-decoration: none;
+    margin-right: 10px;
+}
+
+.btn-about-primary {
+    background: #0b1f3a;
+    color: white;
+}
+
+.btn-about-outline {
+    border: 2px solid #0b1f3a;
+    color: #0b1f3a;
+}
+
+/* CTA */
+.contact-cta {
+    background: linear-gradient(135deg, #0b1f3a, #123c69);
+    color: white;
+}
+
+.contact-cta h2 {
+    color: white;
+    font-weight: 700;
+}
+
+.contact-cta p {
+    color: #dbeafe;
+    font-size: 18px;
+}
+
+/* FOOTER */
+.footer-custom {
+    background: #0b1f3a;
+    color: white;
+    padding: 18px 0;
+}
+
+.footer-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.footer-brand {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    font-size: 15px;
+}
+
+.footer-menu a {
+    color: white;
+    text-decoration: none;
+    margin: 0 10px;
+    font-size: 14px;
+    opacity: 0.85;
+}
+
+.footer-social {
+    display: flex;
+    gap: 10px;
+}
+
+.footer-social a {
+    width: 34px;
+    height: 34px;
+    background: white;
+    color: #0b1f3a;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+}
+
+/* ADMIN DASHBOARD */
+.admin-dashboard {
+    padding: 130px 0 80px;
+    background: linear-gradient(135deg, #f8fbff, #eaf4ff);
+    min-height: 100vh;
+}
+
+.admin-header {
+    background: linear-gradient(135deg, #0b1f3a, #123c69);
+    color: white;
+    padding: 32px;
+    border-radius: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 28px;
+    box-shadow: 0 20px 50px rgba(11,31,58,0.18);
+}
+
+.admin-label {
+    background: rgba(255,255,255,0.15);
+    padding: 7px 16px;
+    border-radius: 30px;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.admin-header h1 {
+    margin-top: 16px;
+    font-size: 36px;
+    font-weight: 800;
+}
+
+.admin-header p {
+    color: #dbeafe;
+    margin-bottom: 0;
+}
+
+.btn-admin-logout,
+.btn-admin-add {
+    border: none;
+    border-radius: 30px;
+    padding: 12px 22px;
+    text-decoration: none;
+    font-weight: 700;
+    transition: 0.3s;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-admin-logout {
+    background: white;
+    color: #0b1f3a;
+}
+
+.btn-admin-add {
+    background: #0b1f3a;
+    color: white;
+}
+
+.admin-stat-card {
+    background: white;
+    padding: 24px;
+    border-radius: 24px;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    box-shadow: 0 15px 35px rgba(11,31,58,0.08);
+}
+
+.admin-stat-card i {
+    width: 56px;
+    height: 56px;
+    background: #dbeafe;
+    color: #0b1f3a;
+    border-radius: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+}
+
+.admin-table-card {
+    background: white;
+    border-radius: 28px;
+    padding: 26px;
+    box-shadow: 0 20px 45px rgba(11,31,58,0.08);
+}
+
+.admin-table-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 22px;
+    gap: 16px;
+}
+
+.admin-table thead th {
+    background: #0b1f3a;
+    color: white;
+    padding: 14px;
+    white-space: nowrap;
+}
+
+.admin-table tbody td {
+    padding: 14px;
+    vertical-align: middle;
+}
+
+.admin-logo {
+    width: 56px;
+    height: 56px;
+    object-fit: contain;
+    border-radius: 14px;
+    background: #f8fbff;
+    padding: 6px;
+}
+
+.admin-logo-placeholder {
+    width: 56px;
+    height: 56px;
+    background: #dbeafe;
+    color: #0b1f3a;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.admin-badge {
+    background: #dbeafe;
+    color: #0b1f3a;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.admin-desc {
+    max-width: 260px;
+    color: #475569;
+}
+
+.btn-admin-edit,
+.btn-admin-delete {
+    width: 36px;
+    height: 36px;
+    border-radius: 12px;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-admin-edit {
+    background: #facc15;
+    color: #0b1f3a;
+}
+
+.btn-admin-delete {
+    background: #ef4444;
+    color: white;
+}
+
+/* SERTIFIKASI PAGE */
+.sertifikasi-page {
+    padding: 130px 0 90px;
+    background: linear-gradient(135deg, #f8fbff, #eaf4ff);
+    min-height: 100vh;
+}
+
+.sertifikasi-header h1 {
+    font-size: 46px;
+    font-weight: 800;
+    color: #0b1f3a;
+    margin-top: 15px;
+}
+
+.sertifikasi-header p {
+    max-width: 700px;
+    margin: 15px auto 0;
+    color: #64748b;
+    font-size: 17px;
+    line-height: 1.8;
+}
+
+.sertifikasi-card {
+    background: white;
+    border-radius: 26px;
+    padding: 30px;
+    box-shadow: 0 18px 45px rgba(11,31,58,0.08);
+    transition: 0.3s;
+    position: relative;
+    overflow: hidden;
+    height: 100%;
+}
+
+.sertifikasi-card::before {
+    content: "";
+    position: absolute;
+    top: -60px;
+    right: -60px;
+    width: 140px;
+    height: 140px;
+    background: #dbeafe;
+    border-radius: 50%;
+}
+
+.sertifikasi-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 25px 55px rgba(11,31,58,0.15);
+}
+
+.sertifikasi-card > * {
+    position: relative;
+    z-index: 1;
+}
+
+.sertifikasi-icon {
+    width: 68px;
+    height: 68px;
+    background: linear-gradient(135deg, #0b1f3a, #123c69);
+    color: white;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 30px;
+    margin-bottom: 22px;
+}
+
+.sertifikasi-card h4 {
+    color: #0b1f3a;
+    font-weight: 800;
+    margin-bottom: 14px;
+}
+
+.sertifikasi-year {
+    display: inline-block;
+    margin-top: 10px;
+    background: #dbeafe;
+    color: #0b1f3a;
+    padding: 6px 14px;
+    border-radius: 30px;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.sertifikasi-desc {
+    color: #475569;
+    line-height: 1.7;
+}
+
+.btn-sertifikasi {
+    margin-top: 12px;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+    .hero-title {
+        font-size: 38px;
+    }
+
+    .hero-text {
+        font-size: 16px;
+    }
+
+    .about-title {
+        font-size: 32px;
+    }
+
+    .about-photo {
+    max-width: 100%;
+    height: 420px;
+}
+
+    .footer-content {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .footer-menu a {
+        display: inline-block;
+        margin: 5px 8px;
+    }
+
+    .admin-header,
+    .admin-table-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .admin-header h1 {
+        font-size: 28px;
+    }
+
+    .btn-admin-logout,
+    .btn-admin-add {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .sertifikasi-header h1 {
+        font-size: 34px;
+    }
+
+    .sertifikasi-card {
+        padding: 24px;
+    }
+
+    .admin-tabs .nav-link {
+    border-radius: 30px;
+    padding: 12px 24px;
+    font-weight: 700;
+    color: #0b1f3a;
+    background: #dbeafe;
+    margin-right: 10px;
+}
+
+.admin-tabs .nav-link.active {
+    background: #0b1f3a;
+    color: white;
+}
+
+.custom-indicators {
+    position: relative;
+    margin-top: 25px;
+    bottom: unset;
+}
+
+.custom-indicators button {
+    width: 12px !important;
+    height: 12px !important;
+    border-radius: 50%;
+    background-color: #0b1f3a !important;
+    opacity: 0.3;
+    margin: 0 5px;
+    border: none;
+}
+
+.custom-indicators .active {
+    width: 35px !important;
+    border-radius: 30px;
+    opacity: 1;
+}
+
+.pagination {
+    gap: 8px;
+}
+
+.pagination .page-link {
+    border: none;
+    border-radius: 14px;
+    padding: 10px 16px;
+    color: #0b1f3a;
+    font-weight: 700;
+    background: #ffffff;
+    box-shadow: 0 8px 20px rgba(11,31,58,0.08);
+    transition: 0.3s;
+}
+
+.pagination .page-link:hover {
+    background: #dbeafe;
+    color: #0b1f3a;
+    transform: translateY(-3px);
+}
+
+.pagination .page-item.active .page-link {
+    background: #0b1f3a;
+    color: #ffffff;
+}
+
+.pagination .page-item.disabled .page-link {
+    opacity: 0.5;
+}
+
+}
+/* ADMIN LOGIN FIX */
+.admin-login-page {
+    min-height: 100vh;
+    padding: 80px 20px;
+    background: linear-gradient(135deg, #f8fbff, #eaf4ff);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.admin-login-wrapper {
+    width: 100%;
+    max-width: 1050px;
+    background: #ffffff;
+    border-radius: 34px;
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    box-shadow: 0 30px 70px rgba(11,31,58,0.14);
+}
+
+.admin-login-left {
+    background: linear-gradient(135deg, #0b1f3a, #123c69);
+    color: white;
+    padding: 55px;
+}
+
+.admin-login-left h1 {
+    font-size: 46px;
+    font-weight: 800;
+}
+
+.admin-login-left p {
+    color: #dbeafe;
+    line-height: 1.8;
+}
+
+.admin-login-card {
+    padding: 55px 45px;
+}
+
+.admin-login-card h3 {
+    font-size: 32px;
+    font-weight: 800;
+    color: #0b1f3a;
+}
+
+.admin-input-group {
+    position: relative;
+}
+
+.admin-input-group i {
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #64748b;
+}
+
+.admin-input-group .form-control {
+    height: 52px;
+    border-radius: 16px;
+    padding-left: 46px;
+    background: #f8fbff;
+}
+
+.btn-admin-login {
+    width: 100%;
+    height: 54px;
+    border: none;
+    border-radius: 18px;
+    background: linear-gradient(135deg, #0b1f3a, #123c69);
+    color: white;
+    font-weight: 800;
+}
+
+@media (max-width: 768px) {
+    .admin-login-wrapper {
+        grid-template-columns: 1fr;
+    }
+
+    .admin-login-left,
+    .admin-login-card {
+        padding: 32px;
+    }
+
+    .admin-login-left h1 {
+        font-size: 34px;
+    }
+}
+
+/* LOGIN NAVBAR */
+.btn-login-nav {
+    background: linear-gradient(135deg, #0b1f3a, #123c69);
+    color: white !important;
+    padding: 10px 18px;
+    border-radius: 14px;
+    text-decoration: none;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: 0.3s;
+}
+
+.btn-login-nav:hover {
+    transform: translateY(-3px);
+    background: linear-gradient(135deg, #123c69, #0b1f3a);
+    box-shadow: 0 12px 24px rgba(11,31,58,0.2);
+}
+
+@media (max-width: 992px) {
+    .btn-login-nav {
+        margin-top: 12px;
+        justify-content: center;
+        width: 100%;
+    }
+}
+
+/* CUSTOM NAVBAR */
+.custom-navbar {
+    transition: 0.4s ease;
+    padding: 18px 0;
+    background: transparent;
+}
+
+.custom-navbar.scrolled {
+    background: rgba(11, 31, 58, 0.92);
+    backdrop-filter: blur(14px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    padding: 12px 0;
+}
+
+.custom-navbar .nav-link {
+    color: white !important;
+    font-weight: 600;
+    transition: 0.3s;
+}
+
+.custom-navbar .nav-link:hover {
+    color: #dbeafe !important;
+}
+
+.custom-navbar.scrolled .nav-link {
+    color: white !important;
+}
+
+.custom-navbar .navbar-brand {
+    color: white !important;
+    font-weight: 800;
+    font-size: 28px;
+}
+
+.custom-navbar.scrolled .navbar-brand {
+    color: white !important;
+}
+
+.admin-header,
+.admin-stat-card,
+.admin-table-card {
+    transition: 0.3s ease;
+}
+
+.admin-stat-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 22px 50px rgba(11,31,58,0.14);
+}
+
+.admin-table-card:hover {
+    box-shadow: 0 28px 60px rgba(11,31,58,0.12);
+}
+
+.admin-tabs .nav-link {
+    transition: 0.3s ease;
+}
+
+.admin-tabs .nav-link:hover {
+    transform: translateY(-3px);
+}
+
+.admin-table tbody tr {
+    transition: 0.25s ease;
+}
+
+.admin-table tbody tr:hover {
+    background: #f1f7ff;
+    transform: scale(1.005);
+}
+
+.about-photo{
+    width: 340px !important;
+    height: 420px !important;
+    object-fit: cover;
+}
+
+/* ABOUT INTERACTIVE HOVER */
+.about-photo-wrapper {
+    transition: 0.35s ease;
+}
+
+.about-photo-wrapper:hover {
+    transform: translateY(-10px) scale(1.03);
+}
+
+.about-photo {
+    transition: 0.35s ease;
+}
+
+.about-photo-wrapper:hover .about-photo {
+    box-shadow: 0 35px 80px rgba(11,31,58,0.25);
+}
+
+.about-badge {
+    transition: 0.35s ease;
+}
+
+.about-photo-wrapper:hover .about-badge {
+    transform: translateX(-50%) translateY(-8px);
+}
+
+.about-info-card {
+    transition: 0.35s ease;
+    cursor: pointer;
+}
+
+.about-info-card:hover {
+    transform: translateY(-10px) scale(1.04);
+    box-shadow: 0 25px 55px rgba(11,31,58,0.16);
+}
+
+.about-info-card i {
+    transition: 0.35s ease;
+}
+
+.about-info-card:hover i {
+    transform: scale(1.25) rotate(8deg);
+    color: #123c69;
+}
+
+.btn-about-primary,
+.btn-about-outline {
+    transition: 0.35s ease;
+}
+
+.btn-about-primary:hover,
+.btn-about-outline:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 16px 35px rgba(11,31,58,0.18);
+}
+
+/* FLOATING WHATSAPP */
+.floating-whatsapp {
+    position: fixed;
+    right: 24px;
+    bottom: 24px;
+    width: 62px;
+    height: 62px;
+    background: #25d366;
+    color: white;
+    border-radius: 50%;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 30px;
+    text-decoration: none;
+    box-shadow: 0 14px 35px rgba(37, 211, 102, 0.35);
+    transition: 0.3s ease;
+    animation: waPulse 1.8s infinite;
+}
+
+.floating-whatsapp:hover {
+    color: white;
+    transform: translateY(-6px) scale(1.08);
+    box-shadow: 0 20px 45px rgba(37, 211, 102, 0.5);
+}
+
+@keyframes waPulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.55);
+    }
+
+    70% {
+        box-shadow: 0 0 0 18px rgba(37, 211, 102, 0);
+    }
+
+    100% {
+        box-shadow: 0 0 0 0 rgba(37, 211, 102, 0);
+    }
+}
+
+@media (max-width: 768px) {
+    .floating-whatsapp {
+        right: 18px;
+        bottom: 18px;
+        width: 56px;
+        height: 56px;
+        font-size: 27px;
+    }
+}
+
+/* FIX MODAL ADMIN */
+.modal {
+    z-index: 99999 !important;
+}
+
+.modal-backdrop {
+    z-index: 99998 !important;
+}
+
+.modal-dialog {
+    z-index: 100000 !important;
+}
+
+.modal-content {
+    position: relative;
+    z-index: 100001 !important;
+}
+
+.modal {
+    z-index: 99999 !important;
+}
+
+.modal-backdrop {
+    z-index: 99998 !important;
+}
