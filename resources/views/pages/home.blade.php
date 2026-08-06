@@ -5,7 +5,7 @@
 @section('content')
 
     <!-- Hero Carousel -->
-    <section class="hero-section d-flex align-items-center">
+    <section class="hero-section d-flex align-items-center"data-aos="fade-up">
         <div class="container">
             <div id="heroCarousel" class="carousel slide" data-bs-ride="carousel">
 
@@ -14,8 +14,8 @@
                     <div class="carousel-item active">
                         <div class="row align-items-center">
                             <div class="col-md-7" data-aos="fade-right" data-aos-delay="200">
-                                <h1 class="hero-title">
-                                    Halo, Saya Aulia Nur Afifa
+                                <h1>
+                                    Halo, Saya {{ $tentangSaya->nama ?? 'Nama Anda' }}
                                 </h1>
 
                                 <p class="hero-text mt-3">
@@ -30,7 +30,8 @@
                             </div>
 
                             <div class="col-md-5 text-center mt-5 mt-md-0" data-aos="zoom-in" data-aos-delay="300">
-                                <img src="{{ asset('images/profile.jpeg') }}" class="hero-img" alt="Foto Profile">
+                                <img src="{{ asset('images/' . ($tentangSaya->foto ?? 'profile.jpeg')) }}" class="hero-img"
+                                    alt="Foto Profile">
                             </div>
                         </div>
                     </div>
@@ -178,51 +179,59 @@
         <div class="container">
 
             <div class="text-center mb-5" data-aos="fade-up">
-                <h2 class="fw-bold text-primary-dark">Pengalaman Kerja</h2>
-                <p>Beberapa pengalaman kerja saya di berbagai perusahaan.</p>
+                <span class="section-label">Career Journey</span>
+                <h2 class="fw-bold text-primary-dark mt-3">Pengalaman Kerja</h2>
+                <p>Perjalanan pengalaman profesional saya.</p>
             </div>
 
-            <div class="row g-4">
+            <div class="timeline-wrapper">
 
-                @forelse($pengalaman as $item)
-                    <div class="col-md-4" data-aos="fade-up">
-                        <div class="card card-custom h-100 p-4 d-flex flex-column">
+                @forelse($pengalaman as $index => $item)
+                    <div class="timeline-item {{ $index % 2 == 0 ? 'left' : 'right' }}" data-aos="fade-up">
 
-                            <div class="mb-3">
+                        <div class="timeline-dot">
+                            <i class="bi bi-briefcase-fill"></i>
+                        </div>
+
+                        <div class="timeline-card">
+
+                            <div class="timeline-logo">
                                 @if ($item->logo)
-                                    <img src="{{ asset('images/' . $item->logo) }}" width="60"
-                                        style="object-fit:contain;">
+                                    <img src="{{ asset('images/' . $item->logo) }}" alt="{{ $item->nama_perusahaan }}">
                                 @else
-                                    <i class="bi bi-building fs-1 text-primary-dark"></i>
+                                    <i class="bi bi-building"></i>
                                 @endif
                             </div>
 
-                            <h5 class="fw-bold">
-                                {{ $item->nama_perusahaan }}
-                            </h5>
+                            <div class="timeline-content">
+                                <span class="timeline-period">
+                                    {{ $item->periode }}
+                                </span>
 
-                            <p class="mb-1 text-primary-dark fw-semibold">
-                                {{ $item->jabatan }}
-                            </p>
+                                <h4>{{ $item->jabatan }}</h4>
 
-                            <small class="text-muted">
-                                {{ $item->periode }}
-                            </small>
+                                <h6>
+                                    <i class="bi bi-building"></i>
+                                    {{ $item->nama_perusahaan }}
+                                </h6>
 
-                            <p class="mt-3">
-                                {{ $item->deskripsi }}
-                            </p>
+                                <p>{{ $item->deskripsi }}</p>
+                            </div>
 
                         </div>
                     </div>
                 @empty
-                    <div class="col-12 text-center" data-aos="fade-up">
-                        <p class="text-muted">Belum ada data pengalaman</p>
+                    <div class="text-center text-muted">
+                        Belum ada data pengalaman.
                     </div>
                 @endforelse
+
             </div>
+
             <div class="mt-5 d-flex justify-content-center">
-                {{ $pengalaman->appends(request()->query())->fragment('pengalaman')->links() }} </div>
+                {{ $pengalaman->appends(request()->query())->fragment('pengalaman')->links() }}
+            </div>
+
         </div>
     </section>
 
@@ -375,8 +384,11 @@
             <p class="mt-3">
                 Silakan hubungi saya untuk informasi lebih lanjut mengenai profil, pengalaman, dan portofolio saya.
             </p>
-            <a href="#" class="btn btn-main mt-3">
+            <a href="https://wa.me/{{ $tentangSaya->whatsapp ?? '' }}" target="_blank" class="btn btn-main">
+
+                <i class="bi bi-whatsapp"></i>
                 Hubungi Saya
+
             </a>
         </div>
     </section>

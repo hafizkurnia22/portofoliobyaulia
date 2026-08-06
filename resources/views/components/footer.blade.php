@@ -8,9 +8,25 @@
             </div>
 
             <div class="footer-social">
-                <a href="#"><i class="bi bi-facebook"></i></a>
-                <a href="#"><i class="bi bi-instagram"></i></a>
-                <a href="#"><i class="bi bi-tiktok"></i></a>
+
+                @if (!empty($tentangSaya->facebook))
+                    <a href="{{ $tentangSaya->facebook }}" target="_blank">
+                        <i class="bi bi-facebook"></i>
+                    </a>
+                @endif
+
+                @if (!empty($tentangSaya->instagram))
+                    <a href="{{ $tentangSaya->instagram }}" target="_blank">
+                        <i class="bi bi-instagram"></i>
+                    </a>
+                @endif
+
+                @if (!empty($tentangSaya->tiktok))
+                    <a href="{{ $tentangSaya->tiktok }}" target="_blank">
+                        <i class="bi bi-tiktok"></i>
+                    </a>
+                @endif
+
             </div>
 
         </div>

@@ -5,7 +5,7 @@
 @section('content')
 
     @php
-        $activeTab = session('active_tab', 'pengalaman');
+        $activeTab = request('active_tab', session('active_tab', 'pengalaman'));
     @endphp
 
     <section class="admin-dashboard">
@@ -18,9 +18,23 @@
                     <p>Kelola data pengalaman kerja, sertifikasi, dan skill.</p>
                 </div>
 
-                <a href="/admin/logout" class="btn-admin-logout">
-                    <i class="bi bi-box-arrow-right"></i> Logout
-                </a>
+                <div class="admin-header-right">
+
+                    <div class="d-flex gap-2 flex-wrap">
+
+                        <button type="button" class="btn-dark-toggle" id="darkModeToggle">
+                            <i class="bi bi-moon-stars-fill"></i>
+                            <span>Dark Mode</span>
+                        </button>
+
+                        <a href="/admin/logout" class="btn-admin-logout">
+                            <i class="bi bi-box-arrow-right"></i>
+                            Logout
+                        </a>
+
+                    </div>
+
+                </div>
             </div>
 
             <div class="row g-4 mb-4">
@@ -28,7 +42,7 @@
                     <div class="admin-stat-card">
                         <i class="bi bi-briefcase-fill"></i>
                         <div>
-                            <h4>{{ $pengalaman->total() }}</h4>
+                            <h4>{{ $totalPengalaman }}</h4>
                             <p>Total Pengalaman</p>
                         </div>
                     </div>
@@ -38,7 +52,7 @@
                     <div class="admin-stat-card">
                         <i class="bi bi-award-fill"></i>
                         <div>
-                            <h4>{{ $sertifikasi->total() }}</h4>
+                            <h4>{{ $totalSertifikasi }}</h4>
                             <p>Total Sertifikasi</p>
                         </div>
                     </div>
@@ -48,17 +62,16 @@
                     <div class="admin-stat-card">
                         <i class="bi bi-bar-chart-fill"></i>
                         <div>
-                            <h4>{{ $skill->total() }}</h4>
+                            <h4>{{ $totalSkill }}</h4>
                             <p>Total Skill</p>
                         </div>
                     </div>
                 </div>
             </div>
 
+
             <div class="admin-table-card" data-aos="fade-up" data-aos-delay="400">
-
                 <ul class="nav nav-pills admin-tabs mb-4" id="adminTabs" role="tablist" data-aos="zoom-in">
-
                     <li class="nav-item" role="presentation">
                         <button class="nav-link {{ $activeTab == 'pengalaman' ? 'active' : '' }}" data-bs-toggle="pill"
                             data-bs-target="#pengalaman-panel" type="button" role="tab">
@@ -95,7 +108,7 @@
                     <div class="tab-pane fade {{ $activeTab == 'pengalaman' ? 'show active' : '' }}" id="pengalaman-panel"
                         role="tabpanel">
 
-                        <div class="admin-table-header" data-aos="fade-right">
+                        <div class="admin-table-header align-middle" data-aos="fade-right">
                             <div>
                                 <h5>Data Pengalaman Kerja</h5>
                                 <p>Tambah, edit, atau hapus pengalaman kerja.</p>
@@ -106,9 +119,15 @@
                                 <i class="bi bi-plus-circle"></i> Tambah Pengalaman
                             </button>
                         </div>
+                        {{-- kolom search pengalaman --}}
+                        <div class="admin-search-box mb-3">
+                            <i class="bi bi-search"></i>
+                            <input type="text" class="form-control admin-live-search" data-target="pengalaman-table"
+                                placeholder="Cari pengalaman, perusahaan, jabatan...">
+                        </div>
 
                         <div class="table-responsive" data-aos="fade-up">
-                            <table class="table admin-table align-middle">
+                            <table class="table admin-table align-middle"id="pengalaman-table">
                                 <thead>
                                     <tr>
                                         <th>No</th>
@@ -150,12 +169,12 @@
                                                         <i class="bi bi-pencil-square"></i>
                                                     </button>
 
-                                                    <form action="/hapus-pengalaman/{{ $item->id }}" method="POST">
+                                                    <form action="/hapus-pengalaman/{{ $item->id }}" method="POST"
+                                                        class="delete-form">
                                                         @csrf
                                                         @method('DELETE')
 
-                                                        <button type="submit" class="btn-admin-delete"
-                                                            onclick="return confirm('Yakin ingin menghapus data ini?')">
+                                                        <button type="button" class="btn-admin-delete btn-delete">
                                                             <i class="bi bi-trash"></i>
                                                         </button>
                                                     </form>
@@ -173,7 +192,7 @@
                             </table>
 
                             <div class="mt-4">
-                                {{ $pengalaman->appends(request()->query())->links() }}
+                                {{ $pengalaman->appends(array_merge(request()->query(), ['active_tab' => 'pengalaman']))->links() }}
                             </div>
                         </div>
 
@@ -195,9 +214,15 @@
                                 <i class="bi bi-plus-circle"></i> Tambah Sertifikasi
                             </button>
                         </div>
+                        {{-- search sertifikasi --}}
+                        <div class="admin-search-box mb-3">
+                            <i class="bi bi-search"></i>
+                            <input type="text" class="form-control admin-live-search" data-target="sertifikasi-table"
+                                placeholder="Cari sertifikasi, penyelenggara, tahun...">
+                        </div>
 
                         <div class="table-responsive" data-aos="fade-up">
-                            <table class="table admin-table align-middle">
+                            <table class="table admin-table align-middle"id="sertifikasi-table">
                                 <thead>
                                     <tr>
                                         <th>No</th>
@@ -239,15 +264,16 @@
                                                         <i class="bi bi-pencil-square"></i>
                                                     </button>
 
-                                                    <form action="/hapus-sertifikasi/{{ $item->id }}" method="POST">
+                                                    <form action="/hapus-sertifikasi/{{ $item->id }}" method="POST"
+                                                        class="delete-form">
                                                         @csrf
                                                         @method('DELETE')
 
-                                                        <button type="submit" class="btn-admin-delete"
-                                                            onclick="return confirm('Yakin ingin menghapus sertifikasi ini?')">
+                                                        <button type="button" class="btn-admin-delete btn-delete">
                                                             <i class="bi bi-trash"></i>
                                                         </button>
                                                     </form>
+
                                                 </div>
                                             </td>
                                         </tr>
@@ -262,7 +288,7 @@
                             </table>
 
                             <div class="mt-4">
-                                {{ $sertifikasi->appends(request()->query())->links() }}
+                                {{ $sertifikasi->appends(array_merge(request()->query(), ['active_tab' => 'sertifikasi']))->links() }}
                             </div>
                         </div>
                     </div>
@@ -283,8 +309,15 @@
                             </button>
                         </div>
 
+                        {{-- search skill --}}
+                        <div class="admin-search-box mb-3">
+                            <i class="bi bi-search"></i>
+                            <input type="text" class="form-control admin-live-search" data-target="skill-table"
+                                placeholder="Cari skill, kategori, progress...">
+                        </div>
+
                         <div class="table-responsive" data-aos="fade-up">
-                            <table class="table admin-table align-middle">
+                            <table class="table admin-table align-middle"id="skill-table">
                                 <thead>
                                     <tr>
                                         <th>No</th>
@@ -323,12 +356,12 @@
                                                         <i class="bi bi-pencil-square"></i>
                                                     </button>
 
-                                                    <form action="/hapus-skill/{{ $item->id }}" method="POST">
+                                                    <form action="/hapus-skill/{{ $item->id }}" method="POST"
+                                                        class="delete-form">
                                                         @csrf
                                                         @method('DELETE')
 
-                                                        <button type="submit" class="btn-admin-delete"
-                                                            onclick="return confirm('Yakin ingin menghapus skill ini?')">
+                                                        <button type="button" class="btn-admin-delete btn-delete">
                                                             <i class="bi bi-trash"></i>
                                                         </button>
                                                     </form>
@@ -346,7 +379,7 @@
                             </table>
 
                             <div class="mt-4">
-                                {{ $skill->appends(request()->query())->links() }}
+                                {{ $skill->appends(array_merge(request()->query(), ['active_tab' => 'skill']))->links() }}
                             </div>
                         </div>
 
@@ -369,6 +402,17 @@
                                 Data ini digunakan untuk menampilkan bagian Tentang Saya di halaman beranda.
                             </div>
 
+                            @if ($errors->any())
+                                <div class="alert alert-danger rounded-4 mb-4">
+                                    <strong>Data belum tersimpan.</strong>
+                                    <ul class="mb-0 mt-2">
+                                        @foreach ($errors->all() as $error)
+                                            <li>{{ $error }}</li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                            @endif
+
                             <form action="/simpan-tentang-saya" method="POST" enctype="multipart/form-data">
                                 @csrf
 
@@ -376,24 +420,61 @@
                                     <div class="col-md-6 mb-3">
                                         <label>Nama</label>
                                         <input type="text" name="nama" class="form-control"
-                                            value="{{ $tentangSaya->nama ?? '' }}">
+                                            value="{{ old('nama', $tentangSaya->nama ?? '') }}">
                                     </div>
 
                                     <div class="col-md-6 mb-3">
                                         <label>Bidang</label>
                                         <input type="text" name="bidang" class="form-control"
-                                            value="{{ $tentangSaya->bidang ?? '' }}">
+                                            value="{{ old('bidang', $tentangSaya->bidang ?? '') }}">
                                     </div>
 
                                     <div class="col-md-6 mb-3">
                                         <label>Status</label>
                                         <input type="text" name="status" class="form-control"
-                                            value="{{ $tentangSaya->status ?? '' }}">
+                                            value="{{ old('status', $tentangSaya->status ?? '') }}">
+                                    </div>
+
+                                    <div class="col-md-6 mb-3">
+                                        <label>Nomor WhatsApp</label>
+                                        <input type="text" name="whatsapp" class="form-control"
+                                            placeholder="mohon menggunakan (62) Contoh: 6281234567890"
+                                            value="{{ old('whatsapp', $tentangSaya->whatsapp ?? '') }}">
+                                    </div>
+
+                                    <div class="col-md-6 mb-3">
+                                        <label>Email Kontak</label>
+                                        <input type="email" name="email_kontak" class="form-control"
+                                            placeholder="Contoh: nama@email.com"
+                                            value="{{ old('email_kontak', $tentangSaya->email_kontak ?? '') }}">
+                                    </div>
+
+                                    <div class="col-md-4 mb-3">
+                                        <label>Facebook</label>
+                                        <input type="url" name="facebook" class="form-control"
+                                            placeholder="https://facebook.com/username"
+                                            value="{{ old('facebook', $tentangSaya->facebook ?? '') }}">
+                                    </div>
+
+                                    <div class="col-md-4 mb-3">
+                                        <label>Instagram</label>
+                                        <input type="url" name="instagram" class="form-control"
+                                            placeholder="https://instagram.com/username"
+                                            value="{{ old('instagram', $tentangSaya->instagram ?? '') }}">
+                                    </div>
+
+                                    <div class="col-md-4 mb-3">
+                                        <label>TikTok</label>
+                                        <input type="url" name="tiktok" class="form-control"
+                                            placeholder="https://tiktok.com/@username"
+                                            value="{{ old('tiktok', $tentangSaya->tiktok ?? '') }}">
                                     </div>
 
                                     <div class="col-md-6 mb-3">
                                         <label>Foto Profile</label>
-                                        <input type="file" name="foto" class="form-control">
+                                        <input type="file" name="foto" class="form-control"
+                                            accept="image/jpeg,image/png,image/webp">
+                                        <small class="text-muted">Format JPG, PNG, atau WEBP. Maksimal 5MB.</small>
 
                                         @if (isset($tentangSaya->foto))
                                             <img src="{{ asset('images/' . $tentangSaya->foto) }}" width="100"
@@ -403,12 +484,12 @@
 
                                     <div class="col-12 mb-3">
                                         <label>Deskripsi 1</label>
-                                        <textarea name="deskripsi_1" rows="4" class="form-control">{{ $tentangSaya->deskripsi_1 ?? '' }}</textarea>
+                                        <textarea name="deskripsi_1" rows="4" class="form-control">{{ old('deskripsi_1', $tentangSaya->deskripsi_1 ?? '') }}</textarea>
                                     </div>
 
                                     <div class="col-12 mb-4">
                                         <label>Deskripsi 2</label>
-                                        <textarea name="deskripsi_2" rows="4" class="form-control">{{ $tentangSaya->deskripsi_2 ?? '' }}</textarea>
+                                        <textarea name="deskripsi_2" rows="4" class="form-control">{{ old('deskripsi_2', $tentangSaya->deskripsi_2 ?? '') }}</textarea>
                                     </div>
                                 </div>
 
@@ -423,7 +504,155 @@
                 </div>
             </div>
 
-        </div>
+            @php
+                $complete = 0;
+
+                if (!empty($tentangSaya->nama)) {
+                    $complete += 20;
+                }
+                if (!empty($tentangSaya->bidang)) {
+                    $complete += 20;
+                }
+                if (!empty($tentangSaya->status)) {
+                    $complete += 20;
+                }
+                if (!empty($tentangSaya->foto)) {
+                    $complete += 20;
+                }
+                if (!empty($tentangSaya->deskripsi_1)) {
+                    $complete += 20;
+                }
+            @endphp
+            <div class="dashboard-stat-section">
+                <div class="row g-4 mb-4">
+
+                    <div class="col-lg-4 col-md-6">
+                        <div class="dashboard-insight-card">
+                            <div class="insight-icon blue">
+                                <i class="bi bi-speedometer2"></i>
+                            </div>
+
+                            <div class="w-100">
+                                <span>Rata-rata Skill</span>
+                                <h3>{{ number_format($rataSkill, 0) }}%</h3>
+
+                                <div class="insight-progress">
+                                    <div style="width: {{ number_format($rataSkill, 0) }}%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4 col-md-6">
+                        <div class="dashboard-insight-card">
+                            <div class="insight-icon green">
+                                <i class="bi bi-trophy-fill"></i>
+                            </div>
+
+                            <div>
+                                <span>Skill Tertinggi</span>
+                                <h3>{{ $skillTertinggi->nama_skill ?? 'Belum ada' }}</h3>
+                                <p>{{ $skillTertinggi->persentase ?? 0 }}%</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4 col-md-12">
+                        <div class="dashboard-insight-card">
+                            <div class="insight-icon purple">
+                                <i class="bi bi-award-fill"></i>
+                            </div>
+
+                            <div>
+                                <span>Sertifikasi Terbaru</span>
+                                <h3>{{ $sertifikasiTerbaru->nama_sertifikat ?? 'Belum ada' }}</h3>
+                                <p>{{ $sertifikasiTerbaru->tahun ?? '-' }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="quick-action-card mb-4">
+                <div>
+                    <h4>Quick Action</h4>
+                    <p>Akses cepat untuk mengelola data portfolio.</p>
+                </div>
+
+                <div class="quick-action-buttons">
+                    <button class="quick-btn" data-bs-toggle="modal" data-bs-target="#tambahModal">
+                        <i class="bi bi-briefcase-fill"></i>
+                        Tambah Pengalaman
+                    </button>
+
+                    <button class="quick-btn" data-bs-toggle="modal" data-bs-target="#tambahSertifikasiModal">
+                        <i class="bi bi-award-fill"></i>
+                        Tambah Sertifikasi
+                    </button>
+
+                    <button class="quick-btn" data-bs-toggle="modal" data-bs-target="#tambahSkillModal">
+                        <i class="bi bi-bar-chart-fill"></i>
+                        Tambah Skill
+                    </button>
+                </div>
+            </div>
+
+            <div class="row g-4 mb-4">
+
+                <div class="col-lg-6">
+                    <div class="recent-card">
+                        <div class="recent-header">
+                            <i class="bi bi-clock-history"></i>
+                            <h5>Aktivitas Terbaru</h5>
+                        </div>
+
+                        <div class="recent-item">
+                            <i class="bi bi-briefcase"></i>
+                            <div>
+                                <strong>Pengalaman Terbaru</strong>
+                                <p>{{ $pengalamanTerbaru->nama_perusahaan ?? 'Belum ada data' }}</p>
+                            </div>
+                        </div>
+
+                        <div class="recent-item">
+                            <i class="bi bi-award"></i>
+                            <div>
+                                <strong>Sertifikasi Terbaru</strong>
+                                <p>{{ $sertifikasiTerbaru->nama_sertifikat ?? 'Belum ada data' }}</p>
+                            </div>
+                        </div>
+
+                        <div class="recent-item">
+                            <i class="bi bi-bar-chart"></i>
+                            <div>
+                                <strong>Skill Tertinggi</strong>
+                                <p>{{ $skillTertinggi->nama_skill ?? 'Belum ada data' }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-6">
+                    <div class="profile-completion-card">
+                        <div class="recent-header">
+                            <i class="bi bi-person-check-fill"></i>
+                            <h5>Kelengkapan Profil</h5>
+                        </div>
+
+                        <div class="completion-circle" style="--progress: {{ $complete }}%;">
+                            <span>{{ $complete }}%</span>
+                        </div>
+
+                        <p class="text-muted text-center mt-3">
+                            Semakin lengkap profil, semakin profesional tampilan portfolio kamu.
+                        </p>
+
+                        <div class="completion-bar">
+                            <div style="width: {{ $complete }}%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
     </section>
 
     {{-- MODAL EDIT PENGALAMAN --}}
@@ -769,5 +998,47 @@
             </div>
         </div>
     </div>
+
+
+    {{-- notifikasi --}}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            @if (session('success'))
+                Swal.fire({
+                    toast: true,
+                    position: 'top-end',
+                    icon: 'success',
+                    title: "{{ session('success') }}",
+                    showConfirmButton: false,
+                    timer: 3000,
+                    timerProgressBar: true,
+                    background: '#ffffff',
+                    color: '#0b1f3a',
+                    iconColor: '#22c55e',
+                    customClass: {
+                        popup: 'modern-toast'
+                    }
+                });
+            @endif
+
+            @if (session('error'))
+                Swal.fire({
+                    toast: true,
+                    position: 'top-end',
+                    icon: 'error',
+                    title: "{{ session('error') }}",
+                    showConfirmButton: false,
+                    timer: 3000,
+                    timerProgressBar: true,
+                    background: '#ffffff',
+                    color: '#0b1f3a',
+                    iconColor: '#ef4444',
+                    customClass: {
+                        popup: 'modern-toast'
+                    }
+                });
+            @endif
+        });
+    </script>
 
 @endsection

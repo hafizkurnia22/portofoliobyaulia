@@ -1,7 +1,7 @@
 <nav class="navbar navbar-expand-lg custom-navbar fixed-top" data-aos="fade-down">
     <div class="container">
         <a class="navbar-brand" href="#">
-            Aulia's Portofolio
+            My Portfolio
         </a>
 
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMenu">
@@ -29,6 +29,13 @@
 
                 <li class="nav-item">
                     <a class="nav-link" href="/#tentang">Tentang Saya</a>
+                </li>
+
+                {{-- Menu ini menggantikan download langsung agar pengunjung bisa memilih template CV dulu. --}}
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route('cv.builder') }}">
+                        Generate CV saya
+                    </a>
                 </li>
 
                 <li class="nav-item ms-lg-3">
