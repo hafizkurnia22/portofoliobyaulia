@@ -5,7 +5,7 @@
 @section('content')
 
     <!-- Hero Carousel -->
-    <section class="hero-section d-flex align-items-center"data-aos="fade-up">
+    <section id="home" class="hero-section d-flex align-items-center" data-aos="fade-up">
         <div class="container">
             <div id="heroCarousel" class="carousel slide" data-bs-ride="carousel">
 
@@ -275,6 +275,112 @@
                 @empty
                     <div class="col-12 text-center">
                         <p class="text-muted">Belum ada data skill.</p>
+                    </div>
+                @endforelse
+            </div>
+        </div>
+    </section>
+
+    <!-- My Project -->
+    <section id="my-project" class="project-section section-padding">
+        <div class="container">
+            <div class="project-header" data-aos="fade-up">
+                <div>
+                    <span class="section-label project-label">My Project</span>
+                    <h2 class="project-title">Project Pilihan yang Pernah Saya Buat</h2>
+                    <p class="project-subtitle">
+                        Kumpulan karya digital dengan fokus pada tampilan profesional, alur yang jelas, dan pengalaman
+                        pengguna yang nyaman.
+                    </p>
+                </div>
+
+                <div class="project-summary">
+                    <div>
+                        <strong>{{ $projects->count() }}</strong>
+                        <span>Project</span>
+                    </div>
+                    <div>
+                        <strong>Web</strong>
+                        <span>Based</span>
+                    </div>
+                    <div>
+                        <strong>UI</strong>
+                        <span>Premium</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row g-4 mt-2">
+                @forelse ($projects as $index => $project)
+                    @php
+                        $accents = ['gold', 'emerald', 'blue', 'rose'];
+                        $accent = $accents[$index % count($accents)];
+                        $techList = collect(explode(',', $project->teknologi ?? ''))->map(function ($tech) {
+                            return trim($tech);
+                        })->filter();
+                    @endphp
+
+                    <div class="col-lg-6" data-aos="fade-up" data-aos-delay="{{ 100 + $index * 100 }}">
+                        <article class="project-card project-accent-{{ $accent }}">
+                            @if ($project->gambar)
+                                <div class="project-cover">
+                                    <img src="{{ asset('images/projects/' . $project->gambar) }}"
+                                        alt="{{ $project->nama_project }}">
+                                </div>
+                            @endif
+
+                            <div class="project-card-top">
+                                <div class="project-icon">
+                                    <i class="bi bi-kanban"></i>
+                                </div>
+
+                                <span class="project-category">
+                                    {{ $project->kategori ?? 'Project' }}
+                                </span>
+                            </div>
+
+                            <h3>{{ $project->nama_project }}</h3>
+                            <p>{{ $project->deskripsi }}</p>
+
+                            @if ($techList->isNotEmpty())
+                                <div class="project-tech-list">
+                                    @foreach ($techList as $tech)
+                                        <span>{{ $tech }}</span>
+                                    @endforeach
+                                </div>
+                            @endif
+
+                            <div class="project-actions">
+                                @if ($project->link_demo)
+                                    <a href="{{ $project->link_demo }}" target="_blank" class="project-link">
+                                        Demo
+                                        <i class="bi bi-arrow-up-right"></i>
+                                    </a>
+                                @endif
+
+                                @if ($project->link_repository)
+                                    <a href="{{ $project->link_repository }}" target="_blank"
+                                        class="project-link project-link-outline">
+                                        Repository
+                                        <i class="bi bi-github"></i>
+                                    </a>
+                                @endif
+
+                                @if (!$project->link_demo && !$project->link_repository)
+                                    <span class="project-link-muted">
+                                        Link belum tersedia
+                                    </span>
+                                @endif
+                            </div>
+                        </article>
+                    </div>
+                @empty
+                    <div class="col-12" data-aos="fade-up">
+                        <div class="project-empty-state">
+                            <i class="bi bi-folder2-open"></i>
+                            <h3>Belum ada project yang ditampilkan</h3>
+                            <p>Project yang ditambahkan dari dashboard admin akan tampil otomatis di bagian ini.</p>
+                        </div>
                     </div>
                 @endforelse
             </div>

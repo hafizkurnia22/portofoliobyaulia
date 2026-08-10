@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Pengalaman;
+use App\Models\Project;
 
 class PengalamanController extends Controller
 {
@@ -14,12 +15,14 @@ public function index()
 
     $sertifikasi = \App\Models\Sertifikasi::latest()->get();
     $skill = \App\Models\Skill::latest()->get();
+    $projects = Project::latest()->get();
     $tentangSaya = \App\Models\TentangSaya::first();
 
 return view('pages.home', compact(
     'pengalaman',
     'sertifikasi',
     'skill',
+    'projects',
     'tentangSaya'
 ));}
     public function create()

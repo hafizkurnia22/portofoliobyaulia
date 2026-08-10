@@ -5,7 +5,7 @@
 @section('content')
 
     @php
-        $activeTab = request('active_tab', session('active_tab', 'pengalaman'));
+        $activeTab = request('active_tab', old('active_tab', session('active_tab', 'pengalaman')));
     @endphp
 
     <section class="admin-dashboard">
@@ -15,7 +15,7 @@
                 <div>
                     <span class="admin-label">Admin Panel</span>
                     <h1>Dashboard Portfolio</h1>
-                    <p>Kelola data pengalaman kerja, sertifikasi, dan skill.</p>
+                    <p>Kelola data pengalaman kerja, project, sertifikasi, dan skill.</p>
                 </div>
 
                 <div class="admin-header-right">
@@ -38,7 +38,7 @@
             </div>
 
             <div class="row g-4 mb-4">
-                <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
+                <div class="col-xl-3 col-md-6" data-aos="fade-up" data-aos-delay="100">
                     <div class="admin-stat-card">
                         <i class="bi bi-briefcase-fill"></i>
                         <div>
@@ -48,7 +48,17 @@
                     </div>
                 </div>
 
-                <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
+                <div class="col-xl-3 col-md-6" data-aos="fade-up" data-aos-delay="200">
+                    <div class="admin-stat-card">
+                        <i class="bi bi-kanban-fill"></i>
+                        <div>
+                            <h4>{{ $totalProject }}</h4>
+                            <p>Total Project</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xl-3 col-md-6" data-aos="fade-up" data-aos-delay="300">
                     <div class="admin-stat-card">
                         <i class="bi bi-award-fill"></i>
                         <div>
@@ -58,7 +68,7 @@
                     </div>
                 </div>
 
-                <div class="col-md-4" data-aos="fade-up" data-aos-delay="300">
+                <div class="col-xl-3 col-md-6" data-aos="fade-up" data-aos-delay="400">
                     <div class="admin-stat-card">
                         <i class="bi bi-bar-chart-fill"></i>
                         <div>
@@ -90,6 +100,13 @@
                         <button class="nav-link {{ $activeTab == 'skill' ? 'active' : '' }}" data-bs-toggle="pill"
                             data-bs-target="#skill-panel" type="button" role="tab">
                             <i class="bi bi-bar-chart-fill"></i> Skill
+                        </button>
+                    </li>
+
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link {{ $activeTab == 'project' ? 'active' : '' }}" data-bs-toggle="pill"
+                            data-bs-target="#project-panel" type="button" role="tab">
+                            <i class="bi bi-kanban-fill"></i> Project
                         </button>
                     </li>
 
@@ -386,6 +403,134 @@
 
                     </div>
 
+                    {{-- TAB PROJECT --}}
+                    <div class="tab-pane fade {{ $activeTab == 'project' ? 'show active' : '' }}" id="project-panel"
+                        role="tabpanel">
+
+                        <div class="admin-table-header" data-aos="fade-right">
+                            <div>
+                                <h5>Data My Project</h5>
+                                <p>Tambah, edit, atau hapus project yang pernah dikerjakan.</p>
+                            </div>
+
+                            <button type="button" class="btn-admin-add" data-bs-toggle="modal"
+                                data-bs-target="#tambahProjectModal">
+                                <i class="bi bi-plus-circle"></i> Tambah Project
+                            </button>
+                        </div>
+
+                        @if ($activeTab == 'project' && $errors->any())
+                            <div class="alert alert-danger rounded-4 mb-4">
+                                <strong>Project belum tersimpan.</strong>
+                                <ul class="mb-0 mt-2">
+                                    @foreach ($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        @endif
+
+                        <div class="admin-search-box mb-3">
+                            <i class="bi bi-search"></i>
+                            <input type="text" class="form-control admin-live-search" data-target="project-table"
+                                placeholder="Cari project, kategori, teknologi, status...">
+                        </div>
+
+                        <div class="table-responsive" data-aos="fade-up">
+                            <table class="table admin-table align-middle" id="project-table">
+                                <thead>
+                                    <tr>
+                                        <th>No</th>
+                                        <th>Gambar</th>
+                                        <th>Project</th>
+                                        <th>Kategori</th>
+                                        <th>Status</th>
+                                        <th>Teknologi</th>
+                                        <th>Link</th>
+                                        <th>Aksi</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    @forelse($project as $item)
+                                        <tr>
+                                            <td>{{ $project->firstItem() + $loop->index }}</td>
+                                            <td>
+                                                @if ($item->gambar)
+                                                    <img src="{{ asset('images/projects/' . $item->gambar) }}"
+                                                        class="admin-logo" alt="{{ $item->nama_project }}">
+                                                @else
+                                                    <div class="admin-logo-placeholder">
+                                                        <i class="bi bi-kanban"></i>
+                                                    </div>
+                                                @endif
+                                            </td>
+
+                                            <td>
+                                                <strong>{{ $item->nama_project }}</strong>
+                                                <p class="admin-desc mb-0 mt-1">{{ $item->deskripsi }}</p>
+                                            </td>
+                                            <td>
+                                                <span class="admin-badge">{{ $item->kategori ?? 'Project' }}</span>
+                                            </td>
+                                            <td>{{ $item->status ?? 'Selesai' }}</td>
+                                            <td>{{ $item->teknologi ?? '-' }}</td>
+                                            <td>
+                                                <div class="d-flex gap-2 flex-wrap">
+                                                    @if ($item->link_demo)
+                                                        <a href="{{ $item->link_demo }}" target="_blank"
+                                                            class="btn btn-sm btn-primary">
+                                                            Demo
+                                                        </a>
+                                                    @endif
+
+                                                    @if ($item->link_repository)
+                                                        <a href="{{ $item->link_repository }}" target="_blank"
+                                                            class="btn btn-sm btn-outline-primary">
+                                                            Repo
+                                                        </a>
+                                                    @endif
+
+                                                    @if (!$item->link_demo && !$item->link_repository)
+                                                        <span class="text-muted">Tidak ada link</span>
+                                                    @endif
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="d-flex gap-2">
+                                                    <button type="button" class="btn-admin-edit" data-bs-toggle="modal"
+                                                        data-bs-target="#editProjectModal{{ $item->id }}">
+                                                        <i class="bi bi-pencil-square"></i>
+                                                    </button>
+
+                                                    <form action="/hapus-project/{{ $item->id }}" method="POST"
+                                                        class="delete-form">
+                                                        @csrf
+                                                        @method('DELETE')
+
+                                                        <button type="button" class="btn-admin-delete btn-delete">
+                                                            <i class="bi bi-trash"></i>
+                                                        </button>
+                                                    </form>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    @empty
+                                        <tr>
+                                            <td colspan="8" class="text-center text-muted py-4">
+                                                Belum ada data project
+                                            </td>
+                                        </tr>
+                                    @endforelse
+                                </tbody>
+                            </table>
+
+                            <div class="mt-4">
+                                {{ $project->appends(array_merge(request()->query(), ['active_tab' => 'project']))->links() }}
+                            </div>
+                        </div>
+                    </div>
+
                     {{-- TAB TENTANG SAYA --}}
                     <div class="tab-pane fade {{ $activeTab == 'tentang' ? 'show active' : '' }}" id="tentang-panel"
                         role="tabpanel">
@@ -585,6 +730,11 @@
                         Tambah Pengalaman
                     </button>
 
+                    <button class="quick-btn" data-bs-toggle="modal" data-bs-target="#tambahProjectModal">
+                        <i class="bi bi-kanban-fill"></i>
+                        Tambah Project
+                    </button>
+
                     <button class="quick-btn" data-bs-toggle="modal" data-bs-target="#tambahSertifikasiModal">
                         <i class="bi bi-award-fill"></i>
                         Tambah Sertifikasi
@@ -611,6 +761,14 @@
                             <div>
                                 <strong>Pengalaman Terbaru</strong>
                                 <p>{{ $pengalamanTerbaru->nama_perusahaan ?? 'Belum ada data' }}</p>
+                            </div>
+                        </div>
+
+                        <div class="recent-item">
+                            <i class="bi bi-kanban"></i>
+                            <div>
+                                <strong>Project Terbaru</strong>
+                                <p>{{ $projectTerbaru->nama_project ?? 'Belum ada data' }}</p>
                             </div>
                         </div>
 
@@ -847,6 +1005,109 @@
         </div>
     @endforeach
 
+    {{-- MODAL EDIT PROJECT --}}
+    @foreach ($project as $item)
+        <div class="modal fade" id="editProjectModal{{ $item->id }}" tabindex="-1">
+            <div class="modal-dialog modal-lg modal-dialog-centered">
+                <div class="modal-content">
+                    <form action="/update-project/{{ $item->id }}" method="POST" enctype="multipart/form-data">
+                        @csrf
+                        @method('PUT')
+                        <input type="hidden" name="active_tab" value="project">
+
+                        <div class="modal-header">
+                            <h5 class="modal-title fw-bold">Edit Project</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-md-8 mb-3">
+                                    <label class="form-label">Nama Project</label>
+                                    <input type="text" name="nama_project" class="form-control"
+                                        value="{{ $item->nama_project }}" required>
+                                </div>
+
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label">Status</label>
+                                    <select name="status" class="form-control">
+                                        <option value="Selesai" {{ $item->status == 'Selesai' ? 'selected' : '' }}>
+                                            Selesai
+                                        </option>
+                                        <option value="On Progress"
+                                            {{ $item->status == 'On Progress' ? 'selected' : '' }}>
+                                            On Progress
+                                        </option>
+                                        <option value="Maintenance"
+                                            {{ $item->status == 'Maintenance' ? 'selected' : '' }}>
+                                            Maintenance
+                                        </option>
+                                    </select>
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Kategori</label>
+                                    <input type="text" name="kategori" class="form-control"
+                                        value="{{ $item->kategori }}" placeholder="Website / Dashboard / Mobile App">
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Teknologi</label>
+                                    <input type="text" name="teknologi" class="form-control"
+                                        value="{{ $item->teknologi }}" placeholder="Laravel, Bootstrap, MySQL">
+                                    <small class="text-muted">Pisahkan dengan koma.</small>
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Link Demo</label>
+                                    <input type="url" name="link_demo" class="form-control"
+                                        value="{{ $item->link_demo }}" placeholder="https://domain-project.com">
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Link Repository</label>
+                                    <input type="url" name="link_repository" class="form-control"
+                                        value="{{ $item->link_repository }}" placeholder="https://github.com/user/repo">
+                                </div>
+
+                                <div class="col-12 mb-3">
+                                    <label class="form-label">Deskripsi</label>
+                                    <textarea name="deskripsi" class="form-control" rows="4" required>{{ $item->deskripsi }}</textarea>
+                                </div>
+
+                                <div class="col-12 mb-3">
+                                    <label class="form-label">Gambar Project</label>
+
+                                    @if ($item->gambar)
+                                        <div class="mb-2">
+                                            <img src="{{ asset('images/projects/' . $item->gambar) }}" width="120"
+                                                class="rounded" alt="{{ $item->nama_project }}">
+                                        </div>
+                                    @else
+                                        <small class="text-muted d-block mb-2">Belum ada gambar</small>
+                                    @endif
+
+                                    <input type="file" name="gambar" class="form-control"
+                                        accept="image/jpeg,image/png,image/webp">
+                                    <small class="text-muted">Kosongkan jika tidak ingin mengganti gambar.</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                Batal
+                            </button>
+                            <button type="submit" class="btn btn-primary">
+                                Simpan Perubahan
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    @endforeach
+
     {{-- MODAL TAMBAH PENGALAMAN --}}
     <div class="modal fade" id="tambahModal" tabindex="-1">
         <div class="modal-dialog modal-lg modal-dialog-centered">
@@ -893,6 +1154,98 @@
                         </button>
                         <button type="submit" class="btn btn-primary">
                             Simpan Data
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    {{-- MODAL TAMBAH PROJECT --}}
+    <div class="modal fade" id="tambahProjectModal" tabindex="-1">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <form action="/simpan-project" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    <input type="hidden" name="active_tab" value="project">
+
+                    <div class="modal-header">
+                        <h5 class="modal-title fw-bold">Tambah Project</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-8 mb-3">
+                                <label class="form-label">Nama Project</label>
+                                <input type="text" name="nama_project" class="form-control"
+                                    placeholder="Contoh: Website Portfolio CV" value="{{ old('nama_project') }}"
+                                    required>
+                            </div>
+
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Status</label>
+                                <select name="status" class="form-control">
+                                    <option value="Selesai" {{ old('status') == 'Selesai' ? 'selected' : '' }}>
+                                        Selesai
+                                    </option>
+                                    <option value="On Progress"
+                                        {{ old('status') == 'On Progress' ? 'selected' : '' }}>
+                                        On Progress
+                                    </option>
+                                    <option value="Maintenance"
+                                        {{ old('status') == 'Maintenance' ? 'selected' : '' }}>
+                                        Maintenance
+                                    </option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Kategori</label>
+                                <input type="text" name="kategori" class="form-control"
+                                    placeholder="Website / Dashboard / Mobile App" value="{{ old('kategori') }}">
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Teknologi</label>
+                                <input type="text" name="teknologi" class="form-control"
+                                    placeholder="Laravel, Bootstrap, MySQL" value="{{ old('teknologi') }}">
+                                <small class="text-muted">Pisahkan dengan koma.</small>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Link Demo</label>
+                                <input type="url" name="link_demo" class="form-control"
+                                    placeholder="https://domain-project.com" value="{{ old('link_demo') }}">
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Link Repository</label>
+                                <input type="url" name="link_repository" class="form-control"
+                                    placeholder="https://github.com/user/repo" value="{{ old('link_repository') }}">
+                            </div>
+
+                            <div class="col-12 mb-3">
+                                <label class="form-label">Deskripsi</label>
+                                <textarea name="deskripsi" class="form-control" rows="4"
+                                    placeholder="Ceritakan fungsi utama, fitur, dan hasil project." required>{{ old('deskripsi') }}</textarea>
+                            </div>
+
+                            <div class="col-12 mb-3">
+                                <label class="form-label">Gambar Project</label>
+                                <input type="file" name="gambar" class="form-control"
+                                    accept="image/jpeg,image/png,image/webp">
+                                <small class="text-muted">Format JPG, PNG, atau WEBP. Maksimal 5MB.</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                            Batal
+                        </button>
+                        <button type="submit" class="btn btn-primary">
+                            Simpan Project
                         </button>
                     </div>
                 </form>
