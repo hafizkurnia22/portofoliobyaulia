@@ -236,7 +236,7 @@
     </section>
 
     <!-- Skill -->
-    <section id="skill" class="section-padding">
+    <section id="skill" class="section-padding skill-section-simple">
         <div class="container">
             <div class="text-center mb-5" data-aos="fade-up">
                 <h2 class="fw-bold text-primary-dark">Skill</h2>
@@ -245,10 +245,20 @@
 
             <div class="row g-4">
                 @forelse($skill as $item)
+                    @php
+                        $percentage = max(0, min(100, (int) $item->persentase));
+                        $progressClass = match (true) {
+                            $percentage >= 85 => 'skill-range-expert',
+                            $percentage >= 75 => 'skill-range-strong',
+                            $percentage >= 60 => 'skill-range-medium',
+                            default => 'skill-range-basic',
+                        };
+                    @endphp
+
                     <div class="col-md-6" data-aos="fade-up">
-                        <div class="card card-custom p-4 h-100">
-                            <div class="d-flex justify-content-between align-items-center mb-2">
-                                <div>
+                        <div class="card card-custom skill-simple-card p-4 h-100">
+                            <div class="d-flex justify-content-between align-items-center gap-3 mb-2">
+                                <div class="skill-simple-title">
                                     <h5 class="fw-bold text-primary-dark mb-1">
                                         {{ $item->nama_skill }}
                                     </h5>
@@ -260,14 +270,15 @@
                                     @endif
                                 </div>
 
-                                <span class="admin-badge">
-                                    {{ $item->persentase }}%
+                                <span class="skill-percent-badge {{ $progressClass }}">
+                                    {{ $percentage }}%
                                 </span>
                             </div>
 
-                            <div class="progress mt-3" style="height: 12px; border-radius: 30px;">
-                                <div class="progress-bar bg-primary-dark" role="progressbar"
-                                    style="width: {{ $item->persentase }}%;">
+                            <div class="progress skill-gradient-track mt-3">
+                                <div class="progress-bar skill-gradient-fill {{ $progressClass }}" role="progressbar"
+                                    style="width: {{ $percentage }}%;" aria-valuenow="{{ $percentage }}"
+                                    aria-valuemin="0" aria-valuemax="100">
                                 </div>
                             </div>
                         </div>
@@ -280,7 +291,6 @@
             </div>
         </div>
     </section>
-
     <!-- My Project -->
     <section id="my-project" class="project-section section-padding">
         <div class="container">
@@ -398,40 +408,55 @@
 
                     @forelse($sertifikasi as $index => $item)
                         <div class="carousel-item {{ $index == 0 ? 'active' : '' }}">
-                            <div class="card card-custom p-4 mx-auto" style="max-width: 700px;">
-                                <div class="row align-items-center">
-
-                                    <div class="col-md-4 text-center mb-3 mb-md-0">
-                                        <i class="bi bi-award-fill text-primary-dark" style="font-size: 80px;"></i>
+                            <article class="certificate-showcase-card">
+                                <div class="certificate-badge-panel">
+                                    <div class="certificate-icon-shell">
+                                        <i class="bi bi-award-fill"></i>
                                     </div>
 
-                                    <div class="col-md-8">
-                                        <h4 class="fw-bold text-primary-dark">
-                                            {{ $item->nama_sertifikat }}
-                                        </h4>
+                                    <div class="certificate-badge-copy">
+                                        <span>Sertifikasi</span>
+                                        <strong>{{ $item->tahun ?? 'Tahun' }}</strong>
+                                    </div>
+                                </div>
 
-                                        <p class="mb-1">
-                                            <strong>Penyelenggara:</strong> {{ $item->penyelenggara }}
-                                        </p>
+                                <div class="certificate-content">
+                                    <span class="certificate-label">Sertifikasi Unggulan</span>
 
-                                        <p class="mb-1">
-                                            <strong>Tahun:</strong> {{ $item->tahun }}
-                                        </p>
+                                    <h4>{{ $item->nama_sertifikat }}</h4>
 
-                                        <p class="mb-3">
+                                    <div class="certificate-meta-grid">
+                                        <div class="certificate-meta-item">
+                                            <small>Penyelenggara</small>
+                                            <strong>{{ $item->penyelenggara }}</strong>
+                                        </div>
+
+                                        <div class="certificate-meta-item">
+                                            <small>Tahun</small>
+                                            <strong>{{ $item->tahun }}</strong>
+                                        </div>
+                                    </div>
+
+                                    @if (!empty($item->deskripsi))
+                                        <p class="certificate-description">
                                             {{ $item->deskripsi }}
                                         </p>
+                                    @endif
 
-                                        @if ($item->file_pdf)
-                                            <a href="{{ asset('sertifikat/' . $item->file_pdf) }}" target="_blank"
-                                                class="btn-view-all">
-                                                Lihat Sertifikat PDF
-                                            </a>
-                                        @endif
-                                    </div>
-
+                                    @if ($item->file_pdf)
+                                        <a href="{{ asset('sertifikat/' . $item->file_pdf) }}" target="_blank"
+                                            class="certificate-action">
+                                            <i class="bi bi-file-earmark-pdf"></i>
+                                            Lihat Sertifikat PDF
+                                        </a>
+                                    @else
+                                        <span class="certificate-action certificate-action-muted">
+                                            <i class="bi bi-file-earmark-lock"></i>
+                                            PDF belum tersedia
+                                        </span>
+                                    @endif
                                 </div>
-                            </div>
+                            </article>
                         </div>
                     @empty
                         <div class="carousel-item active">

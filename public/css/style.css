@@ -1999,6 +1999,534 @@ body:has(.cv-builder-page) .custom-navbar {
     font-weight: 900;
     text-decoration: none;
 }
+/* CERTIFICATE SHOWCASE PREMIUM */
+#sertifikasi {
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(180deg, #f8fbff 0%, #eef6ff 48%, #ffffff 100%) !important;
+}
+
+#sertifikasi .container {
+    position: relative;
+    z-index: 1;
+}
+
+#sertifikasi .text-center h2 {
+    color: #0b1f3a !important;
+}
+
+#sertifikasi .text-center p {
+    color: #475569;
+}
+
+#sertifikasiCarousel {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 0 88px;
+}
+
+#sertifikasiCarousel .carousel-inner {
+    overflow: visible;
+}
+
+.certificate-showcase-card {
+    position: relative;
+    isolation: isolate;
+    display: grid;
+    grid-template-columns: 220px minmax(0, 1fr);
+    gap: 28px;
+    width: min(900px, 100%);
+    min-height: 390px;
+    margin: 0 auto;
+    padding: 28px;
+    overflow: hidden;
+    border: 1px solid rgba(245, 158, 11, 0.34);
+    border-radius: 8px;
+    background: linear-gradient(135deg, #07111f 0%, #0b1f3a 54%, #0f766e 190%);
+    box-shadow: 0 28px 75px rgba(7, 17, 31, 0.20);
+    color: #f8fafc;
+}
+
+.certificate-showcase-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background:
+        linear-gradient(90deg, rgba(245, 158, 11, 0.13), transparent 30%, rgba(20, 184, 166, 0.12)),
+        repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.035) 0 1px, transparent 1px 16px);
+}
+
+.certificate-showcase-card::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #f59e0b, #14b8a6, #fbbf24);
+}
+
+.certificate-badge-panel,
+.certificate-content {
+    position: relative;
+    z-index: 1;
+}
+
+.certificate-badge-panel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+    min-height: 300px;
+    padding: 24px;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 8px;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.10), rgba(255, 255, 255, 0.045));
+}
+
+.certificate-badge-panel::before {
+    content: "";
+    position: absolute;
+    inset: 12px;
+    border: 1px solid rgba(245, 158, 11, 0.24);
+    border-radius: 8px;
+    pointer-events: none;
+}
+
+.certificate-icon-shell {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 108px;
+    height: 108px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 34% 26%, #fff7d6 0%, #fbbf24 38%, #f59e0b 68%, #92400e 100%);
+    box-shadow:
+        inset 0 2px 8px rgba(255, 255, 255, 0.34),
+        0 18px 36px rgba(0, 0, 0, 0.28),
+        0 0 24px rgba(245, 158, 11, 0.34);
+}
+
+.certificate-icon-shell i {
+    color: #07111f;
+    font-size: 48px;
+    filter: drop-shadow(0 2px 0 rgba(255, 255, 255, 0.18));
+}
+
+.certificate-badge-copy {
+    text-align: center;
+}
+
+.certificate-badge-copy span,
+.certificate-label,
+.certificate-meta-item small {
+    display: block;
+    text-transform: uppercase;
+    letter-spacing: 0;
+    font-size: 11px;
+    font-weight: 900;
+}
+
+.certificate-badge-copy span {
+    color: rgba(255, 247, 214, 0.72);
+}
+
+.certificate-badge-copy strong {
+    display: block;
+    margin-top: 4px;
+    color: #fef3c7;
+    font-size: 28px;
+    font-weight: 900;
+}
+
+.certificate-content {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.certificate-label {
+    margin-bottom: 10px;
+    color: #fbbf24;
+}
+
+.certificate-content h4 {
+    display: -webkit-box;
+    margin: 0 0 18px;
+    overflow: hidden;
+    color: #ffffff;
+    font-size: clamp(22px, 2.2vw, 30px);
+    font-weight: 900;
+    line-height: 1.16;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+}
+
+.certificate-meta-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 132px;
+    gap: 10px;
+    margin-bottom: 14px;
+}
+
+.certificate-meta-item {
+    min-width: 0;
+    padding: 11px 13px;
+    border: 1px solid rgba(255, 255, 255, 0.13);
+    border-left: 3px solid #f59e0b;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.075);
+}
+
+.certificate-meta-item small {
+    margin-bottom: 3px;
+    color: rgba(219, 234, 254, 0.72);
+}
+
+.certificate-meta-item strong {
+    display: -webkit-box;
+    overflow: hidden;
+    color: #f8fafc;
+    font-size: 14px;
+    font-weight: 800;
+    line-height: 1.45;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+}
+
+.certificate-description {
+    display: -webkit-box;
+    min-height: 8.4em;
+    margin: 0 0 18px;
+    overflow: hidden;
+    color: #dbeafe;
+    line-height: 1.68;
+    text-align: justify;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 5;
+}
+
+.certificate-action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: fit-content;
+    min-height: 44px;
+    margin-top: auto;
+    padding: 11px 18px;
+    border: 1px solid rgba(245, 158, 11, 0.36);
+    border-radius: 999px;
+    background: linear-gradient(135deg, #f59e0b, #fbbf24);
+    color: #07111f;
+    font-weight: 900;
+    text-decoration: none;
+    box-shadow: 0 16px 30px rgba(245, 158, 11, 0.24);
+    transition: 0.25s ease;
+}
+
+.certificate-action:hover {
+    color: #07111f;
+    transform: translateY(-2px);
+    box-shadow: 0 20px 36px rgba(245, 158, 11, 0.32);
+}
+
+.certificate-action-muted {
+    background: rgba(255, 255, 255, 0.11);
+    color: rgba(255, 255, 255, 0.72);
+    box-shadow: none;
+}
+
+#sertifikasiCarousel .carousel-control-prev,
+#sertifikasiCarousel .carousel-control-next {
+    width: 54px;
+    opacity: 1;
+}
+
+#sertifikasiCarousel .carousel-control-prev {
+    left: 14px;
+}
+
+#sertifikasiCarousel .carousel-control-next {
+    right: 14px;
+}
+
+#sertifikasiCarousel .carousel-control-prev-icon,
+#sertifikasiCarousel .carousel-control-next-icon {
+    width: 44px;
+    height: 44px;
+    padding: 14px;
+    border: 1px solid rgba(245, 158, 11, 0.28);
+    border-radius: 50%;
+    background-color: #0b1f3a;
+    background-size: 46%;
+    box-shadow: 0 14px 28px rgba(7, 17, 31, 0.24);
+}
+
+#sertifikasi .custom-indicators {
+    margin-top: 30px;
+}
+
+#sertifikasi .custom-indicators button {
+    background-color: #f59e0b !important;
+    box-shadow: 0 0 0 1px rgba(11, 31, 58, 0.12);
+}
+
+#sertifikasi .custom-indicators .active {
+    background: linear-gradient(90deg, #f59e0b, #14b8a6) !important;
+}
+
+.sertifikasi-card {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid rgba(11, 31, 58, 0.08);
+    border-top: 4px solid #f59e0b;
+    border-radius: 8px;
+    background: linear-gradient(180deg, #ffffff, #f8fbff);
+}
+
+.sertifikasi-card::before {
+    top: 0;
+    right: 0;
+    width: 100%;
+    height: 4px;
+    border-radius: 0;
+    background: linear-gradient(90deg, #f59e0b, #14b8a6, #fbbf24);
+}
+
+.sertifikasi-card h4 {
+    display: -webkit-box;
+    min-height: 4.2em;
+    overflow: hidden;
+    line-height: 1.4;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+}
+
+.sertifikasi-card .sertifikasi-desc {
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 6;
+}
+
+.sertifikasi-card .btn-sertifikasi,
+.sertifikasi-card .text-muted {
+    margin-top: auto;
+}
+
+@media (max-width: 991px) {
+    #sertifikasiCarousel {
+        padding: 0 58px;
+    }
+
+    .certificate-showcase-card {
+        grid-template-columns: 1fr;
+        gap: 18px;
+        min-height: unset;
+    }
+
+    .certificate-badge-panel {
+        min-height: 160px;
+        flex-direction: row;
+        justify-content: flex-start;
+    }
+
+    .certificate-description {
+        min-height: unset;
+    }
+}
+
+@media (max-width: 576px) {
+    #sertifikasiCarousel {
+        padding: 0;
+    }
+
+    #sertifikasiCarousel .carousel-control-prev,
+    #sertifikasiCarousel .carousel-control-next {
+        display: none;
+    }
+
+    .certificate-showcase-card {
+        padding: 20px;
+    }
+
+    .certificate-badge-panel {
+        align-items: center;
+        flex-direction: column;
+        min-height: 150px;
+        text-align: center;
+    }
+
+    .certificate-icon-shell {
+        width: 78px;
+        height: 78px;
+    }
+
+    .certificate-icon-shell i {
+        font-size: 34px;
+    }
+
+    .certificate-meta-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .certificate-content h4 {
+        font-size: 22px;
+    }
+}
+/* SIMPLE SKILL GRADIENT */
+.skill-section-simple {
+    background: linear-gradient(180deg, #f8fbff 0%, #eef6ff 54%, #ffffff 100%);
+}
+
+.skill-simple-card {
+    position: relative;
+    overflow: hidden;
+    border: 1px solid rgba(11, 31, 58, 0.07);
+    background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+    box-shadow: 0 18px 45px rgba(11, 31, 58, 0.08);
+}
+
+.skill-simple-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #f59e0b, #14b8a6);
+}
+
+.skill-simple-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 28px 62px rgba(11, 31, 58, 0.13);
+}
+
+.skill-simple-title {
+    min-width: 0;
+}
+
+.skill-simple-title h5 {
+    display: -webkit-box;
+    overflow: hidden;
+    line-height: 1.35;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+}
+
+.skill-percent-badge {
+    flex-shrink: 0;
+    min-width: 64px;
+    padding: 9px 13px;
+    border-radius: 999px;
+    color: #07111f;
+    font-weight: 900;
+    text-align: center;
+    box-shadow: 0 12px 22px rgba(11, 31, 58, 0.08);
+}
+
+.skill-gradient-track {
+    height: 12px;
+    overflow: hidden;
+    border-radius: 999px;
+    background: #e5e7eb;
+}
+
+.skill-gradient-fill {
+    position: relative;
+    overflow: hidden;
+    border-radius: inherit;
+    background-size: 180% 100%;
+    animation: skillGradientFlow 3.6s ease-in-out infinite;
+}
+
+.skill-gradient-fill::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.34), transparent);
+    transform: translateX(-100%);
+    animation: skillProgressShine 2.8s ease-in-out infinite;
+}
+
+.skill-percent-badge.skill-range-basic {
+    background: rgba(100, 116, 139, 0.16);
+    color: #334155;
+}
+
+.skill-gradient-fill.skill-range-basic {
+    background-image: linear-gradient(90deg, #64748b, #94a3b8);
+}
+
+.skill-percent-badge.skill-range-medium {
+    background: rgba(37, 99, 235, 0.14);
+    color: #1d4ed8;
+}
+
+.skill-gradient-fill.skill-range-medium {
+    background-image: linear-gradient(90deg, #2563eb, #14b8a6);
+}
+
+.skill-percent-badge.skill-range-strong {
+    background: rgba(20, 184, 166, 0.15);
+    color: #0f766e;
+}
+
+.skill-gradient-fill.skill-range-strong {
+    background-image: linear-gradient(90deg, #14b8a6, #f59e0b);
+}
+
+.skill-percent-badge.skill-range-expert {
+    background: rgba(245, 158, 11, 0.18);
+    color: #92400e;
+}
+
+.skill-gradient-fill.skill-range-expert {
+    background-image: linear-gradient(90deg, #f59e0b, #fbbf24, #14b8a6);
+}
+
+@keyframes skillGradientFlow {
+    0%,
+    100% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+}
+
+@keyframes skillProgressShine {
+    0%,
+    42% {
+        transform: translateX(-110%);
+        opacity: 0;
+    }
+
+    58% {
+        opacity: 1;
+    }
+
+    100% {
+        transform: translateX(110%);
+        opacity: 0;
+    }
+}
+
+@media (max-width: 576px) {
+    .skill-simple-card {
+        padding: 22px !important;
+    }
+
+    .skill-percent-badge {
+        min-width: 58px;
+        padding: 8px 11px;
+    }
+}
 /* PREMIUM NAVBAR & PROJECT SECTION */
 html {
     scroll-behavior: smooth;
@@ -2038,8 +2566,8 @@ body:has(.cv-builder-page) .custom-navbar {
     clip-path: circle(50% at 50% 50%);
     -webkit-mask-image: radial-gradient(circle, #000 69%, transparent 70%);
     mask-image: radial-gradient(circle, #000 69%, transparent 70%);
-    filter: contrast(1.08) saturate(1.12) drop-shadow(0 0 10px rgba(245, 158, 11, 0.32));
-    transform: scale(1.26) translateZ(0);
+    filter: contrast(1.12) saturate(1.18) drop-shadow(0 0 12px rgba(245, 158, 11, 0.38)) drop-shadow(0 0 6px rgba(20, 184, 166, 0.18));
+    transform: scale(1.04) translateZ(0);
 }
 
 .brand-logo-shell {
@@ -2057,12 +2585,13 @@ body:has(.cv-builder-page) .custom-navbar {
     mask-image: radial-gradient(circle, #000 69%, transparent 70%);
     isolation: isolate;
     flex-shrink: 0;
-    border: 2px solid rgba(251, 191, 36, 0.78);
-    background: #050505;
+    border: 2px solid rgba(245, 158, 11, 0.9);
+    background: #ffffff;
     box-shadow:
-        0 0 0 1px rgba(255, 255, 255, 0.16),
-        0 12px 28px rgba(0, 0, 0, 0.26),
-        0 0 24px rgba(245, 158, 11, 0.32);
+        0 0 0 1px rgba(20, 184, 166, 0.18),
+        0 12px 28px rgba(0, 0, 0, 0.3),
+        0 0 22px rgba(245, 158, 11, 0.36),
+        0 0 14px rgba(20, 184, 166, 0.16);
 }
 
 .brand-logo-shell::before {
@@ -2070,7 +2599,7 @@ body:has(.cv-builder-page) .custom-navbar {
     position: absolute;
     inset: -12px;
     border-radius: 50%;
-    background: radial-gradient(circle, rgba(251, 191, 36, 0.22), transparent 62%);
+    background: radial-gradient(circle, rgba(245, 158, 11, 0.28) 0%, rgba(20, 184, 166, 0.12) 42%, transparent 68%);
     filter: blur(9px);
     opacity: 0.75;
     z-index: -1;
@@ -2086,10 +2615,11 @@ body:has(.cv-builder-page) .custom-navbar {
     height: 190%;
     background: linear-gradient(115deg,
             transparent 0%,
-            rgba(255, 255, 255, 0.08) 28%,
-            rgba(255, 255, 255, 0.72) 48%,
-            rgba(251, 191, 36, 0.55) 54%,
-            rgba(255, 255, 255, 0.12) 68%,
+            rgba(245, 158, 11, 0.08) 24%,
+            rgba(20, 184, 166, 0.2) 36%,
+            rgba(255, 247, 215, 0.86) 48%,
+            rgba(245, 158, 11, 0.62) 56%,
+            rgba(20, 184, 166, 0.18) 66%,
             transparent 100%);
     transform: skewX(-18deg);
     mix-blend-mode: screen;
@@ -2098,7 +2628,7 @@ body:has(.cv-builder-page) .custom-navbar {
 }
 
 .brand-logo-shell:hover .brand-logo-img {
-    filter: contrast(1.16) saturate(1.2) drop-shadow(0 0 16px rgba(251, 191, 36, 0.48));
+    filter: contrast(1.18) saturate(1.24) drop-shadow(0 0 18px rgba(245, 158, 11, 0.55)) drop-shadow(0 0 9px rgba(20, 184, 166, 0.24));
 }
 
 .brand-text-shine {
@@ -2106,7 +2636,7 @@ body:has(.cv-builder-page) .custom-navbar {
     display: inline-block;
     color: transparent;
     background:
-        linear-gradient(90deg, #f8fafc 0%, #fbbf24 24%, #ffffff 42%, #cbd5e1 58%, #f59e0b 78%, #ffffff 100%);
+        linear-gradient(90deg, #fff7d6 0%, #f59e0b 22%, #fef3c7 38%, #14b8a6 52%, #fffaf0 60%, #fbbf24 78%, #fff7d6 100%);
     background-size: 240% 100%;
     -webkit-background-clip: text;
     background-clip: text;
@@ -2114,7 +2644,7 @@ body:has(.cv-builder-page) .custom-navbar {
     font-weight: 900;
     line-height: 1;
     white-space: nowrap;
-    text-shadow: 0 8px 24px rgba(245, 158, 11, 0.18);
+    text-shadow: 0 8px 24px rgba(245, 158, 11, 0.24), 0 0 14px rgba(20, 184, 166, 0.12);
     animation: brandTextShine 4.2s ease-in-out infinite;
 }
 
@@ -2126,7 +2656,7 @@ body:has(.cv-builder-page) .custom-navbar {
     bottom: -7px;
     height: 2px;
     border-radius: 999px;
-    background: linear-gradient(90deg, transparent, rgba(251, 191, 36, 0.95), rgba(255, 255, 255, 0.85), transparent);
+    background: linear-gradient(90deg, transparent, rgba(245, 158, 11, 0.95), rgba(20, 184, 166, 0.65), rgba(255, 247, 215, 0.92), transparent);
     opacity: 0.72;
     transform: scaleX(0.88);
 }
@@ -2669,3 +3199,64 @@ body:has(.cv-builder-page) .custom-navbar {
         width: 100%;
     }
 }
+
+/* PROFESSIONAL SKILL GRADIENT COLORS */
+.skill-simple-card::before {
+    background: linear-gradient(90deg, #0b1f3a 0%, #f59e0b 56%, #0f766e 100%);
+    opacity: 0.92;
+}
+
+.skill-gradient-track {
+    background: #e8edf3;
+    box-shadow: inset 0 1px 2px rgba(11, 31, 58, 0.08);
+}
+
+.skill-gradient-fill {
+    box-shadow: 0 0 14px rgba(11, 31, 58, 0.10);
+}
+
+.skill-gradient-fill::after {
+    background: linear-gradient(90deg, transparent, rgba(255, 247, 214, 0.22), transparent);
+}
+
+.skill-percent-badge {
+    border: 1px solid rgba(11, 31, 58, 0.08);
+    box-shadow: 0 10px 18px rgba(11, 31, 58, 0.08);
+}
+
+.skill-percent-badge.skill-range-basic {
+    background: #e2e8f0;
+    color: #334155;
+}
+
+.skill-gradient-fill.skill-range-basic {
+    background-image: linear-gradient(90deg, #334155 0%, #64748b 100%);
+}
+
+.skill-percent-badge.skill-range-medium {
+    background: #dbeafe;
+    color: #1e3a8a;
+}
+
+.skill-gradient-fill.skill-range-medium {
+    background-image: linear-gradient(90deg, #0b1f3a 0%, #2563eb 100%);
+}
+
+.skill-percent-badge.skill-range-strong {
+    background: #ccfbf1;
+    color: #0f766e;
+}
+
+.skill-gradient-fill.skill-range-strong {
+    background-image: linear-gradient(90deg, #0b1f3a 0%, #0f766e 58%, #14b8a6 100%);
+}
+
+.skill-percent-badge.skill-range-expert {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.skill-gradient-fill.skill-range-expert {
+    background-image: linear-gradient(90deg, #0b1f3a 0%, #b45309 48%, #f59e0b 100%);
+}
+/* END PROFESSIONAL SKILL GRADIENT COLORS */
