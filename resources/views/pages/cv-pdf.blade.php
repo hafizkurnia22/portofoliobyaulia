@@ -18,6 +18,7 @@
         $showProfile = $options['show_profile'] ?? true;
         $showSkills = $options['show_skills'] ?? true;
         $showExperience = $options['show_experience'] ?? true;
+        $showProjects = $options['show_projects'] ?? true;
         $showCertifications = $options['show_certifications'] ?? true;
     @endphp
 
@@ -194,6 +195,63 @@
             text-align: justify;
         }
 
+        .project-card {
+            border: 1px solid #e5e7eb;
+            border-left: 4px solid {{ $colors['secondary'] }};
+            border-radius: 10px;
+            padding: 10px 12px;
+            margin-bottom: 10px;
+            page-break-inside: avoid;
+        }
+
+        .project-title-row {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 4px;
+        }
+
+        .project-name {
+            font-size: 12px;
+            font-weight: bold;
+            color: #0f172a;
+        }
+
+        .project-category {
+            color: {{ $colors['secondary'] }};
+            font-size: 9.5px;
+            font-weight: bold;
+            margin-top: 1px;
+        }
+
+        .project-status {
+            display: inline-block;
+            background: {{ $colors['soft'] }};
+            color: {{ $colors['primary'] }};
+            padding: 3px 8px;
+            border-radius: 14px;
+            font-size: 9px;
+            font-weight: bold;
+        }
+
+        .project-desc {
+            color: #475569;
+            text-align: justify;
+            margin-top: 5px;
+        }
+
+        .project-tech {
+            margin-top: 7px;
+            color: {{ $colors['primary'] }};
+            font-size: 9.5px;
+            font-weight: bold;
+        }
+
+        .project-links {
+            margin-top: 5px;
+            color: {{ $colors['secondary'] }};
+            font-size: 9.5px;
+            font-weight: bold;
+        }
         .footer-note {
             margin-top: 16px;
             text-align: center;
@@ -326,6 +384,62 @@
     </div>
     @endif
 
+    @if ($showProjects)
+    <div class="section">
+        <div class="section-title">PROJECT PILIHAN</div>
+
+        @forelse ($projects as $project)
+            @php
+                $techList = collect(explode(',', $project->teknologi ?? ''))
+                    ->map(function ($tech) {
+                        return trim($tech);
+                    })
+                    ->filter()
+                    ->take(6)
+                    ->implode(', ');
+
+                $projectLinks = collect([
+                    !empty($project->link_demo) ? 'Demo tersedia' : null,
+                    !empty($project->link_repository) ? 'Repository tersedia' : null,
+                ])->filter()->implode(' | ');
+            @endphp
+
+            <div class="project-card">
+                <table class="project-title-row">
+                    <tr>
+                        <td>
+                            <div class="project-name">{{ $project->nama_project }}</div>
+
+                            @if (!empty($project->kategori))
+                                <div class="project-category">{{ $project->kategori }}</div>
+                            @endif
+                        </td>
+
+                        @if (!empty($project->status))
+                            <td align="right" width="90">
+                                <span class="project-status">{{ $project->status }}</span>
+                            </td>
+                        @endif
+                    </tr>
+                </table>
+
+                @if (!empty($project->deskripsi))
+                    <div class="project-desc">{{ $project->deskripsi }}</div>
+                @endif
+
+                @if (!empty($techList))
+                    <div class="project-tech">Teknologi: {{ $techList }}</div>
+                @endif
+
+                @if (!empty($projectLinks))
+                    <div class="project-links">{{ $projectLinks }}</div>
+                @endif
+            </div>
+        @empty
+            <p>Belum ada project.</p>
+        @endforelse
+    </div>
+    @endif
     @if ($showCertifications)
     <div class="section">
         <div class="section-title">SERTIFIKASI</div>

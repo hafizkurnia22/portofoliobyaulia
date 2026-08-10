@@ -1,13 +1,10 @@
 <nav class="navbar navbar-expand-xl custom-navbar fixed-top" data-aos="fade-down">
     <div class="container">
         <a class="navbar-brand brand-premium" href="{{ url('/') }}">
-            <span class="brand-icon">
-                <i class="bi bi-gem"></i>
+            <span class="brand-logo-shell">
+                <img src="{{ asset('images/logo-mhk.png') }}" class="brand-logo-img" alt="MHK Logo">
             </span>
-            <span class="brand-copy">
-                <strong>My Portfolio</strong>
-                <small>Personal CV</small>
-            </span>
+            <span class="brand-text-shine">Hafiz's Portofolio</span>
         </a>
 
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMenu"

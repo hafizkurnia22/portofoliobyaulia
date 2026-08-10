@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Pengalaman;
+use App\Models\Project;
 use App\Models\Sertifikasi;
 use App\Models\Skill;
 use App\Models\TentangSaya;
@@ -80,9 +81,10 @@ class CvBuilderController extends Controller
     {
         return [
             'tentangSaya' => TentangSaya::first(),
-            'pengalaman' => Pengalaman::latest()->get(),
+            'pengalaman' => Pengalaman::byLatestYear()->get(),
+            'projects' => Project::latest()->get(),
             'skill' => Skill::latest()->get(),
-            'sertifikasi' => Sertifikasi::latest()->get(),
+            'sertifikasi' => Sertifikasi::byLatestYear()->get(),
             'cvOptions' => $this->resolveOptions($request),
             'cvThemes' => self::THEMES,
         ];
@@ -119,6 +121,7 @@ class CvBuilderController extends Controller
             'show_profile' => $show('show_profile'),
             'show_skills' => $show('show_skills'),
             'show_experience' => $show('show_experience'),
+            'show_projects' => $show('show_projects'),
             'show_certifications' => $show('show_certifications'),
         ];
     }

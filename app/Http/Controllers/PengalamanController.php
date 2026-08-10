@@ -5,15 +5,16 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Pengalaman;
 use App\Models\Project;
+use App\Models\Sertifikasi;
 
 class PengalamanController extends Controller
 {
 public function index()
 {
-    $pengalaman = Pengalaman::latest()
+    $pengalaman = Pengalaman::byLatestYear()
         ->paginate(6, ['*'], 'pengalaman_page');
 
-    $sertifikasi = \App\Models\Sertifikasi::latest()->get();
+    $sertifikasi = Sertifikasi::byLatestYear()->get();
     $skill = \App\Models\Skill::latest()->get();
     $projects = Project::latest()->get();
     $tentangSaya = \App\Models\TentangSaya::first();

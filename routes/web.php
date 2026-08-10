@@ -20,7 +20,7 @@ Route::get('/cv-builder', [CvBuilderController::class, 'index'])->name('cv.build
 Route::get('/download-cv', [CvBuilderController::class, 'download'])->name('cv.download');
 
 Route::get('/sertifikasi', function () {
-    $sertifikasi = \App\Models\Sertifikasi::latest()->get();
+    $sertifikasi = \App\Models\Sertifikasi::byLatestYear()->get();
 
     return view('pages.sertifikasi', compact('sertifikasi'));
 });
@@ -51,8 +51,8 @@ Route::get('/admin/dashboard', function () {
         return redirect('/admin/login');
     }
 
-    $pengalaman = \App\Models\Pengalaman::latest()->paginate(5, ['*'], 'pengalaman_page');
-    $sertifikasi = \App\Models\Sertifikasi::latest()->paginate(5, ['*'], 'sertifikasi_page');
+    $pengalaman = \App\Models\Pengalaman::byLatestYear()->paginate(5, ['*'], 'pengalaman_page');
+    $sertifikasi = \App\Models\Sertifikasi::byLatestYear()->paginate(5, ['*'], 'sertifikasi_page');
     $skill = \App\Models\Skill::latest()->paginate(5, ['*'], 'skill_page');
     $project = \App\Models\Project::latest()->paginate(5, ['*'], 'project_page');
     $tentangSaya = \App\Models\TentangSaya::first();
@@ -65,8 +65,8 @@ Route::get('/admin/dashboard', function () {
     $rataSkill = \App\Models\Skill::avg('persentase') ?? 0;
 
     $skillTertinggi = \App\Models\Skill::orderByDesc('persentase')->first();
-    $sertifikasiTerbaru = \App\Models\Sertifikasi::latest()->first();
-    $pengalamanTerbaru = \App\Models\Pengalaman::latest()->first();
+    $sertifikasiTerbaru = \App\Models\Sertifikasi::byLatestYear()->first();
+    $pengalamanTerbaru = \App\Models\Pengalaman::byLatestYear()->first();
     $projectTerbaru = \App\Models\Project::latest()->first();
 
     return view('admin.dashboard', compact(

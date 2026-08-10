@@ -303,10 +303,6 @@
                         <strong>Web</strong>
                         <span>Based</span>
                     </div>
-                    <div>
-                        <strong>UI</strong>
-                        <span>Premium</span>
-                    </div>
                 </div>
             </div>
 

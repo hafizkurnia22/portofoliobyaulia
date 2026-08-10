@@ -14,6 +14,7 @@
             'show_profile' => $cvOptions['show_profile'] ? 1 : 0,
             'show_skills' => $cvOptions['show_skills'] ? 1 : 0,
             'show_experience' => $cvOptions['show_experience'] ? 1 : 0,
+            'show_projects' => $cvOptions['show_projects'] ? 1 : 0,
             'show_certifications' => $cvOptions['show_certifications'] ? 1 : 0,
         ];
     @endphp
@@ -85,6 +86,11 @@
                             <label class="cv-builder-check">
                                 <input type="checkbox" name="show_experience" value="1" @checked($cvOptions['show_experience'])>
                                 <span>Pengalaman kerja</span>
+                            </label>
+
+                            <label class="cv-builder-check">
+                                <input type="checkbox" name="show_projects" value="1" @checked($cvOptions['show_projects'])>
+                                <span>Project pilihan</span>
                             </label>
 
                             <label class="cv-builder-check">
@@ -197,6 +203,68 @@
                             </div>
                         @endif
 
+                        @if ($cvOptions['show_projects'])
+                            <div class="cv-preview-section">
+                                <h3>Project Pilihan</h3>
+
+                                <div class="cv-preview-project-grid">
+                                    @forelse ($projects as $project)
+                                        @php
+                                            $techList = collect(explode(',', $project->teknologi ?? ''))
+                                                ->map(function ($tech) {
+                                                    return trim($tech);
+                                                })
+                                                ->filter()
+                                                ->take(6);
+                                        @endphp
+
+                                        <div class="cv-preview-project">
+                                            <div class="cv-preview-project-head">
+                                                <div>
+                                                    <strong>{{ $project->nama_project }}</strong>
+
+                                                    @if (!empty($project->kategori))
+                                                        <small>{{ $project->kategori }}</small>
+                                                    @endif
+                                                </div>
+
+                                                @if (!empty($project->status))
+                                                    <span>{{ $project->status }}</span>
+                                                @endif
+                                            </div>
+
+                                            @if (!empty($project->deskripsi))
+                                                <p>{{ $project->deskripsi }}</p>
+                                            @endif
+
+                                            @if ($techList->isNotEmpty())
+                                                <div class="cv-preview-project-tech">
+                                                    @foreach ($techList as $tech)
+                                                        <span>{{ $tech }}</span>
+                                                    @endforeach
+                                                </div>
+                                            @endif
+
+                                            @if (!empty($project->link_demo) || !empty($project->link_repository))
+                                                <div class="cv-preview-project-links">
+                                                    @if (!empty($project->link_demo))
+                                                        <a href="{{ $project->link_demo }}" target="_blank"
+                                                            rel="noopener">Demo</a>
+                                                    @endif
+
+                                                    @if (!empty($project->link_repository))
+                                                        <a href="{{ $project->link_repository }}" target="_blank"
+                                                            rel="noopener">Repository</a>
+                                                    @endif
+                                                </div>
+                                            @endif
+                                        </div>
+                                    @empty
+                                        <p>Belum ada project.</p>
+                                    @endforelse
+                                </div>
+                            </div>
+                        @endif
                         @if ($cvOptions['show_certifications'])
                             <div class="cv-preview-section">
                                 <h3>Sertifikasi</h3>

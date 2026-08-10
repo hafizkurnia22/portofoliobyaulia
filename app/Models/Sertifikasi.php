@@ -15,4 +15,13 @@ class Sertifikasi extends Model
         'deskripsi',
         'file_pdf',
     ];
+
+    public function scopeByLatestYear($query)
+    {
+        return $query
+            ->orderByRaw("
+                CAST(COALESCE(NULLIF(RIGHT(REGEXP_REPLACE(tahun, '[^0-9]', ''), 4), ''), '0') AS UNSIGNED) DESC
+            ")
+            ->latest();
+    }
 }
