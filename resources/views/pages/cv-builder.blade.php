@@ -269,21 +269,25 @@
                             <div class="cv-preview-section">
                                 <h3>Sertifikasi</h3>
 
-                                @forelse ($sertifikasi as $item)
-                                    <div class="cv-preview-item">
-                                        <div class="cv-preview-item-title">
-                                            {{ $item->nama_sertifikat }}
-                                            <span>{{ $item->penyelenggara }}</span>
-                                        </div>
-                                        <small>{{ $item->tahun }}</small>
+                                <div class="cv-preview-cert-grid">
+                                    @forelse ($sertifikasi as $item)
+                                        <article class="cv-preview-cert-card">
+                                            <div class="cv-preview-cert-mark">
+                                                <i class="bi bi-patch-check-fill"></i>
+                                            </div>
 
-                                        @if (!empty($item->deskripsi))
-                                            <p>{{ $item->deskripsi }}</p>
-                                        @endif
-                                    </div>
-                                @empty
-                                    <p>Belum ada sertifikasi.</p>
-                                @endforelse
+                                            <div class="cv-preview-cert-content">
+                                                <h4>{{ $item->nama_sertifikat }}</h4>
+                                                <p>{{ $item->penyelenggara }}</p>
+                                            </div>
+                                        </article>
+                                    @empty
+                                        <div class="cv-preview-cert-empty">
+                                            <i class="bi bi-patch-question-fill"></i>
+                                            <span>Belum ada sertifikasi.</span>
+                                        </div>
+                                    @endforelse
+                                </div>
                             </div>
                         @endif
                     </div>

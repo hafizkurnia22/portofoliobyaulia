@@ -1999,6 +1999,110 @@ body:has(.cv-builder-page) .custom-navbar {
     font-weight: 900;
     text-decoration: none;
 }
+
+.cv-preview-cert-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.cv-preview-cert-card {
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    min-height: 106px;
+    padding: 14px;
+    background: linear-gradient(135deg, #ffffff 0%, var(--cv-soft) 185%);
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    border-left: 5px solid var(--cv-secondary);
+    border-radius: 8px;
+    box-shadow: 0 14px 32px rgba(11, 31, 58, 0.08);
+}
+
+.cv-preview-cert-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+        linear-gradient(115deg, transparent 0%, rgba(255, 255, 255, 0.72) 42%, transparent 58%),
+        radial-gradient(circle at top right, rgba(255, 255, 255, 0.74), transparent 34%);
+    opacity: 0.55;
+    pointer-events: none;
+}
+
+.cv-preview-cert-mark,
+.cv-preview-cert-content {
+    position: relative;
+}
+
+.cv-preview-cert-mark {
+    width: 42px;
+    height: 42px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 42px;
+    background: linear-gradient(135deg, var(--cv-primary), var(--cv-secondary));
+    color: #ffffff;
+    border-radius: 50%;
+    box-shadow: 0 10px 22px rgba(11, 31, 58, 0.18);
+}
+
+.cv-preview-cert-mark i {
+    font-size: 18px;
+}
+
+.cv-preview-cert-content {
+    min-width: 0;
+}
+
+.cv-preview-cert-content h4 {
+    color: #0f172a;
+    font-size: 15px;
+    font-weight: 900;
+    line-height: 1.35;
+    margin: 0;
+}
+
+.cv-preview-cert-content p {
+    display: inline-flex;
+    width: fit-content;
+    max-width: 100%;
+    margin: 8px 0 0;
+    padding: 5px 10px;
+    background: rgba(255, 255, 255, 0.78);
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    border-radius: 999px;
+    color: var(--cv-primary);
+    font-size: 12px;
+    font-weight: 900;
+    line-height: 1.35;
+    text-align: left;
+}
+
+.cv-preview-cert-empty {
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px;
+    background: var(--cv-soft);
+    color: var(--cv-primary);
+    border-radius: 8px;
+    font-weight: 800;
+}
+
+@media (max-width: 768px) {
+    .cv-preview-cert-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .cv-preview-cert-card {
+        min-height: auto;
+    }
+}
 /* CERTIFICATE SHOWCASE PREMIUM */
 #sertifikasi {
     position: relative;

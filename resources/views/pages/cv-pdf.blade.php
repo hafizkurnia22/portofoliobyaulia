@@ -252,6 +252,65 @@
             font-size: 9.5px;
             font-weight: bold;
         }
+
+        .cert-grid {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 6px 8px;
+            margin-left: -6px;
+            margin-right: -6px;
+        }
+
+        .cert-cell {
+            width: 50%;
+            vertical-align: top;
+        }
+
+        .cert-card {
+            border: 1px solid #e5e7eb;
+            border-left: 4px solid {{ $colors['secondary'] }};
+            border-radius: 8px;
+            padding: 9px 10px;
+            background: {{ $colors['soft'] }};
+            page-break-inside: avoid;
+        }
+
+        .cert-inner {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .cert-icon-cell {
+            width: 28px;
+            vertical-align: top;
+        }
+
+        .cert-badge {
+            width: 22px;
+            height: 22px;
+            line-height: 22px;
+            text-align: center;
+            border-radius: 50%;
+            background: {{ $colors['primary'] }};
+            color: #ffffff;
+            font-size: 10px;
+            font-weight: bold;
+        }
+
+        .cert-name {
+            color: #0f172a;
+            font-size: 11px;
+            font-weight: bold;
+            line-height: 1.35;
+            margin-bottom: 4px;
+        }
+
+        .cert-org {
+            color: {{ $colors['primary'] }};
+            font-size: 9.5px;
+            font-weight: bold;
+            line-height: 1.35;
+        }
         .footer-note {
             margin-top: 16px;
             text-align: center;
@@ -444,25 +503,37 @@
     <div class="section">
         <div class="section-title">SERTIFIKASI</div>
 
-        @forelse ($sertifikasi as $item)
-            <div class="item">
-                <div class="item-title">
-                    {{ $item->nama_sertifikat }}
-                </div>
+        @if ($sertifikasi->isNotEmpty())
+            <table class="cert-grid">
+                @foreach ($sertifikasi->chunk(2) as $row)
+                    <tr>
+                        @foreach ($row as $item)
+                            <td class="cert-cell">
+                                <div class="cert-card">
+                                    <table class="cert-inner">
+                                        <tr>
+                                            <td class="cert-icon-cell">
+                                                <div class="cert-badge">&#10003;</div>
+                                            </td>
+                                            <td>
+                                                <div class="cert-name">{{ $item->nama_sertifikat }}</div>
+                                                <div class="cert-org">{{ $item->penyelenggara }}</div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </td>
+                        @endforeach
 
-                <div class="period">
-                    {{ $item->penyelenggara }} - {{ $item->tahun }}
-                </div>
-
-                @if (!empty($item->deskripsi))
-                    <div class="desc">
-                        {{ $item->deskripsi }}
-                    </div>
-                @endif
-            </div>
-        @empty
+                        @if ($row->count() < 2)
+                            <td class="cert-cell"></td>
+                        @endif
+                    </tr>
+                @endforeach
+            </table>
+        @else
             <p>Belum ada sertifikasi.</p>
-        @endforelse
+        @endif
     </div>
     @endif
 
