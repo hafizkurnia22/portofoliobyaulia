@@ -2,8 +2,10 @@
 
 namespace App\Providers;
 
+use App\Models\TentangSaya;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Facades\View;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -21,5 +23,11 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Paginator::useBootstrapFive();
+
+        try {
+            View::share('tentangSaya', TentangSaya::first());
+        } catch (\Throwable $exception) {
+            View::share('tentangSaya', null);
+        }
     }
 }

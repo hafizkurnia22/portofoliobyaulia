@@ -575,9 +575,13 @@
                                     </div>
 
                                     <div class="col-md-6 mb-3">
-                                        <label>Status</label>
+                                        <label>Status / Availability</label>
                                         <input type="text" name="status" class="form-control"
+                                            placeholder="Contoh: Open for freelance / Ready for collaboration"
                                             value="{{ old('status', $tentangSaya->status ?? '') }}">
+                                        <small class="text-muted">
+                                            Teks ini tampil sebagai Live Availability Badge di website.
+                                        </small>
                                     </div>
 
                                     <div class="col-md-6 mb-3">

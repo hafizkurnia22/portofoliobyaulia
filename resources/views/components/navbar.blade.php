@@ -1,10 +1,17 @@
+@php
+    $availabilityText = trim($tentangSaya->status ?? 'Open for Collaboration');
+@endphp
+
 <nav class="navbar navbar-expand-xl custom-navbar fixed-top" data-aos="fade-down">
     <div class="container">
         <a class="navbar-brand brand-premium" href="{{ url('/') }}">
             <span class="brand-logo-shell">
                 <img src="{{ asset('images/logo-mhk.png') }}" class="brand-logo-img" alt="MHK Logo">
             </span>
-            <span class="brand-text-shine">Hafiz's Portofolio</span>
+            <span class="brand-copy-stack">
+                <span class="brand-text-shine brand-text-top">Hafiz's</span>
+                <span class="brand-text-shine brand-text-bottom">Portofolio</span>
+            </span>
         </a>
 
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMenu"
@@ -43,18 +50,46 @@
                     </a>
                 </li>
 
-                <li class="nav-item">
-                    <a class="nav-link nav-scroll-link" href="{{ url('/#sertifikasi') }}" data-section="sertifikasi">
-                        <i class="bi bi-award"></i>
-                        Sertifikasi
-                    </a>
-                </li>
+                <li class="nav-item dropdown">
+                    <button class="nav-link dropdown-toggle nav-more-toggle" type="button" data-bs-toggle="dropdown"
+                        aria-expanded="false">
+                        <i class="bi bi-grid"></i>
+                        Lainnya
+                    </button>
 
-                <li class="nav-item">
-                    <a class="nav-link nav-scroll-link" href="{{ url('/#tentang') }}" data-section="tentang">
-                        <i class="bi bi-person"></i>
-                        Tentang Saya
-                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end premium-dropdown-menu">
+                        @if ($availabilityText !== '')
+                            <li>
+                                <button type="button" class="dropdown-item premium-dropdown-status"
+                                    data-bs-toggle="modal" data-bs-target="#smartContactModal">
+                                    <span class="availability-live-dot"></span>
+                                    <span>
+                                        <small>Availability</small>
+                                        <strong>{{ $availabilityText }}</strong>
+                                    </span>
+                                </button>
+                            </li>
+
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                        @endif
+
+                        <li>
+                            <a class="dropdown-item nav-scroll-link" href="{{ url('/#sertifikasi') }}"
+                                data-section="sertifikasi">
+                                <i class="bi bi-award"></i>
+                                Sertifikasi
+                            </a>
+                        </li>
+
+                        <li>
+                            <a class="dropdown-item nav-scroll-link" href="{{ url('/#tentang') }}" data-section="tentang">
+                                <i class="bi bi-person"></i>
+                                Tentang Saya
+                            </a>
+                        </li>
+                    </ul>
                 </li>
 
                 {{-- Menu ini menggantikan download langsung agar pengunjung bisa memilih template CV dulu. --}}
@@ -95,6 +130,7 @@
 
     const sections = document.querySelectorAll('section[id]');
     const navLinks = document.querySelectorAll('.nav-scroll-link');
+    const moreToggle = document.querySelector('.nav-more-toggle');
 
     function setActiveNav() {
         let currentSection = 'home';
@@ -110,6 +146,10 @@
         navLinks.forEach(function(link) {
             link.classList.toggle('active', link.dataset.section === currentSection);
         });
+
+        if (moreToggle) {
+            moreToggle.classList.toggle('active', ['sertifikasi', 'tentang'].includes(currentSection));
+        }
     }
 
     setActiveNav();
