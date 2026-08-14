@@ -3,6 +3,9 @@
 @section('title', 'Beranda | Portfolio CV')
 
 @section('content')
+    @php
+        $availabilityText = trim($tentangSaya->status ?? 'Open for Collaboration');
+    @endphp
 
     <!-- Hero Carousel -->
     <section id="home" class="hero-section d-flex align-items-center" data-aos="fade-up">
@@ -14,6 +17,16 @@
                     <div class="carousel-item active">
                         <div class="row align-items-center">
                             <div class="col-md-7" data-aos="fade-right" data-aos-delay="200">
+                                @if ($availabilityText !== '')
+                                    <button type="button" class="hero-availability-card" data-bs-toggle="modal"
+                                        data-bs-target="#smartContactModal">
+                                        <span class="availability-live-dot"></span>
+                                        <span>Live Availability</span>
+                                        <strong>{{ $availabilityText }}</strong>
+                                        <i class="bi bi-arrow-up-right"></i>
+                                    </button>
+                                @endif
+
                                 <h1>
                                     Halo, Saya {{ $tentangSaya->nama ?? 'Nama Anda' }}
                                 </h1>
@@ -505,18 +518,31 @@
     </section>
 
     <!-- Contact CTA -->
-    <section class="section-padding contact-cta text-center">
+    <section class="section-padding contact-cta premium-contact-cta text-center">
         <div class="container" data-aos="zoom-in">
-            <h2 class="fw-bold">Tertarik Bekerja Sama?</h2>
+            <span class="contact-cta-kicker">
+                <span class="availability-live-dot"></span>
+                Smart Contact
+            </span>
+
+            <h2 class="fw-bold">Mulai Percakapan yang Tepat</h2>
             <p class="mt-3">
-                Silakan hubungi saya untuk informasi lebih lanjut mengenai profil, pengalaman, dan portofolio saya.
+                Pilih tujuan kontak agar pesan WhatsApp langsung rapi, profesional, dan sesuai kebutuhan Anda.
             </p>
-            <a href="https://wa.me/{{ $tentangSaya->whatsapp ?? '' }}" target="_blank" class="btn btn-main">
+
+            <div class="contact-intent-preview" aria-hidden="true">
+                <span><i class="bi bi-briefcase-fill"></i> Rekrutmen</span>
+                <span><i class="bi bi-stars"></i> Kerja Sama</span>
+                <span><i class="bi bi-file-earmark-person-fill"></i> Minta CV</span>
+            </div>
+
+            <button type="button" class="btn btn-main contact-intent-button" data-bs-toggle="modal"
+                data-bs-target="#smartContactModal">
 
                 <i class="bi bi-whatsapp"></i>
-                Hubungi Saya
+                Pilih Tujuan Kontak
 
-            </a>
+            </button>
         </div>
     </section>
 
