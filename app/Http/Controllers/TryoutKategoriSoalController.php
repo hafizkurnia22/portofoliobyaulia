@@ -28,11 +28,17 @@ class TryoutKategoriSoalController extends Controller
 
     public function destroy($id)
     {
-        $kategori = TryoutKategoriSoal::withCount('soals')->findOrFail($id);
+        $kategori = TryoutKategoriSoal::withCount(['soals', 'materis'])->findOrFail($id);
 
         if ($kategori->soals_count > 0) {
             return redirect('/admin/dashboard')
                 ->with('error', 'Kategori masih digunakan oleh soal')
+                ->with('active_tab', 'master-kategori-soal');
+        }
+
+        if ($kategori->materis_count > 0) {
+            return redirect('/admin/dashboard')
+                ->with('error', 'Kategori masih digunakan oleh materi ujian')
                 ->with('active_tab', 'master-kategori-soal');
         }
 

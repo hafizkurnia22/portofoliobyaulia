@@ -3,6 +3,19 @@
 @section('title', 'Tryout CAT CPNS')
 
 @section('content')
+    @php
+        $tryoutMode = request('mode', 'menu');
+        $tryoutMode = in_array($tryoutMode, ['menu', 'ujian', 'materi'], true) ? $tryoutMode : 'menu';
+        $showExam = $tryoutMode === 'ujian';
+        $showMateri = $tryoutMode === 'materi';
+        $materiKategori = ['TWK', 'TIU', 'TKP'];
+        $allMateri = isset($materiTryout)
+            ? $materiTryout->flatten(1)->sortBy(fn ($materi) => optional($materi->kategoriSoal)->kode . $materi->judul)->values()
+            : collect();
+        $kategoriMateriOptions = $allMateri->map(fn ($materi) => optional($materi->kategoriSoal)->kode ?? 'LAIN')->unique()->values();
+        $hasMateri = $allMateri->isNotEmpty();
+    @endphp
+
     <section class="tryout-page">
         <div class="container">
             <div class="tryout-header" data-aos="fade-down">
@@ -25,35 +38,73 @@
                 </div>
             </div>
 
-            <div class="tryout-history-card" id="tryoutHistoryCard" data-aos="fade-up">
-                <div class="tryout-history-header">
-                    <div>
-                        <span>Riwayat Saya</span>
-                        <h2>Riwayat mengikuti tryout</h2>
+            @if ($tryoutMode === 'menu')
+                <div class="tryout-choice-grid" data-aos="fade-up">
+                    <a href="{{ route('tryout.index', ['mode' => 'ujian']) }}" class="tryout-choice-card">
+                        <span><i class="bi bi-display"></i></span>
+                        <strong>Mulai Ujian</strong>
+                        <small>Masuk ke simulasi CAT CPNS dan kerjakan soal aktif yang sudah disiapkan admin.</small>
+                    </a>
+
+                    <a href="{{ route('tryout.index', ['mode' => 'materi']) }}" class="tryout-choice-card">
+                        <span><i class="bi bi-journal-bookmark"></i></span>
+                        <strong>Materi Ujian</strong>
+                        <small>Baca pembahasan pembelajaran untuk TIU, TWK, dan TKP sebelum mulai latihan.</small>
+                    </a>
+                </div>
+            @else
+                <div class="tryout-mode-actions" data-aos="fade-up">
+                    <a href="{{ route('tryout.index') }}" class="cat-action-btn cat-action-secondary">
+                        <i class="bi bi-grid"></i>
+                        Pilihan Tryout
+                    </a>
+
+                    @if ($showExam)
+                        <a href="{{ route('tryout.index', ['mode' => 'materi']) }}" class="cat-action-btn">
+                            <i class="bi bi-journal-bookmark"></i>
+                            Materi Ujian
+                        </a>
+                    @else
+                        <a href="{{ route('tryout.index', ['mode' => 'ujian']) }}" class="cat-action-btn">
+                            <i class="bi bi-display"></i>
+                            Mulai Ujian
+                        </a>
+                    @endif
+                </div>
+            @endif
+
+            @if (!$showMateri)
+                <div class="tryout-history-card" id="tryoutHistoryCard" data-aos="fade-up">
+                    <div class="tryout-history-header">
+                        <div>
+                            <span>Riwayat Saya</span>
+                            <h2>Riwayat mengikuti tryout</h2>
+                        </div>
+                    </div>
+
+                    <div class="tryout-history-list" id="tryoutHistoryList">
+                        @forelse ($riwayatTryout as $riwayat)
+                            <div class="tryout-history-item">
+                                <div>
+                                    <strong>{{ $riwayat->finished_at ? $riwayat->finished_at->format('d M Y H:i') : '-' }}</strong>
+                                    <small>{{ $riwayat->total_dijawab }}/{{ $riwayat->total_soal }} dijawab, {{ $riwayat->total_benar }} benar</small>
+                                </div>
+
+                                <span>
+                                    <small>Skor</small>
+                                    {{ $riwayat->total_skor }}
+                                </span>
+                            </div>
+                        @empty
+                            <div class="tryout-history-empty" id="tryoutHistoryEmpty">
+                                Belum ada riwayat tryout.
+                            </div>
+                        @endforelse
                     </div>
                 </div>
+            @endif
 
-                <div class="tryout-history-list" id="tryoutHistoryList">
-                    @forelse ($riwayatTryout as $riwayat)
-                        <div class="tryout-history-item">
-                            <div>
-                                <strong>{{ $riwayat->finished_at ? $riwayat->finished_at->format('d M Y H:i') : '-' }}</strong>
-                                <small>{{ $riwayat->total_dijawab }}/{{ $riwayat->total_soal }} dijawab, {{ $riwayat->total_benar }} benar</small>
-                            </div>
-
-                            <span>
-                                <small>Skor</small>
-                                {{ $riwayat->total_skor }}
-                            </span>
-                        </div>
-                    @empty
-                        <div class="tryout-history-empty" id="tryoutHistoryEmpty">
-                            Belum ada riwayat tryout.
-                        </div>
-                    @endforelse
-                </div>
-            </div>
-            @if ($riwayatTryout->isNotEmpty())
+            @if ($riwayatTryout->isNotEmpty() && !$showMateri)
                 <script>
                     document.addEventListener('DOMContentLoaded', function() {
                         const historyList = document.getElementById('tryoutHistoryList');
@@ -67,79 +118,245 @@
                 </script>
             @endif
 
-            @if ($soals->isEmpty())
-                <div class="tryout-empty-state" data-aos="fade-up">
-                    <i class="bi bi-journal-plus"></i>
-                    <h3>Belum ada soal aktif</h3>
-                    <p>Silakan input soal dari menu Admin Tryout > Master Soal.</p>
+            @if ($showMateri)
+                <div class="tryout-materi-section" data-aos="fade-up">
+                    <div class="tryout-materi-heading">
+                        <span>Materi Ujian</span>
+                        <h2>Pembahasan Pembelajaran CAT CPNS</h2>
+                    </div>
+
+                    @if ($hasMateri)
+                        <div class="tryout-materi-toolbar">
+                            <div class="tryout-materi-search">
+                                <i class="bi bi-search"></i>
+                                <input type="search" id="materiSearchInput" placeholder="Cari judul atau ringkasan materi...">
+                            </div>
+
+                            <select id="materiFilterSelect" class="tryout-materi-filter" aria-label="Filter jenis materi">
+                                <option value="">Semua jenis materi</option>
+                                @foreach ($kategoriMateriOptions as $kodeKategori)
+                                    <option value="{{ $kodeKategori }}">{{ $kodeKategori }}</option>
+                                @endforeach
+                            </select>
+
+                            <select id="materiSortSelect" class="tryout-materi-filter" aria-label="Urutkan materi">
+                                <option value="kategori-asc">Jenis A-Z</option>
+                                <option value="kategori-desc">Jenis Z-A</option>
+                                <option value="judul-asc">Judul A-Z</option>
+                                <option value="judul-desc">Judul Z-A</option>
+                            </select>
+                        </div>
+
+                        <div class="tryout-materi-table-card">
+                            <div class="table-responsive">
+                                <table class="tryout-materi-table" id="materiTable">
+                                    <thead>
+                                        <tr>
+                                            <th>No</th>
+                                            <th>Jenis Materi</th>
+                                            <th>Judul Materi</th>
+                                            <th>Ringkasan</th>
+                                            <th>Aksi</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="materiTableBody">
+                                        @foreach ($allMateri as $materi)
+                                            @php
+                                                $kodeKategori = $materi->kategoriSoal->kode ?? 'LAIN';
+                                                $namaKategori = $materi->kategoriSoal->nama ?? 'Materi Tambahan';
+                                                $ringkasanMateri = $materi->ringkasan ?: $materi->isi_materi;
+                                            @endphp
+                                            <tr data-category="{{ $kodeKategori }}"
+                                                data-title="{{ \Illuminate\Support\Str::lower($materi->judul) }}"
+                                                data-summary="{{ \Illuminate\Support\Str::lower(strip_tags($ringkasanMateri)) }}">
+                                                <td class="materi-row-number">{{ $loop->iteration }}</td>
+                                                <td>
+                                                    <span class="tryout-materi-code">
+                                                        {{ $kodeKategori }}
+                                                    </span>
+                                                    <small>{{ $namaKategori }}</small>
+                                                </td>
+                                                <td>
+                                                    <strong>{{ $materi->judul }}</strong>
+                                                </td>
+                                                <td>{{ \Illuminate\Support\Str::limit(strip_tags($ringkasanMateri), 120) }}</td>
+                                                <td>
+                                                    <a href="{{ route('tryout.materi.show', $materi) }}" class="tryout-detail-btn">
+                                                        <i class="bi bi-eye"></i>
+                                                        Detail
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="tryout-materi-table-empty d-none" id="materiTableEmpty">
+                            Materi tidak ditemukan.
+                        </div>
+                    @else
+                        <div class="tryout-empty-state">
+                            <i class="bi bi-journal-plus"></i>
+                            <h3>Belum ada materi aktif</h3>
+                            <p>Silakan input materi dari menu Admin Tryout > Master Materi.</p>
+                        </div>
+                    @endif
                 </div>
-            @else
-                <div class="cat-shell" data-aos="fade-up">
-                    <aside class="cat-sidebar">
-                        <div class="cat-timer">
-                            <span>Sisa Waktu</span>
-                            <strong id="catTimer">00:00:00</strong>
-                        </div>
+            @endif
 
-                        <div class="cat-summary-grid">
-                            <div>
-                                <strong id="answeredCount">0</strong>
-                                <span>Terjawab</span>
+            @if ($showMateri && $hasMateri)
+                <script>
+                    document.addEventListener('DOMContentLoaded', function() {
+                        const searchInput = document.getElementById('materiSearchInput');
+                        const filterSelect = document.getElementById('materiFilterSelect');
+                        const sortSelect = document.getElementById('materiSortSelect');
+                        const tableBody = document.getElementById('materiTableBody');
+                        const emptyState = document.getElementById('materiTableEmpty');
+
+                        if (!searchInput || !filterSelect || !sortSelect || !tableBody || !emptyState) {
+                            return;
+                        }
+
+                        const rows = Array.from(tableBody.querySelectorAll('tr'));
+
+                        function normalize(value) {
+                            return String(value || '').toLowerCase().trim();
+                        }
+
+                        function sortRows(items) {
+                            const sortMode = sortSelect.value;
+
+                            return items.sort(function(first, second) {
+                                const firstCategory = first.dataset.category || '';
+                                const secondCategory = second.dataset.category || '';
+                                const firstTitle = first.dataset.title || '';
+                                const secondTitle = second.dataset.title || '';
+
+                                if (sortMode === 'kategori-desc') {
+                                    return secondCategory.localeCompare(firstCategory) || secondTitle.localeCompare(firstTitle);
+                                }
+
+                                if (sortMode === 'judul-asc') {
+                                    return firstTitle.localeCompare(secondTitle);
+                                }
+
+                                if (sortMode === 'judul-desc') {
+                                    return secondTitle.localeCompare(firstTitle);
+                                }
+
+                                return firstCategory.localeCompare(secondCategory) || firstTitle.localeCompare(secondTitle);
+                            });
+                        }
+
+                        function applyTableControls() {
+                            const keyword = normalize(searchInput.value);
+                            const category = filterSelect.value;
+                            let visibleIndex = 0;
+
+                            sortRows(rows).forEach(function(row) {
+                                const matchesCategory = category === '' || row.dataset.category === category;
+                                const searchableText = `${row.dataset.category} ${row.dataset.title} ${row.dataset.summary}`;
+                                const matchesSearch = keyword === '' || normalize(searchableText).includes(keyword);
+                                const isVisible = matchesCategory && matchesSearch;
+
+                                row.classList.toggle('d-none', !isVisible);
+
+                                if (isVisible) {
+                                    visibleIndex += 1;
+                                    row.querySelector('.materi-row-number').textContent = visibleIndex;
+                                }
+
+                                tableBody.appendChild(row);
+                            });
+
+                            emptyState.classList.toggle('d-none', visibleIndex > 0);
+                        }
+
+                        searchInput.addEventListener('input', applyTableControls);
+                        filterSelect.addEventListener('change', applyTableControls);
+                        sortSelect.addEventListener('change', applyTableControls);
+                        applyTableControls();
+                    });
+                </script>
+            @endif
+
+            @if ($showExam)
+                @if ($soals->isEmpty())
+                    <div class="tryout-empty-state" data-aos="fade-up">
+                        <i class="bi bi-journal-plus"></i>
+                        <h3>Belum ada soal aktif</h3>
+                        <p>Silakan input soal dari menu Admin Tryout > Master Soal.</p>
+                    </div>
+                @else
+                    <div class="cat-shell" data-aos="fade-up">
+                        <aside class="cat-sidebar">
+                            <div class="cat-timer">
+                                <span>Sisa Waktu</span>
+                                <strong id="catTimer">00:00:00</strong>
                             </div>
-                            <div>
-                                <strong id="markedCount">0</strong>
-                                <span>Ragu</span>
-                            </div>
-                        </div>
 
-                        <div class="cat-number-grid" id="questionNav"></div>
-                    </aside>
-
-                    <div class="cat-main">
-                        <div class="cat-question-top">
-                            <div>
-                                <span class="cat-kategori" id="questionCategory">TWK</span>
-                                <h2 id="questionTitle">Soal 1</h2>
+                            <div class="cat-summary-grid">
+                                <div>
+                                    <strong id="answeredCount">0</strong>
+                                    <span>Terjawab</span>
+                                </div>
+                                <div>
+                                    <strong id="markedCount">0</strong>
+                                    <span>Ragu</span>
+                                </div>
                             </div>
 
-                            <button type="button" class="cat-mark-btn" id="markButton">
-                                <i class="bi bi-bookmark"></i>
-                                Ragu-ragu
-                            </button>
-                        </div>
+                            <div class="cat-number-grid" id="questionNav"></div>
+                        </aside>
 
-                        <p class="cat-question-text" id="questionText"></p>
+                        <div class="cat-main">
+                            <div class="cat-question-top">
+                                <div>
+                                    <span class="cat-kategori" id="questionCategory">TWK</span>
+                                    <h2 id="questionTitle">Soal 1</h2>
+                                </div>
 
-                        <div class="cat-options" id="questionOptions"></div>
+                                <button type="button" class="cat-mark-btn" id="markButton">
+                                    <i class="bi bi-bookmark"></i>
+                                    Ragu-ragu
+                                </button>
+                            </div>
 
-                        <div class="cat-actions">
-                            <button type="button" class="cat-action-btn cat-action-secondary" id="prevButton">
-                                <i class="bi bi-arrow-left"></i>
-                                Sebelumnya
-                            </button>
+                            <p class="cat-question-text" id="questionText"></p>
 
-                            <button type="button" class="cat-action-btn" id="nextButton">
-                                Selanjutnya
-                                <i class="bi bi-arrow-right"></i>
-                            </button>
+                            <div class="cat-options" id="questionOptions"></div>
 
-                            <button type="button" class="cat-action-btn cat-finish-btn" id="finishButton">
-                                <i class="bi bi-check-circle"></i>
-                                Selesai
-                            </button>
+                            <div class="cat-actions">
+                                <button type="button" class="cat-action-btn cat-action-secondary" id="prevButton">
+                                    <i class="bi bi-arrow-left"></i>
+                                    Sebelumnya
+                                </button>
 
-                            <button type="button" class="cat-action-btn cat-result-back-btn d-none" id="showResultButton">
-                                <i class="bi bi-clipboard2-check"></i>
-                                Lihat Hasil
-                            </button>
+                                <button type="button" class="cat-action-btn" id="nextButton">
+                                    Selanjutnya
+                                    <i class="bi bi-arrow-right"></i>
+                                </button>
+
+                                <button type="button" class="cat-action-btn cat-finish-btn" id="finishButton">
+                                    <i class="bi bi-check-circle"></i>
+                                    Selesai
+                                </button>
+
+                                <button type="button" class="cat-action-btn cat-result-back-btn d-none" id="showResultButton">
+                                    <i class="bi bi-clipboard2-check"></i>
+                                    Lihat Hasil
+                                </button>
+                            </div>
                         </div>
                     </div>
-                </div>
+                @endif
             @endif
         </div>
     </section>
 
-    @if ($soals->isNotEmpty())
+    @if ($showExam && $soals->isNotEmpty())
         <div class="modal fade cat-result-modal" id="catResultModal" tabindex="-1" aria-hidden="true"
             data-bs-backdrop="static" data-bs-keyboard="false">
             <div class="modal-dialog modal-dialog-centered">
@@ -157,7 +374,7 @@
                                 Review Jawaban
                             </button>
 
-                            <a href="{{ route('tryout.index') }}" class="cat-action-btn cat-action-secondary">
+                            <a href="{{ route('tryout.index', ['mode' => 'ujian']) }}" class="cat-action-btn cat-action-secondary">
                                 <i class="bi bi-arrow-repeat"></i>
                                 Kerjakan Lagi
                             </a>
@@ -175,7 +392,7 @@
                 let soals = [];
                 let currentIndex = 0;
                 let isReview = false;
-                let remainingSeconds = Math.max(rawSoals.length * 90, 900);
+                let remainingSeconds = Math.max(Number(@json((int) ($tryoutPengaturan->durasi_menit ?? 45))) * 60, 60);
                 const initialSeconds = remainingSeconds;
                 const startedAt = new Date().toISOString();
                 const shouldShuffleQuestions = @json((bool) $tryoutPengaturan->acak_soal);
@@ -432,7 +649,7 @@
                     let totalScore = 0;
                     let correctCount = 0;
 
-                    soals.forEach(function(soal, index) {
+                    soals.forEach(function(soal) {
                         const answer = answers[soal.id];
 
                         if (!answer) return;

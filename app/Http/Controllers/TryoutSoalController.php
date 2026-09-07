@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\TryoutKategoriSoal;
+use App\Models\TryoutMateri;
 use App\Models\TryoutPengaturan;
 use App\Models\TryoutPeserta;
 use App\Models\TryoutSoal;
@@ -17,24 +18,23 @@ class TryoutSoalController extends Controller
 {
     public function index()
     {
-        $peserta = TryoutPeserta::aktif()->find(session('tryout_peserta_id'));
+        $peserta = $this->authenticatedPeserta();
 
         if (!$peserta) {
-            session()->forget([
-                'tryout_peserta_id',
-                'tryout_peserta_username',
-                'tryout_peserta_nama',
-            ]);
+            $this->forgetTryoutSession();
 
             return redirect()->route('tryout.login');
         }
 
         $tryoutPengaturan = TryoutPengaturan::current();
         $riwayatTryout = $peserta->riwayats()->latest()->limit(5)->get();
-        $soals = TryoutSoal::aktif()
+        $materiTryout = TryoutMateri::aktif()
             ->with('kategoriSoal')
-            ->latest()
             ->get()
+            ->groupBy(function (TryoutMateri $materi) {
+                return $materi->kategoriSoal->kode ?? 'Lainnya';
+            });
+        $soals = $this->selectedSoals($tryoutPengaturan)
             ->map(function (TryoutSoal $soal) {
                 return [
                     'id' => $soal->id,
@@ -61,7 +61,32 @@ class TryoutSoalController extends Controller
                 ];
             });
 
-        return view('pages.tryout', compact('soals', 'tryoutPengaturan', 'peserta', 'riwayatTryout'));
+        return view('pages.tryout', compact('soals', 'tryoutPengaturan', 'peserta', 'riwayatTryout', 'materiTryout'));
+    }
+
+    public function materiDetail(TryoutMateri $materi)
+    {
+        $peserta = $this->authenticatedPeserta();
+
+        if (!$peserta) {
+            $this->forgetTryoutSession();
+
+            return redirect()->route('tryout.login');
+        }
+
+        if ($materi->status !== 'aktif') {
+            abort(404);
+        }
+
+        $materi->load('kategoriSoal');
+        $materiLainnya = TryoutMateri::aktif()
+            ->with('kategoriSoal')
+            ->where('id', '!=', $materi->id)
+            ->orderBy('judul')
+            ->limit(4)
+            ->get();
+
+        return view('pages.tryout-materi-detail', compact('materi', 'materiLainnya', 'peserta'));
     }
 
     public function store(Request $request)
@@ -458,5 +483,81 @@ class TryoutSoalController extends Controller
         arsort($scores);
 
         return array_key_first($scores);
+    }
+
+    private function selectedSoals(TryoutPengaturan $pengaturan)
+    {
+        $jumlahSoal = max((int) ($pengaturan->jumlah_soal ?? 30), 1);
+        $soals = TryoutSoal::aktif()
+            ->with('kategoriSoal')
+            ->latest()
+            ->get();
+
+        if (!$pengaturan->acak_soal) {
+            return $soals->take($jumlahSoal)->values();
+        }
+
+        if ($soals->count() <= $jumlahSoal) {
+            return $soals->shuffle()->values();
+        }
+
+        if (!$pengaturan->acak_seimbang_kategori) {
+            return $soals->shuffle()->take($jumlahSoal)->values();
+        }
+
+        return $this->balancedRandomSoals($soals, $jumlahSoal);
+    }
+
+    private function balancedRandomSoals($soals, int $jumlahSoal)
+    {
+        $groups = $soals
+            ->groupBy(function (TryoutSoal $soal) {
+                return $soal->kategoriSoal->kode ?? $soal->kategori ?? 'Lainnya';
+            })
+            ->filter(function ($group) {
+                return $group->isNotEmpty();
+            })
+            ->values()
+            ->shuffle()
+            ->values();
+
+        if ($groups->isEmpty()) {
+            return collect();
+        }
+
+        $perCategory = intdiv($jumlahSoal, $groups->count());
+        $remainder = $jumlahSoal % $groups->count();
+        $selected = collect();
+        $remaining = collect();
+
+        foreach ($groups as $index => $group) {
+            $take = $perCategory + ($index < $remainder ? 1 : 0);
+            $shuffledGroup = $group->shuffle()->values();
+
+            $selected = $selected->merge($shuffledGroup->take($take));
+            $remaining = $remaining->merge($shuffledGroup->slice($take));
+        }
+
+        if ($selected->count() < $jumlahSoal) {
+            $selected = $selected->merge(
+                $remaining->shuffle()->take($jumlahSoal - $selected->count())
+            );
+        }
+
+        return $selected->shuffle()->take($jumlahSoal)->values();
+    }
+
+    private function authenticatedPeserta(): ?TryoutPeserta
+    {
+        return TryoutPeserta::aktif()->find(session('tryout_peserta_id'));
+    }
+
+    private function forgetTryoutSession(): void
+    {
+        session()->forget([
+            'tryout_peserta_id',
+            'tryout_peserta_username',
+            'tryout_peserta_nama',
+        ]);
     }
 }

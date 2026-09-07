@@ -85,6 +85,42 @@ document.addEventListener('DOMContentLoaded', function () {
         applyScoringMode();
     });
 
+    // RICH TEXT EDITOR
+    document.querySelectorAll('[data-rich-editor]').forEach(editor => {
+        const toolbar = editor.querySelector('.rich-editor-toolbar');
+        const area = editor.querySelector('.rich-editor-area');
+        const input = editor.querySelector('.rich-editor-input');
+        const form = editor.closest('form');
+
+        if (!toolbar || !area || !input || !form) return;
+
+        toolbar.querySelectorAll('button[data-command]').forEach(button => {
+            button.addEventListener('click', function () {
+                const command = this.dataset.command;
+                let value = this.dataset.value || null;
+
+                area.focus();
+
+                if (command === 'createLink') {
+                    value = window.prompt('Masukkan link, contoh: https://example.com');
+
+                    if (!value) return;
+                }
+
+                document.execCommand(command, false, value);
+                input.value = area.innerHTML.trim();
+            });
+        });
+
+        area.addEventListener('input', function () {
+            input.value = area.innerHTML.trim();
+        });
+
+        form.addEventListener('submit', function () {
+            input.value = area.innerHTML.trim();
+        });
+    });
+
     // DARK MODE
     const toggle = document.getElementById('darkModeToggle');
     const body = document.body;

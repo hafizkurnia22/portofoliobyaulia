@@ -10,6 +10,7 @@ use App\Http\Controllers\SkillController;
 use App\Http\Controllers\TentangSayaController;
 use App\Http\Controllers\TryoutAuthController;
 use App\Http\Controllers\TryoutKategoriSoalController;
+use App\Http\Controllers\TryoutMateriController;
 use App\Http\Controllers\TryoutPengaturanController;
 use App\Http\Controllers\TryoutPesertaController;
 use App\Http\Controllers\TryoutRiwayatController;
@@ -28,6 +29,7 @@ Route::get('/tryout/login', [TryoutAuthController::class, 'showLogin'])->name('t
 Route::post('/tryout/login', [TryoutAuthController::class, 'login'])->name('tryout.login.submit');
 Route::post('/tryout/logout', [TryoutAuthController::class, 'logout'])->name('tryout.logout');
 Route::get('/tryout', [TryoutSoalController::class, 'index'])->name('tryout.index');
+Route::get('/tryout/materi/{materi}', [TryoutSoalController::class, 'materiDetail'])->name('tryout.materi.show');
 Route::post('/tryout/riwayat', [TryoutRiwayatController::class, 'store'])->name('tryout.riwayat.store');
 
 Route::get('/sertifikasi', function () {
@@ -71,6 +73,7 @@ Route::get('/admin/dashboard', function () {
     $tryoutPengaturan = \App\Models\TryoutPengaturan::current();
     $tryoutPeserta = \App\Models\TryoutPeserta::latest()->paginate(8, ['*'], 'tryout_peserta_page');
     $tryoutRiwayat = \App\Models\TryoutRiwayat::with('peserta')->latest()->paginate(10, ['*'], 'tryout_riwayat_page');
+    $tryoutMateri = \App\Models\TryoutMateri::with('kategoriSoal')->latest()->paginate(8, ['*'], 'tryout_materi_page');
     $tryoutSoal = \App\Models\TryoutSoal::with('kategoriSoal')->latest()->paginate(8, ['*'], 'tryout_soal_page');
     $tentangSaya = \App\Models\TentangSaya::first();
 
@@ -82,6 +85,7 @@ Route::get('/admin/dashboard', function () {
     $totalTryoutKategori = \App\Models\TryoutKategoriSoal::count();
     $totalTryoutPeserta = \App\Models\TryoutPeserta::count();
     $totalTryoutRiwayat = \App\Models\TryoutRiwayat::count();
+    $totalTryoutMateri = \App\Models\TryoutMateri::count();
 
     $rataSkill = \App\Models\Skill::avg('persentase') ?? 0;
 
@@ -100,6 +104,7 @@ Route::get('/admin/dashboard', function () {
         'tryoutPengaturan',
         'tryoutPeserta',
         'tryoutRiwayat',
+        'tryoutMateri',
         'tryoutSoal',
         'tentangSaya',
         'totalPengalaman',
@@ -110,6 +115,7 @@ Route::get('/admin/dashboard', function () {
         'totalTryoutKategori',
         'totalTryoutPeserta',
         'totalTryoutRiwayat',
+        'totalTryoutMateri',
         'rataSkill',
         'skillTertinggi',
         'sertifikasiTerbaru',
@@ -166,3 +172,6 @@ Route::delete('/hapus-tryout-peserta/{id}', [TryoutPesertaController::class, 'de
 Route::post('/simpan-tryout-kategori-soal', [TryoutKategoriSoalController::class, 'store']);
 Route::put('/update-tryout-kategori-soal/{id}', [TryoutKategoriSoalController::class, 'update']);
 Route::delete('/hapus-tryout-kategori-soal/{id}', [TryoutKategoriSoalController::class, 'destroy']);
+Route::post('/simpan-tryout-materi', [TryoutMateriController::class, 'store']);
+Route::put('/update-tryout-materi/{id}', [TryoutMateriController::class, 'update']);
+Route::delete('/hapus-tryout-materi/{id}', [TryoutMateriController::class, 'destroy']);

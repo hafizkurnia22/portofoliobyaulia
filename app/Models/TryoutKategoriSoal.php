@@ -18,6 +18,11 @@ class TryoutKategoriSoal extends Model
         return $this->hasMany(TryoutSoal::class);
     }
 
+    public function materis()
+    {
+        return $this->hasMany(TryoutMateri::class);
+    }
+
     public function scopeAktif($query)
     {
         return $query->where('status', 'aktif');

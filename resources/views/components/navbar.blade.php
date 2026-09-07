@@ -51,9 +51,9 @@
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link {{ request()->routeIs('tryout.index', 'tryout.login') ? 'active' : '' }}"
+                    <a class="nav-link {{ request()->routeIs('tryout.index', 'tryout.login', 'tryout.materi.show') ? 'active' : '' }}"
                         href="{{ route('tryout.index') }}">
-                        <i class="bi bi-ui-checks-grid"></i>
+                        <i class="bi bi-pc-display-horizontal"></i>
                         Tryout
                     </a>
                 </li>

@@ -90,6 +90,16 @@
                     </div>
                 </div>
 
+                <div class="col-xl col-md-6" data-aos="fade-up" data-aos-delay="550">
+                    <div class="admin-stat-card">
+                        <i class="bi bi-journal-bookmark-fill"></i>
+                        <div>
+                            <h4>{{ $totalTryoutMateri }}</h4>
+                            <p>Materi Ujian</p>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="col-xl col-md-6" data-aos="fade-up" data-aos-delay="600">
                     <div class="admin-stat-card">
                         <i class="bi bi-people-fill"></i>
@@ -170,6 +180,13 @@
                                     <a class="nav-link {{ $activeTab == 'master-kategori-soal' ? 'active' : '' }}"
                                         href="{{ url('/admin/dashboard?active_tab=master-kategori-soal') }}">
                                         <i class="bi bi-tags"></i> Master Kategori
+                                    </a>
+                                </li>
+
+                                <li class="nav-item">
+                                    <a class="nav-link {{ $activeTab == 'master-materi-tryout' ? 'active' : '' }}"
+                                        href="{{ url('/admin/dashboard?active_tab=master-materi-tryout') }}">
+                                        <i class="bi bi-journal-bookmark"></i> Master Materi
                                     </a>
                                 </li>
 
@@ -818,6 +835,106 @@
                         </div>
                     </div>
 
+                    {{-- TAB MASTER MATERI TRYOUT --}}
+                    <div class="tab-pane fade {{ $activeTab == 'master-materi-tryout' ? 'show active' : '' }}"
+                        id="master-materi-tryout-panel" role="tabpanel">
+
+                        <div class="admin-table-header" data-aos="fade-right">
+                            <div>
+                                <h5>Master Materi Ujian</h5>
+                                <p>Kelola pembahasan pembelajaran untuk materi TIU, TWK, dan TKP.</p>
+                            </div>
+
+                            <button type="button" class="btn-admin-add" data-bs-toggle="modal"
+                                data-bs-target="#tambahTryoutMateriModal">
+                                <i class="bi bi-plus-circle"></i> Tambah Materi
+                            </button>
+                        </div>
+
+                        @if ($activeTab == 'master-materi-tryout' && $errors->any())
+                            <div class="alert alert-danger rounded-4 mb-4">
+                                <strong>Materi belum tersimpan.</strong>
+                                <ul class="mb-0 mt-2">
+                                    @foreach ($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        @endif
+
+                        <div class="admin-search-box mb-3">
+                            <i class="bi bi-search"></i>
+                            <input type="text" class="form-control admin-live-search" data-target="tryout-materi-table"
+                                placeholder="Cari kategori, judul, ringkasan, atau status...">
+                        </div>
+
+                        <div class="table-responsive" data-aos="fade-up">
+                            <table class="table admin-table align-middle" id="tryout-materi-table">
+                                <thead>
+                                    <tr>
+                                        <th>No</th>
+                                        <th>Kategori</th>
+                                        <th>Judul</th>
+                                        <th>Ringkasan</th>
+                                        <th>Status</th>
+                                        <th>Aksi</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    @forelse($tryoutMateri as $item)
+                                        <tr>
+                                            <td>{{ $tryoutMateri->firstItem() + $loop->index }}</td>
+                                            <td>
+                                                <span class="admin-badge">{{ $item->kategoriSoal->kode ?? '-' }}</span>
+                                                <small class="d-block text-muted mt-1">
+                                                    {{ $item->kategoriSoal->nama ?? '-' }}
+                                                </small>
+                                            </td>
+                                            <td class="fw-semibold">{{ $item->judul }}</td>
+                                            <td class="admin-desc">
+                                                {{ \Illuminate\Support\Str::limit(strip_tags($item->ringkasan ?: $item->isi_materi), 110) }}
+                                            </td>
+                                            <td>
+                                                <span class="admin-status-badge {{ $item->status == 'aktif' ? 'active' : 'draft' }}">
+                                                    {{ ucfirst($item->status) }}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <div class="d-flex gap-2">
+                                                    <button type="button" class="btn-admin-edit" data-bs-toggle="modal"
+                                                        data-bs-target="#editTryoutMateriModal{{ $item->id }}">
+                                                        <i class="bi bi-pencil-square"></i>
+                                                    </button>
+
+                                                    <form action="/hapus-tryout-materi/{{ $item->id }}" method="POST"
+                                                        class="delete-form">
+                                                        @csrf
+                                                        @method('DELETE')
+
+                                                        <button type="button" class="btn-admin-delete btn-delete">
+                                                            <i class="bi bi-trash"></i>
+                                                        </button>
+                                                    </form>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    @empty
+                                        <tr>
+                                            <td colspan="6" class="text-center text-muted py-4">
+                                                Belum ada materi ujian
+                                            </td>
+                                        </tr>
+                                    @endforelse
+                                </tbody>
+                            </table>
+
+                            <div class="mt-4">
+                                {{ $tryoutMateri->appends(array_merge(request()->query(), ['active_tab' => 'master-materi-tryout']))->links() }}
+                            </div>
+                        </div>
+                    </div>
+
                     {{-- TAB MASTER PESERTA TRYOUT --}}
                     <div class="tab-pane fade {{ $activeTab == 'master-peserta-tryout' ? 'show active' : '' }}"
                         id="master-peserta-tryout-panel" role="tabpanel">
@@ -1003,8 +1120,28 @@
                             @csrf
 
                             <div>
-                                <h6>Pengaturan Acak Tryout</h6>
+                                <h6>Pengaturan Tryout</h6>
                                 <p>Pengaturan ini berlaku untuk peserta di halaman Tryout CAT CPNS.</p>
+                            </div>
+
+                            <div class="tryout-setting-fields">
+                                <div class="tryout-duration-control">
+                                    <label for="durasi_menit">Durasi Ujian</label>
+                                    <div>
+                                        <input type="number" id="durasi_menit" name="durasi_menit" class="form-control"
+                                            min="1" max="300" value="{{ old('durasi_menit', $tryoutPengaturan->durasi_menit ?? 45) }}" required>
+                                        <span>menit</span>
+                                    </div>
+                                </div>
+
+                                <div class="tryout-duration-control">
+                                    <label for="jumlah_soal">Jumlah Soal</label>
+                                    <div>
+                                        <input type="number" id="jumlah_soal" name="jumlah_soal" class="form-control"
+                                            min="1" max="500" value="{{ old('jumlah_soal', $tryoutPengaturan->jumlah_soal ?? 30) }}" required>
+                                        <span>soal</span>
+                                    </div>
+                                </div>
                             </div>
 
                             <div class="tryout-setting-toggles">
@@ -1017,6 +1154,14 @@
                                 </label>
 
                                 <label class="cat-toggle">
+                                    <input type="hidden" name="acak_seimbang_kategori" value="0">
+                                    <input type="checkbox" name="acak_seimbang_kategori" value="1"
+                                        {{ $tryoutPengaturan->acak_seimbang_kategori ? 'checked' : '' }}>
+                                    <span></span>
+                                    Seimbang Kategori
+                                </label>
+
+                                <label class="cat-toggle">
                                     <input type="hidden" name="acak_jawaban" value="0">
                                     <input type="checkbox" name="acak_jawaban" value="1"
                                         {{ $tryoutPengaturan->acak_jawaban ? 'checked' : '' }}>
@@ -1025,9 +1170,11 @@
                                 </label>
                             </div>
 
-                            <button type="submit" class="btn btn-primary">
-                                <i class="bi bi-save"></i> Simpan Pengaturan
-                            </button>
+                            <div class="tryout-setting-action">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="bi bi-save"></i> Simpan Pengaturan
+                                </button>
+                            </div>
                         </form>
 
                         <div class="tryout-import-card mb-4">
@@ -1668,6 +1815,92 @@
         </div>
     @endforeach
 
+    {{-- MODAL EDIT TRYOUT MATERI --}}
+    @foreach ($tryoutMateri as $item)
+        <div class="modal fade" id="editTryoutMateriModal{{ $item->id }}" tabindex="-1">
+            <div class="modal-dialog modal-xl modal-dialog-centered">
+                <div class="modal-content">
+                    <form action="/update-tryout-materi/{{ $item->id }}" method="POST">
+                        @csrf
+                        @method('PUT')
+                        <input type="hidden" name="active_tab" value="master-materi-tryout">
+
+                        <div class="modal-header">
+                            <h5 class="modal-title fw-bold">Edit Materi Ujian</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label">Kategori</label>
+                                    <select name="tryout_kategori_soal_id" class="form-control" required>
+                                        @foreach ($tryoutKategoriOptions as $kategori)
+                                            <option value="{{ $kategori->id }}"
+                                                {{ $item->tryout_kategori_soal_id == $kategori->id ? 'selected' : '' }}>
+                                                {{ $kategori->kode }} - {{ $kategori->nama }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+
+                                <div class="col-md-5 mb-3">
+                                    <label class="form-label">Judul Materi</label>
+                                    <input type="text" name="judul" class="form-control"
+                                        value="{{ $item->judul }}" required>
+                                </div>
+
+                                <div class="col-md-3 mb-3">
+                                    <label class="form-label">Status</label>
+                                    <select name="status" class="form-control" required>
+                                        <option value="aktif" {{ $item->status == 'aktif' ? 'selected' : '' }}>Aktif
+                                        </option>
+                                        <option value="draft" {{ $item->status == 'draft' ? 'selected' : '' }}>Draft
+                                        </option>
+                                    </select>
+                                </div>
+
+                                <div class="col-12 mb-3">
+                                    <label class="form-label">Ringkasan</label>
+                                    <textarea name="ringkasan" class="form-control" rows="3">{{ $item->ringkasan }}</textarea>
+                                </div>
+
+                                <div class="col-12 mb-3">
+                                    <label class="form-label">Isi Materi</label>
+                                    <div class="rich-editor" data-rich-editor>
+                                        <div class="rich-editor-toolbar">
+                                            <button type="button" data-command="bold"><i class="bi bi-type-bold"></i></button>
+                                            <button type="button" data-command="italic"><i class="bi bi-type-italic"></i></button>
+                                            <button type="button" data-command="underline"><i class="bi bi-type-underline"></i></button>
+                                            <button type="button" data-command="insertUnorderedList"><i class="bi bi-list-ul"></i></button>
+                                            <button type="button" data-command="insertOrderedList"><i class="bi bi-list-ol"></i></button>
+                                            <button type="button" data-command="formatBlock" data-value="h3"><i class="bi bi-type-h3"></i></button>
+                                            <button type="button" data-command="formatBlock" data-value="p"><i class="bi bi-paragraph"></i></button>
+                                            <button type="button" data-command="createLink"><i class="bi bi-link-45deg"></i></button>
+                                        </div>
+                                        <div class="rich-editor-area" contenteditable="true">
+                                            {!! \Illuminate\Support\Str::contains($item->isi_materi, '<') ? $item->isi_materi : nl2br(e($item->isi_materi)) !!}
+                                        </div>
+                                        <textarea name="isi_materi" class="rich-editor-input">{{ $item->isi_materi }}</textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                Batal
+                            </button>
+                            <button type="submit" class="btn btn-primary">
+                                Simpan Perubahan
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    @endforeach
+
     {{-- MODAL EDIT TRYOUT PESERTA --}}
     @foreach ($tryoutPeserta as $item)
         <div class="modal fade" id="editTryoutPesertaModal{{ $item->id }}" tabindex="-1">
@@ -2131,6 +2364,89 @@
                         </button>
                         <button type="submit" class="btn btn-primary">
                             Simpan Kategori
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    {{-- MODAL TAMBAH TRYOUT MATERI --}}
+    <div class="modal fade" id="tambahTryoutMateriModal" tabindex="-1">
+        <div class="modal-dialog modal-xl modal-dialog-centered">
+            <div class="modal-content">
+                <form action="/simpan-tryout-materi" method="POST">
+                    @csrf
+                    <input type="hidden" name="active_tab" value="master-materi-tryout">
+
+                    <div class="modal-header">
+                        <h5 class="modal-title fw-bold">Tambah Materi Ujian</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Kategori</label>
+                                <select name="tryout_kategori_soal_id" class="form-control" required>
+                                    @foreach ($tryoutKategoriOptions as $kategori)
+                                        <option value="{{ $kategori->id }}"
+                                            {{ old('tryout_kategori_soal_id') == $kategori->id ? 'selected' : '' }}>
+                                            {{ $kategori->kode }} - {{ $kategori->nama }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <div class="col-md-5 mb-3">
+                                <label class="form-label">Judul Materi</label>
+                                <input type="text" name="judul" class="form-control"
+                                    value="{{ old('judul') }}" placeholder="Contoh: Strategi Penalaran TIU" required>
+                            </div>
+
+                            <div class="col-md-3 mb-3">
+                                <label class="form-label">Status</label>
+                                <select name="status" class="form-control" required>
+                                    <option value="aktif" {{ old('status', 'aktif') == 'aktif' ? 'selected' : '' }}>Aktif
+                                    </option>
+                                    <option value="draft" {{ old('status') == 'draft' ? 'selected' : '' }}>Draft</option>
+                                </select>
+                            </div>
+
+                            <div class="col-12 mb-3">
+                                <label class="form-label">Ringkasan</label>
+                                <textarea name="ringkasan" class="form-control" rows="3"
+                                    placeholder="Tuliskan ringkasan singkat materi.">{{ old('ringkasan') }}</textarea>
+                            </div>
+
+                            <div class="col-12 mb-3">
+                                <label class="form-label">Isi Materi</label>
+                                <div class="rich-editor" data-rich-editor>
+                                    <div class="rich-editor-toolbar">
+                                        <button type="button" data-command="bold"><i class="bi bi-type-bold"></i></button>
+                                        <button type="button" data-command="italic"><i class="bi bi-type-italic"></i></button>
+                                        <button type="button" data-command="underline"><i class="bi bi-type-underline"></i></button>
+                                        <button type="button" data-command="insertUnorderedList"><i class="bi bi-list-ul"></i></button>
+                                        <button type="button" data-command="insertOrderedList"><i class="bi bi-list-ol"></i></button>
+                                        <button type="button" data-command="formatBlock" data-value="h3"><i class="bi bi-type-h3"></i></button>
+                                        <button type="button" data-command="formatBlock" data-value="p"><i class="bi bi-paragraph"></i></button>
+                                        <button type="button" data-command="createLink"><i class="bi bi-link-45deg"></i></button>
+                                    </div>
+                                    <div class="rich-editor-area" contenteditable="true">
+                                        {!! old('isi_materi') ? (\Illuminate\Support\Str::contains(old('isi_materi'), '<') ? old('isi_materi') : nl2br(e(old('isi_materi')))) : '' !!}
+                                    </div>
+                                    <textarea name="isi_materi" class="rich-editor-input">{{ old('isi_materi') }}</textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                            Batal
+                        </button>
+                        <button type="submit" class="btn btn-primary">
+                            Simpan Materi
                         </button>
                     </div>
                 </form>

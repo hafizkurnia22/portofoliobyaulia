@@ -586,9 +586,9 @@ body {
 
 .tryout-setting-card {
     display: grid;
-    grid-template-columns: minmax(220px, 1fr) auto auto;
-    gap: 14px;
-    align-items: center;
+    grid-template-columns: minmax(220px, 0.85fr) minmax(290px, 1fr) minmax(250px, 0.9fr);
+    gap: 18px 22px;
+    align-items: start;
     padding: 18px;
     border: 1px solid #dbeafe;
     border-radius: 16px;
@@ -610,8 +610,128 @@ body {
 
 .tryout-setting-toggles {
     display: flex;
+    flex-direction: column;
     flex-wrap: wrap;
-    gap: 10px;
+    gap: 8px;
+    align-self: center;
+}
+
+.tryout-setting-fields {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(130px, 1fr));
+    gap: 14px;
+}
+
+.tryout-duration-control {
+    min-width: 0;
+}
+
+.tryout-duration-control label {
+    display: block;
+    margin-bottom: 6px;
+    color: #0b1f3a;
+    font-size: 12px;
+    font-weight: 900;
+    text-transform: uppercase;
+}
+
+.tryout-duration-control div {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.tryout-duration-control .form-control {
+    max-width: 118px;
+    min-height: 42px;
+    font-weight: 900;
+}
+
+.tryout-duration-control span {
+    color: #64748b;
+    font-weight: 800;
+}
+
+.tryout-setting-action {
+    display: flex;
+    justify-content: flex-end;
+    grid-column: 2 / -1;
+    padding-top: 14px;
+    border-top: 1px solid #dbeafe;
+}
+
+.tryout-setting-action .btn {
+    min-height: 48px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 11px 20px;
+    white-space: nowrap;
+    font-weight: 800;
+    border-radius: 10px;
+}
+
+.rich-editor {
+    overflow: hidden;
+    border: 1px solid #dbeafe;
+    border-radius: 8px;
+    background: #ffffff;
+}
+
+.rich-editor-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+    padding: 10px;
+    border-bottom: 1px solid #dbeafe;
+    background: #f8fbff;
+}
+
+.rich-editor-toolbar button {
+    width: 38px;
+    height: 38px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #dbeafe;
+    border-radius: 8px;
+    background: #ffffff;
+    color: #0b1f3a;
+}
+
+.rich-editor-toolbar button:hover {
+    border-color: #14b8a6;
+    color: #0f766e;
+}
+
+.rich-editor-area {
+    min-height: 250px;
+    padding: 14px;
+    color: #0b1f3a;
+    line-height: 1.8;
+    outline: none;
+}
+
+.rich-editor-area:focus {
+    box-shadow: inset 0 0 0 3px rgba(59, 130, 246, 0.22);
+}
+
+.rich-editor-area p,
+.rich-editor-area ul,
+.rich-editor-area ol,
+.rich-editor-area blockquote {
+    margin-bottom: 12px;
+}
+
+.rich-editor-area h3 {
+    margin: 12px 0;
+    font-size: 20px;
+    font-weight: 900;
+}
+
+.rich-editor-input {
+    display: none;
 }
 
 /* TRYOUT CAT PAGE */
@@ -746,6 +866,68 @@ body {
     margin: 0;
 }
 
+.tryout-choice-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+    margin-bottom: 22px;
+}
+
+.tryout-choice-card {
+    min-height: 190px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 12px;
+    padding: 28px;
+    border: 1px solid #dbeafe;
+    border-radius: 8px;
+    background: #ffffff;
+    color: #0b1f3a;
+    text-decoration: none;
+    box-shadow: 0 18px 42px rgba(15, 23, 42, 0.07);
+    transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.tryout-choice-card:hover {
+    transform: translateY(-4px);
+    border-color: #14b8a6;
+    color: #0b1f3a;
+    box-shadow: 0 24px 54px rgba(15, 23, 42, 0.12);
+}
+
+.tryout-choice-card span {
+    width: 56px;
+    height: 56px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    background: #ccfbf1;
+    color: #0f766e;
+    font-size: 27px;
+}
+
+.tryout-choice-card strong {
+    font-size: 25px;
+    font-weight: 900;
+}
+
+.tryout-choice-card small {
+    max-width: 520px;
+    color: #64748b;
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 1.7;
+}
+
+.tryout-mode-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 22px;
+}
+
 .tryout-history-card {
     margin-bottom: 22px;
     padding: 22px;
@@ -841,6 +1023,359 @@ body {
     background: #f8fbff;
     color: #64748b;
     font-weight: 700;
+}
+
+.tryout-materi-section {
+    padding: 28px;
+    border: 1px solid #dbeafe;
+    border-radius: 8px;
+    background: #ffffff;
+    box-shadow: 0 18px 42px rgba(15, 23, 42, 0.07);
+}
+
+.tryout-materi-heading {
+    margin-bottom: 22px;
+}
+
+.tryout-materi-heading span {
+    color: #0f766e;
+    font-size: 12px;
+    font-weight: 900;
+    text-transform: uppercase;
+}
+
+.tryout-materi-heading h2 {
+    margin: 4px 0 0;
+    color: #0b1f3a;
+    font-size: 26px;
+    font-weight: 900;
+}
+
+.tryout-materi-toolbar {
+    display: grid;
+    grid-template-columns: minmax(260px, 1fr) 190px 180px;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.tryout-materi-search {
+    position: relative;
+}
+
+.tryout-materi-search i {
+    position: absolute;
+    top: 50%;
+    left: 15px;
+    transform: translateY(-50%);
+    color: #0f766e;
+}
+
+.tryout-materi-search input,
+.tryout-materi-filter {
+    width: 100%;
+    min-height: 48px;
+    border: 1px solid #dbeafe;
+    border-radius: 8px;
+    background: #f8fbff;
+    color: #0b1f3a;
+    font-weight: 800;
+    outline: none;
+}
+
+.tryout-materi-search input {
+    padding: 11px 14px 11px 42px;
+}
+
+.tryout-materi-filter {
+    padding: 11px 14px;
+}
+
+.tryout-materi-search input:focus,
+.tryout-materi-filter:focus {
+    border-color: #14b8a6;
+    box-shadow: 0 0 0 4px rgba(20, 184, 166, 0.12);
+}
+
+.tryout-materi-grid {
+    display: grid;
+    gap: 18px;
+}
+
+.tryout-materi-table-card {
+    margin-bottom: 18px;
+    overflow: hidden;
+    border: 1px solid #dbeafe;
+    border-radius: 8px;
+    background: #ffffff;
+}
+
+.tryout-materi-table {
+    width: 100%;
+    margin-bottom: 0;
+    border-collapse: collapse;
+}
+
+.tryout-materi-table th,
+.tryout-materi-table td {
+    padding: 15px 16px;
+    border-bottom: 1px solid #e2e8f0;
+    vertical-align: middle;
+}
+
+.tryout-materi-table th {
+    background: #f8fbff;
+    color: #0b1f3a;
+    font-size: 12px;
+    font-weight: 900;
+    text-transform: uppercase;
+}
+
+.tryout-materi-table td {
+    color: #334155;
+    font-weight: 700;
+}
+
+.tryout-materi-table tr:last-child td {
+    border-bottom: 0;
+}
+
+.tryout-materi-table tr.active td {
+    background: #ecfeff;
+}
+
+.tryout-materi-table td strong,
+.tryout-materi-table td small {
+    display: block;
+}
+
+.tryout-materi-table td strong {
+    color: #0b1f3a;
+    font-weight: 900;
+}
+
+.tryout-materi-table td small {
+    margin-top: 6px;
+    color: #64748b;
+    line-height: 1.4;
+}
+
+.tryout-materi-code {
+    display: inline-flex;
+    min-height: 34px;
+    align-items: center;
+    padding: 7px 12px;
+    border-radius: 8px;
+    background: #fef3c7;
+    color: #b45309;
+    font-size: 13px;
+    font-weight: 900;
+}
+
+.tryout-detail-btn {
+    min-height: 38px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 8px 13px;
+    border-radius: 8px;
+    background: #0b1f3a;
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 900;
+    white-space: nowrap;
+}
+
+.tryout-detail-btn:hover {
+    background: #0f766e;
+    color: #ffffff;
+}
+
+.tryout-materi-detail {
+    display: grid;
+    gap: 12px;
+}
+
+.tryout-materi-table-empty {
+    padding: 16px;
+    border: 1px dashed #bfdbfe;
+    border-radius: 8px;
+    background: #f8fbff;
+    color: #64748b;
+    font-weight: 800;
+}
+
+.tryout-materi-empty-detail {
+    min-height: 150px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 24px;
+    border: 1px dashed #bfdbfe;
+    border-radius: 8px;
+    background: #f8fbff;
+    text-align: center;
+}
+
+.tryout-materi-empty-detail i {
+    color: #0f766e;
+    font-size: 28px;
+}
+
+.tryout-materi-empty-detail strong {
+    color: #0b1f3a;
+    font-weight: 900;
+}
+
+.tryout-materi-empty-detail small {
+    color: #64748b;
+    font-weight: 700;
+}
+
+.tryout-materi-detail-page,
+.tryout-related-materi {
+    padding: 28px;
+    border: 1px solid #dbeafe;
+    border-radius: 8px;
+    background: #ffffff;
+    box-shadow: 0 18px 42px rgba(15, 23, 42, 0.07);
+}
+
+.tryout-materi-detail-card {
+    margin-top: 16px;
+    padding: 24px;
+    border: 1px solid #dbeafe;
+    border-radius: 8px;
+    background: #f8fbff;
+}
+
+.tryout-materi-lead {
+    margin-bottom: 20px;
+    padding: 16px;
+    border-left: 4px solid #0f766e;
+    border-radius: 8px;
+    background: #ecfeff;
+    color: #0f766e;
+    font-size: 17px;
+    font-weight: 900;
+    line-height: 1.7;
+}
+
+.tryout-related-materi {
+    margin-top: 22px;
+}
+
+.tryout-related-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+}
+
+.tryout-related-grid .tryout-choice-card {
+    min-height: 150px;
+    padding: 20px;
+}
+
+.tryout-related-grid .tryout-choice-card strong {
+    font-size: 18px;
+}
+
+.tryout-related-grid .tryout-choice-card span {
+    width: 46px;
+    height: 46px;
+    font-size: 22px;
+}
+
+.tryout-materi-group {
+    display: grid;
+    gap: 12px;
+}
+
+.tryout-materi-group-title {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+}
+
+.tryout-materi-group-title span {
+    display: inline-flex;
+    min-height: 38px;
+    align-items: center;
+    padding: 8px 14px;
+    border-radius: 8px;
+    background: #fef3c7;
+    color: #b45309;
+    font-size: 14px;
+    font-weight: 900;
+}
+
+.tryout-materi-group-title strong {
+    color: #0b1f3a;
+    font-size: 17px;
+    font-weight: 900;
+}
+
+.tryout-materi-card {
+    padding: 20px;
+    border: 1px solid #dbeafe;
+    border-radius: 8px;
+    background: #f8fbff;
+}
+
+.tryout-materi-card h3 {
+    margin-bottom: 10px;
+    color: #0b1f3a;
+    font-size: 20px;
+    font-weight: 900;
+}
+
+.tryout-materi-card p {
+    margin-bottom: 14px;
+    color: #475569;
+    font-weight: 700;
+    line-height: 1.7;
+}
+
+.tryout-materi-content {
+    color: #334155;
+    line-height: 1.85;
+}
+
+.tryout-materi-content p,
+.tryout-materi-content ul,
+.tryout-materi-content ol,
+.tryout-materi-content blockquote {
+    margin-bottom: 14px;
+}
+
+.tryout-materi-content ul,
+.tryout-materi-content ol {
+    padding-left: 24px;
+}
+
+.tryout-materi-content h2,
+.tryout-materi-content h3 {
+    margin: 18px 0 10px;
+    color: #0b1f3a;
+    font-weight: 900;
+}
+
+.tryout-materi-content blockquote {
+    padding: 14px 16px;
+    border-left: 4px solid #0f766e;
+    border-radius: 8px;
+    background: #ecfeff;
+    color: #0f766e;
+    font-weight: 800;
+}
+
+.tryout-materi-content a {
+    color: #0f766e;
+    font-weight: 900;
 }
 
 .tryout-empty-state {
@@ -1471,6 +2006,41 @@ body {
         padding: 20px;
     }
 
+    .tryout-choice-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .tryout-choice-card {
+        min-height: 160px;
+        padding: 22px;
+    }
+
+    .tryout-materi-section {
+        padding: 20px;
+    }
+
+    .tryout-materi-toolbar,
+    .tryout-related-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .tryout-materi-detail-page,
+    .tryout-related-materi {
+        padding: 20px;
+    }
+
+    .tryout-materi-detail-card {
+        padding: 18px;
+    }
+
+    .tryout-materi-heading h2 {
+        font-size: 22px;
+    }
+
+    .tryout-materi-table {
+        min-width: 760px;
+    }
+
     .tryout-history-list {
         grid-template-columns: 1fr;
     }
@@ -1519,6 +2089,19 @@ body {
 
     .tryout-setting-card {
         grid-template-columns: 1fr;
+    }
+
+    .tryout-setting-fields {
+        grid-template-columns: 1fr;
+    }
+
+    .tryout-setting-action {
+        grid-column: 1;
+        justify-content: stretch;
+    }
+
+    .tryout-setting-action .btn {
+        width: 100%;
     }
 
     .admin-tabs .nav-link {
@@ -2719,9 +3302,21 @@ body {
 .dark-mode .tryout-login-card,
 .dark-mode .tryout-login-form,
 .dark-mode .tryout-participant-bar,
+.dark-mode .tryout-choice-card,
 .dark-mode .tryout-history-card,
 .dark-mode .tryout-history-item,
 .dark-mode .tryout-history-empty,
+.dark-mode .tryout-materi-section,
+.dark-mode .tryout-materi-table-card,
+.dark-mode .tryout-materi-table-empty,
+.dark-mode .tryout-materi-empty-detail,
+.dark-mode .tryout-materi-detail-page,
+.dark-mode .tryout-materi-detail-card,
+.dark-mode .tryout-related-materi,
+.dark-mode .tryout-materi-card,
+.dark-mode .rich-editor,
+.dark-mode .rich-editor-toolbar,
+.dark-mode .rich-editor-toolbar button,
 .dark-mode .cat-result-modal .modal-content,
 .dark-mode .cat-config-card,
 .dark-mode .cat-sidebar,
@@ -2736,8 +3331,22 @@ body {
 .dark-mode .admin-sidebar-title,
 .dark-mode .tryout-login-copy h1,
 .dark-mode .tryout-header h1,
+.dark-mode .tryout-choice-card,
+.dark-mode .tryout-choice-card:hover,
 .dark-mode .tryout-history-header h2,
 .dark-mode .tryout-history-item strong,
+.dark-mode .tryout-materi-heading h2,
+.dark-mode .tryout-materi-group-title strong,
+.dark-mode .tryout-materi-card h3,
+.dark-mode .tryout-materi-table th,
+.dark-mode .tryout-materi-table td strong,
+.dark-mode .tryout-materi-table-empty,
+.dark-mode .tryout-materi-empty-detail strong,
+.dark-mode .tryout-duration-control label,
+.dark-mode .tryout-materi-content h2,
+.dark-mode .tryout-materi-content h3,
+.dark-mode .rich-editor-area,
+.dark-mode .rich-editor-toolbar button,
 .dark-mode .cat-result-modal-body h2,
 .dark-mode .tryout-empty-state h3,
 .dark-mode .cat-summary-grid strong,
@@ -2759,7 +3368,15 @@ body {
 .dark-mode .tryout-import-card p,
 .dark-mode .tryout-setting-card p,
 .dark-mode .tryout-login-copy p,
+.dark-mode .tryout-choice-card small,
 .dark-mode .tryout-history-item small,
+.dark-mode .tryout-materi-card p,
+.dark-mode .tryout-materi-content,
+.dark-mode .tryout-materi-table td,
+.dark-mode .tryout-materi-table td small,
+.dark-mode .tryout-materi-empty-detail small,
+.dark-mode .tryout-materi-lead,
+.dark-mode .tryout-duration-control span,
 .dark-mode .cat-result-modal-body p {
     color: #cbd5e1;
 }
@@ -2771,7 +3388,10 @@ body {
 .dark-mode .cat-summary-grid div,
 .dark-mode .cat-toggle,
 .dark-mode .cat-mark-btn,
+.dark-mode .tryout-materi-search input,
+.dark-mode .tryout-materi-filter,
 .dark-mode .tryout-login-input .form-control,
+.dark-mode .rich-editor-area,
 .dark-mode .cat-number-btn,
 .dark-mode .cat-option-btn {
     background: #020617;
@@ -2787,6 +3407,27 @@ body {
 .dark-mode .cat-option-btn:hover,
 .dark-mode .cat-option-btn.selected {
     background: #134e4a;
+}
+
+.dark-mode .tryout-materi-table th,
+.dark-mode .tryout-materi-table tr.active td {
+    background: #0f172a;
+}
+
+.dark-mode .tryout-materi-lead {
+    background: #134e4a;
+    border-color: #14b8a6;
+}
+
+.dark-mode .tryout-materi-table th,
+.dark-mode .tryout-materi-table td,
+.dark-mode .tryout-materi-search input,
+.dark-mode .tryout-materi-filter,
+.dark-mode .rich-editor,
+.dark-mode .rich-editor-toolbar,
+.dark-mode .rich-editor-toolbar button,
+.dark-mode .tryout-setting-action {
+    border-color: #334155;
 }
 
 .dark-mode .cat-option-btn.correct {
