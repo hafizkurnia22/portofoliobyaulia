@@ -8,6 +8,12 @@ use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\SertifikasiController;
 use App\Http\Controllers\SkillController;
 use App\Http\Controllers\TentangSayaController;
+use App\Http\Controllers\TryoutAuthController;
+use App\Http\Controllers\TryoutKategoriSoalController;
+use App\Http\Controllers\TryoutPengaturanController;
+use App\Http\Controllers\TryoutPesertaController;
+use App\Http\Controllers\TryoutRiwayatController;
+use App\Http\Controllers\TryoutSoalController;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,6 +24,11 @@ use App\Http\Controllers\TentangSayaController;
 Route::get('/', [PengalamanController::class, 'index']);
 Route::get('/cv-builder', [CvBuilderController::class, 'index'])->name('cv.builder');
 Route::get('/download-cv', [CvBuilderController::class, 'download'])->name('cv.download');
+Route::get('/tryout/login', [TryoutAuthController::class, 'showLogin'])->name('tryout.login');
+Route::post('/tryout/login', [TryoutAuthController::class, 'login'])->name('tryout.login.submit');
+Route::post('/tryout/logout', [TryoutAuthController::class, 'logout'])->name('tryout.logout');
+Route::get('/tryout', [TryoutSoalController::class, 'index'])->name('tryout.index');
+Route::post('/tryout/riwayat', [TryoutRiwayatController::class, 'store'])->name('tryout.riwayat.store');
 
 Route::get('/sertifikasi', function () {
     $sertifikasi = \App\Models\Sertifikasi::byLatestYear()->get();
@@ -55,12 +66,22 @@ Route::get('/admin/dashboard', function () {
     $sertifikasi = \App\Models\Sertifikasi::byLatestYear()->paginate(5, ['*'], 'sertifikasi_page');
     $skill = \App\Models\Skill::latest()->paginate(5, ['*'], 'skill_page');
     $project = \App\Models\Project::latest()->paginate(5, ['*'], 'project_page');
+    $tryoutKategoriSoal = \App\Models\TryoutKategoriSoal::orderBy('id')->paginate(5, ['*'], 'tryout_kategori_page');
+    $tryoutKategoriOptions = \App\Models\TryoutKategoriSoal::aktif()->orderBy('id')->get();
+    $tryoutPengaturan = \App\Models\TryoutPengaturan::current();
+    $tryoutPeserta = \App\Models\TryoutPeserta::latest()->paginate(8, ['*'], 'tryout_peserta_page');
+    $tryoutRiwayat = \App\Models\TryoutRiwayat::with('peserta')->latest()->paginate(10, ['*'], 'tryout_riwayat_page');
+    $tryoutSoal = \App\Models\TryoutSoal::with('kategoriSoal')->latest()->paginate(8, ['*'], 'tryout_soal_page');
     $tentangSaya = \App\Models\TentangSaya::first();
 
     $totalPengalaman = \App\Models\Pengalaman::count();
     $totalSertifikasi = \App\Models\Sertifikasi::count();
     $totalSkill = \App\Models\Skill::count();
     $totalProject = \App\Models\Project::count();
+    $totalTryoutSoal = \App\Models\TryoutSoal::count();
+    $totalTryoutKategori = \App\Models\TryoutKategoriSoal::count();
+    $totalTryoutPeserta = \App\Models\TryoutPeserta::count();
+    $totalTryoutRiwayat = \App\Models\TryoutRiwayat::count();
 
     $rataSkill = \App\Models\Skill::avg('persentase') ?? 0;
 
@@ -74,11 +95,21 @@ Route::get('/admin/dashboard', function () {
         'sertifikasi',
         'skill',
         'project',
+        'tryoutKategoriSoal',
+        'tryoutKategoriOptions',
+        'tryoutPengaturan',
+        'tryoutPeserta',
+        'tryoutRiwayat',
+        'tryoutSoal',
         'tentangSaya',
         'totalPengalaman',
         'totalSertifikasi',
         'totalSkill',
         'totalProject',
+        'totalTryoutSoal',
+        'totalTryoutKategori',
+        'totalTryoutPeserta',
+        'totalTryoutRiwayat',
         'rataSkill',
         'skillTertinggi',
         'sertifikasiTerbaru',
@@ -121,3 +152,17 @@ Route::delete('/hapus-project/{id}', [ProjectController::class, 'destroy']);
 
 /*Tentang Saya*/
 Route::post('/simpan-tentang-saya', [TentangSayaController::class, 'storeOrUpdate']);
+
+/* TRYOUT */
+Route::post('/simpan-tryout-soal', [TryoutSoalController::class, 'store']);
+Route::post('/import-tryout-soal', [TryoutSoalController::class, 'import']);
+Route::get('/template-import-tryout-soal', [TryoutSoalController::class, 'template']);
+Route::put('/update-tryout-soal/{id}', [TryoutSoalController::class, 'update']);
+Route::delete('/hapus-tryout-soal/{id}', [TryoutSoalController::class, 'destroy']);
+Route::post('/simpan-tryout-pengaturan', [TryoutPengaturanController::class, 'update']);
+Route::post('/simpan-tryout-peserta', [TryoutPesertaController::class, 'store']);
+Route::put('/update-tryout-peserta/{id}', [TryoutPesertaController::class, 'update']);
+Route::delete('/hapus-tryout-peserta/{id}', [TryoutPesertaController::class, 'destroy']);
+Route::post('/simpan-tryout-kategori-soal', [TryoutKategoriSoalController::class, 'store']);
+Route::put('/update-tryout-kategori-soal/{id}', [TryoutKategoriSoalController::class, 'update']);
+Route::delete('/hapus-tryout-kategori-soal/{id}', [TryoutKategoriSoalController::class, 'destroy']);

@@ -50,6 +50,14 @@
                     </a>
                 </li>
 
+                <li class="nav-item">
+                    <a class="nav-link {{ request()->routeIs('tryout.index', 'tryout.login') ? 'active' : '' }}"
+                        href="{{ route('tryout.index') }}">
+                        <i class="bi bi-ui-checks-grid"></i>
+                        Tryout
+                    </a>
+                </li>
+
                 <li class="nav-item dropdown">
                     <button class="nav-link dropdown-toggle nav-more-toggle" type="button" data-bs-toggle="dropdown"
                         aria-expanded="false">
@@ -96,7 +104,7 @@
                 <li class="nav-item">
                     <a class="nav-link nav-link-feature" href="{{ route('cv.builder') }}">
                         <i class="bi bi-file-earmark-richtext"></i>
-                        Generate CV
+                        Generate CV saya
                     </a>
                 </li>
 
