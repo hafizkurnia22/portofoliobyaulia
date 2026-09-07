@@ -401,7 +401,7 @@
                 function saveResult(payload) {
                     resultSaveStatus.textContent = 'Menyimpan riwayat...';
 
-                    fetch(@json(route('tryout.riwayat.store')), {
+                    fetch(@json(route('tryout.riwayat.store', [], false)), {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
