@@ -753,6 +753,22 @@ body {
         linear-gradient(135deg, #f8fbff 0%, #ecfeff 48%, #fff7ed 100%);
 }
 
+.tryout-exam-page .tryout-page {
+    padding-top: 32px;
+}
+
+html:has(.tryout-exam-page) {
+    scroll-padding-top: 16px;
+}
+
+.tryout-exam-page .cat-shell {
+    scroll-margin-top: 0;
+}
+
+.tryout-exam-page .cat-sidebar {
+    top: 16px;
+}
+
 .tryout-login-card {
     max-width: 980px;
     margin: 0 auto;

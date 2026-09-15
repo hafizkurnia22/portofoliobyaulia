@@ -26,9 +26,13 @@
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
 </head>
 
-<body>
+@php
+    $isTryoutExam = request()->is('tryout') && request('mode') === 'ujian';
+@endphp
 
-    @if (!request()->is('admin/*'))
+<body @class(['tryout-exam-page' => $isTryoutExam])>
+
+    @if (!request()->is('admin/*') && !$isTryoutExam)
         @include('components.navbar')
     @endif
 
