@@ -4,14 +4,10 @@
 
 <nav class="navbar navbar-expand-xxl custom-navbar fixed-top" data-aos="fade-down">
     <div class="container">
-        <a class="navbar-brand brand-premium" href="{{ url('/') }}">
-            <span class="brand-logo-shell">
-                <img src="{{ asset('images/logo-mhk.png') }}" class="brand-logo-img" alt="MHK Logo">
-            </span>
-            <span class="brand-copy-stack">
-                <span class="brand-text-shine brand-text-top">Hafiz's</span>
-                <span class="brand-text-shine brand-text-bottom">Portofolio</span>
-            </span>
+        <a class="navbar-brand brand-premium" href="{{ url('/') }}" aria-label="Hafiz’s Portofolio — Beranda">
+            <svg class="brand-logo-lockup" viewBox="525 260 1030 228" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+                <image href="{{ asset('images/logo-mhk-premium.png') }}" width="2073" height="758" />
+            </svg>
         </a>
 
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMenu"
