@@ -26,27 +26,6 @@
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link nav-scroll-link" href="{{ url('/#pengalaman') }}" data-section="pengalaman">
-                        <i class="bi bi-briefcase"></i>
-                        Pengalaman
-                    </a>
-                </li>
-
-                <li class="nav-item">
-                    <a class="nav-link nav-scroll-link" href="{{ url('/#skill') }}" data-section="skill">
-                        <i class="bi bi-lightning-charge"></i>
-                        Skill
-                    </a>
-                </li>
-
-                <li class="nav-item">
-                    <a class="nav-link nav-scroll-link" href="{{ url('/#my-project') }}" data-section="my-project">
-                        <i class="bi bi-kanban"></i>
-                        My Project
-                    </a>
-                </li>
-
-                <li class="nav-item">
                     <a class="nav-link {{ request()->routeIs('tryout.index', 'tryout.login', 'tryout.materi.show') ? 'active' : '' }}"
                         href="{{ route('tryout.index') }}">
                         <i class="bi bi-pc-display-horizontal"></i>
@@ -57,27 +36,33 @@
                 <li class="nav-item dropdown">
                     <button class="nav-link dropdown-toggle nav-more-toggle" type="button" data-bs-toggle="dropdown"
                         aria-expanded="false">
-                        <i class="bi bi-grid"></i>
-                        Lainnya
+                        <i class="bi bi-person-circle"></i>
+                        Profile
                     </button>
 
                     <ul class="dropdown-menu dropdown-menu-end premium-dropdown-menu">
-                        @if ($availabilityText !== '')
-                            <li>
-                                <button type="button" class="dropdown-item premium-dropdown-status"
-                                    data-bs-toggle="modal" data-bs-target="#smartContactModal">
-                                    <span class="availability-live-dot"></span>
-                                    <span>
-                                        <small>Availability</small>
-                                        <strong>{{ $availabilityText }}</strong>
-                                    </span>
-                                </button>
-                            </li>
+                        <li>
+                            <a class="dropdown-item nav-scroll-link" href="{{ url('/#pengalaman') }}"
+                                data-section="pengalaman">
+                                <i class="bi bi-briefcase"></i>
+                                Pengalaman
+                            </a>
+                        </li>
 
-                            <li>
-                                <hr class="dropdown-divider">
-                            </li>
-                        @endif
+                        <li>
+                            <a class="dropdown-item nav-scroll-link" href="{{ url('/#skill') }}" data-section="skill">
+                                <i class="bi bi-lightning-charge"></i>
+                                Skill
+                            </a>
+                        </li>
+
+                        <li>
+                            <a class="dropdown-item nav-scroll-link" href="{{ url('/#my-project') }}"
+                                data-section="my-project">
+                                <i class="bi bi-kanban"></i>
+                                My Project
+                            </a>
+                        </li>
 
                         <li>
                             <a class="dropdown-item nav-scroll-link" href="{{ url('/#sertifikasi') }}"
@@ -93,6 +78,27 @@
                                 Tentang Saya
                             </a>
                         </li>
+
+                        @if ($availabilityText !== '')
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+
+                            <li>
+                                <button type="button" class="dropdown-item premium-dropdown-status"
+                                    data-bs-toggle="modal" data-bs-target="#smartContactModal">
+                                    <span class="availability-live-dot"></span>
+                                    <span>
+                                        <small>Availability</small>
+                                        <strong>{{ $availabilityText }}</strong>
+                                    </span>
+                                </button>
+                            </li>
+
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                        @endif
                     </ul>
                 </li>
 
@@ -152,7 +158,7 @@
         });
 
         if (moreToggle) {
-            moreToggle.classList.toggle('active', ['sertifikasi', 'tentang'].includes(currentSection));
+            moreToggle.classList.toggle('active', ['pengalaman', 'skill', 'my-project', 'sertifikasi', 'tentang'].includes(currentSection));
         }
     }
 
