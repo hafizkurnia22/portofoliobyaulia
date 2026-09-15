@@ -108,6 +108,17 @@ document.addEventListener('DOMContentLoaded', function () {
         return new URL(url, window.location.href).searchParams.get('active_tab') || 'dashboard';
     }
 
+    function scrollToActiveData(panel) {
+        const target = panel.querySelector('.admin-table-header, .dashboard-stat-section, .tentang-preview-card') || panel;
+        const topOffset = 18;
+        const targetTop = target.getBoundingClientRect().top + window.scrollY - topOffset;
+
+        window.scrollTo({
+            top: Math.max(targetTop, 0),
+            behavior: 'auto'
+        });
+    }
+
     function switchAdminTab(url, pushState = true) {
         const nextUrl = new URL(url, window.location.href);
         const activeTab = getActiveTabFromUrl(nextUrl.href);
@@ -133,6 +144,8 @@ document.addEventListener('DOMContentLoaded', function () {
         if (window.AOS) {
             window.AOS.refreshHard();
         }
+
+        requestAnimationFrame(() => scrollToActiveData(targetPanel));
 
         return true;
     }
