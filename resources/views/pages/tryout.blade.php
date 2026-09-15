@@ -5,9 +5,12 @@
 @section('content')
     @php
         $tryoutMode = request('mode', 'menu');
-        $tryoutMode = in_array($tryoutMode, ['menu', 'ujian', 'materi'], true) ? $tryoutMode : 'menu';
+        $tryoutMode = $tryoutMode === 'ujian' ? 'ujian' : 'menu';
         $showExam = $tryoutMode === 'ujian';
-        $showMateri = $tryoutMode === 'materi';
+        $activeTryoutTab = request('tab', 'materi');
+        $activeTryoutTab = in_array($activeTryoutTab, ['materi', 'simulasi', 'evaluasi'], true) ? $activeTryoutTab : 'materi';
+        $tryoutKisiKisi = $tryoutPengaturan->kisi_kisi_deskripsi
+            ?: 'Materi dan simulasi Tryout CPNS disusun berdasarkan kisi-kisi seleksi kompetensi dasar yang berlaku. Admin dapat memperbarui keterangan ini dan mengunggah surat PermenPAN terbaru sebagai acuan belajar peserta.';
         $materiKategori = ['TWK', 'TIU', 'TKP'];
         $allMateri = isset($materiTryout)
             ? $materiTryout->flatten(1)->sortBy(fn ($materi) => optional($materi->kategoriSoal)->kode . $materi->judul)->values()
@@ -31,9 +34,9 @@
                 </div>
             @else
             <div class="tryout-header" data-aos="fade-down">
-                <span class="section-label">{{ $showExam ? 'Simulasi CAT' : ($showMateri ? 'Ruang Belajar' : 'Latihan CAT') }}</span>
-                <h1>{{ $showMateri ? 'Materi Tryout CPNS' : 'Tryout CPNS' }}</h1>
-                <p>{{ $showExam ? 'Siapkan diri, kerjakan soal, lalu pelajari hasil latihanmu.' : 'Latihan TWK, TIU, dan TKP. Pelajari materi, ikuti simulasi, dan pantau hasil latihanmu.' }}</p>
+                <span class="section-label">Latihan CAT</span>
+                <h1>Tryout CPNS</h1>
+                <p>Latihan TWK, TIU, dan TKP. Pelajari materi, ikuti simulasi, dan pantau hasil latihanmu.</p>
                 <div class="tryout-participant-bar">
                     <span>
                         <i class="bi bi-person-check"></i>
@@ -52,158 +55,188 @@
             @endif
 
             @if ($tryoutMode === 'menu')
-                <ol class="tryout-steps" aria-label="Alur tryout">
-                    <li><span>1</span> Pelajari materi</li>
-                    <li><span>2</span> Ikuti simulasi</li>
-                    <li><span>3</span> Evaluasi hasil</li>
-                </ol>
-                <div class="tryout-choice-grid" data-aos="fade-up">
-                    <a href="{{ route('tryout.index', ['mode' => 'ujian']) }}" class="tryout-choice-card">
-                        <span><i class="bi bi-display"></i></span>
-                        <strong>Ikuti Simulasi</strong>
-                        <small>{{ $soals->count() }} soal · {{ $tryoutPengaturan->durasi_menit ?? 45 }} menit. Lihat petunjuk sebelum mulai; waktu berjalan setelah kamu siap.</small>
-                    </a>
-
-                    <a href="{{ route('tryout.index', ['mode' => 'materi']) }}" class="tryout-choice-card">
-                        <span><i class="bi bi-journal-bookmark"></i></span>
-                        <strong>Materi Ujian</strong>
-                        <small>Baca pembahasan pembelajaran untuk TIU, TWK, dan TKP sebelum mulai latihan.</small>
-                    </a>
-                </div>
-            @elseif ($showMateri)
-                <div class="tryout-mode-actions" data-aos="fade-up">
-                    <a href="{{ route('tryout.index') }}" class="cat-action-btn cat-action-secondary">
-                        <i class="bi bi-grid"></i>
-                        Beranda Tryout
-                    </a>
-
-                        <a href="{{ route('tryout.index', ['mode' => 'ujian']) }}" class="cat-action-btn">
-                            <i class="bi bi-display"></i>
-                            Ikuti Simulasi
-                        </a>
-                </div>
-            @endif
-
-            @if ($tryoutMode === 'menu')
-                <div class="tryout-history-card" id="tryoutHistoryCard" data-aos="fade-up">
-                    <div class="tryout-history-header">
-                        <div>
-                            <span>Riwayat Saya</span>
-                            <h2>Riwayat mengikuti tryout</h2>
+                <div class="tryout-reference-card" data-aos="fade-up">
+                    <div class="tryout-reference-icon">
+                        <i class="bi bi-patch-check"></i>
+                    </div>
+                    <div>
+                        <span>Acuan Materi & Ujian</span>
+                        <h2>Berdasarkan kisi-kisi CPNS yang dapat diperbarui</h2>
+                        <p>{{ $tryoutKisiKisi }}</p>
+                        <div class="tryout-reference-meta">
+                            <span><i class="bi bi-file-earmark-text"></i> {{ $soals->count() }} soal aktif</span>
+                            <span><i class="bi bi-clock"></i> {{ $tryoutPengaturan->durasi_menit ?? 45 }} menit</span>
+                            <span><i class="bi bi-grid-3x3-gap"></i> TWK · TIU · TKP</span>
+                            @if ($tryoutPengaturan->permenpan_file)
+                                <a href="{{ asset('storage/' . $tryoutPengaturan->permenpan_file) }}" target="_blank" rel="noopener">
+                                    <i class="bi bi-download"></i>
+                                    {{ $tryoutPengaturan->permenpan_nama ?: 'Unduh Surat PermenPAN' }}
+                                </a>
+                            @endif
                         </div>
                     </div>
+                </div>
 
-                    <div class="tryout-history-list" id="tryoutHistoryList">
-                        @forelse ($riwayatTryout as $riwayat)
-                            <div class="tryout-history-item">
-                                <div>
-                                    <strong>{{ $riwayat->finished_at ? $riwayat->finished_at->format('d M Y H:i') : '-' }}</strong>
-                                    <small>{{ $riwayat->total_dijawab }}/{{ $riwayat->total_soal }} dijawab, {{ $riwayat->total_benar }} benar</small>
+                <div class="tryout-tabs" role="tablist" aria-label="Menu Tryout CPNS" data-aos="fade-up">
+                    <a href="{{ route('tryout.index', ['tab' => 'materi']) }}" class="tryout-tab {{ $activeTryoutTab === 'materi' ? 'active' : '' }}">
+                        <span>1</span>
+                        Materi
+                    </a>
+                    <a href="{{ route('tryout.index', ['tab' => 'simulasi']) }}" class="tryout-tab {{ $activeTryoutTab === 'simulasi' ? 'active' : '' }}">
+                        <span>2</span>
+                        Simulasi Ujian
+                    </a>
+                    <a href="{{ route('tryout.index', ['tab' => 'evaluasi']) }}" class="tryout-tab {{ $activeTryoutTab === 'evaluasi' ? 'active' : '' }}">
+                        <span>3</span>
+                        Evaluasi Hasil
+                    </a>
+                </div>
+
+                @if ($activeTryoutTab === 'materi')
+                    <div class="tryout-materi-section" data-aos="fade-up">
+                        <div class="tryout-materi-heading">
+                            <span>Materi Ujian</span>
+                            <h2>Pembahasan Pembelajaran CAT CPNS</h2>
+                        </div>
+
+                        @if ($hasMateri)
+                            <div class="tryout-materi-toolbar">
+                                <div class="tryout-materi-search">
+                                    <i class="bi bi-search"></i>
+                                    <input type="search" id="materiSearchInput" placeholder="Cari judul atau ringkasan materi...">
                                 </div>
 
-                                <span>
-                                    <small>Skor</small>
-                                    {{ $riwayat->total_skor }}
-                                </span>
-                            </div>
-                        @empty
-                            <div class="tryout-history-empty" id="tryoutHistoryEmpty">
-                                Belum ada riwayat. Ikuti simulasi pertamamu; hasilnya akan tampil di sini setelah selesai.
-                            </div>
-                        @endforelse
-                    </div>
-                </div>
-            @endif
+                                <select id="materiFilterSelect" class="tryout-materi-filter" aria-label="Filter jenis materi">
+                                    <option value="">Semua jenis materi</option>
+                                    @foreach ($kategoriMateriOptions as $kodeKategori)
+                                        <option value="{{ $kodeKategori }}">{{ $kodeKategori }}</option>
+                                    @endforeach
+                                </select>
 
-            @if ($showMateri)
-                <div class="tryout-materi-section" data-aos="fade-up">
-                    <div class="tryout-materi-heading">
-                        <span>Materi Ujian</span>
-                        <h2>Pembahasan Pembelajaran CAT CPNS</h2>
-                    </div>
-
-                    @if ($hasMateri)
-                        <div class="tryout-materi-toolbar">
-                            <div class="tryout-materi-search">
-                                <i class="bi bi-search"></i>
-                                <input type="search" id="materiSearchInput" placeholder="Cari judul atau ringkasan materi...">
+                                <select id="materiSortSelect" class="tryout-materi-filter" aria-label="Urutkan materi">
+                                    <option value="kategori-asc">Jenis A-Z</option>
+                                    <option value="kategori-desc">Jenis Z-A</option>
+                                    <option value="judul-asc">Judul A-Z</option>
+                                    <option value="judul-desc">Judul Z-A</option>
+                                </select>
                             </div>
 
-                            <select id="materiFilterSelect" class="tryout-materi-filter" aria-label="Filter jenis materi">
-                                <option value="">Semua jenis materi</option>
-                                @foreach ($kategoriMateriOptions as $kodeKategori)
-                                    <option value="{{ $kodeKategori }}">{{ $kodeKategori }}</option>
-                                @endforeach
-                            </select>
-
-                            <select id="materiSortSelect" class="tryout-materi-filter" aria-label="Urutkan materi">
-                                <option value="kategori-asc">Jenis A-Z</option>
-                                <option value="kategori-desc">Jenis Z-A</option>
-                                <option value="judul-asc">Judul A-Z</option>
-                                <option value="judul-desc">Judul Z-A</option>
-                            </select>
-                        </div>
-
-                        <div class="tryout-materi-table-card">
-                            <div class="table-responsive">
-                                <table class="tryout-materi-table" id="materiTable">
-                                    <thead>
-                                        <tr>
-                                            <th>No</th>
-                                            <th>Jenis Materi</th>
-                                            <th>Judul Materi</th>
-                                            <th>Ringkasan</th>
-                                            <th>Aksi</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="materiTableBody">
-                                        @foreach ($allMateri as $materi)
-                                            @php
-                                                $kodeKategori = $materi->kategoriSoal->kode ?? 'LAIN';
-                                                $namaKategori = $materi->kategoriSoal->nama ?? 'Materi Tambahan';
-                                                $ringkasanMateri = $materi->ringkasan ?: $materi->isi_materi;
-                                            @endphp
-                                            <tr data-category="{{ $kodeKategori }}"
-                                                data-title="{{ \Illuminate\Support\Str::lower($materi->judul) }}"
-                                                data-summary="{{ \Illuminate\Support\Str::lower(strip_tags($ringkasanMateri)) }}">
-                                                <td class="materi-row-number">{{ $loop->iteration }}</td>
-                                                <td>
-                                                    <span class="tryout-materi-code">
-                                                        {{ $kodeKategori }}
-                                                    </span>
-                                                    <small>{{ $namaKategori }}</small>
-                                                </td>
-                                                <td>
-                                                    <strong>{{ $materi->judul }}</strong>
-                                                </td>
-                                                <td>{{ \Illuminate\Support\Str::limit(strip_tags($ringkasanMateri), 120) }}</td>
-                                                <td>
-                                                    <a href="{{ route('tryout.materi.show', $materi) }}" class="tryout-detail-btn">
-                                                        <i class="bi bi-eye"></i>
-                                                        Detail
-                                                    </a>
-                                                </td>
+                            <div class="tryout-materi-table-card">
+                                <div class="table-responsive">
+                                    <table class="tryout-materi-table" id="materiTable">
+                                        <thead>
+                                            <tr>
+                                                <th>No</th>
+                                                <th>Jenis Materi</th>
+                                                <th>Judul Materi</th>
+                                                <th>Ringkasan</th>
+                                                <th>Aksi</th>
                                             </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
+                                        </thead>
+                                        <tbody id="materiTableBody">
+                                            @foreach ($allMateri as $materi)
+                                                @php
+                                                    $kodeKategori = $materi->kategoriSoal->kode ?? 'LAIN';
+                                                    $namaKategori = $materi->kategoriSoal->nama ?? 'Materi Tambahan';
+                                                    $ringkasanMateri = $materi->ringkasan ?: $materi->isi_materi;
+                                                @endphp
+                                                <tr data-category="{{ $kodeKategori }}"
+                                                    data-title="{{ \Illuminate\Support\Str::lower($materi->judul) }}"
+                                                    data-summary="{{ \Illuminate\Support\Str::lower(strip_tags($ringkasanMateri)) }}">
+                                                    <td class="materi-row-number">{{ $loop->iteration }}</td>
+                                                    <td>
+                                                        <span class="tryout-materi-code">{{ $kodeKategori }}</span>
+                                                        <small>{{ $namaKategori }}</small>
+                                                    </td>
+                                                    <td><strong>{{ $materi->judul }}</strong></td>
+                                                    <td>{{ \Illuminate\Support\Str::limit(strip_tags($ringkasanMateri), 120) }}</td>
+                                                    <td>
+                                                        <a href="{{ route('tryout.materi.show', $materi) }}" class="tryout-detail-btn">
+                                                            <i class="bi bi-eye"></i>
+                                                            Detail
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <div class="tryout-materi-table-empty d-none" id="materiTableEmpty">
+                                Materi tidak ditemukan.
+                            </div>
+                        @else
+                            <div class="tryout-empty-state">
+                                <i class="bi bi-journal-plus"></i>
+                                <h3>Belum ada materi aktif</h3>
+                                <p>Materi pembelajaran belum tersedia. Silakan kembali lagi nanti atau coba simulasi.</p>
+                            </div>
+                        @endif
+                    </div>
+                @elseif ($activeTryoutTab === 'simulasi')
+                    <div class="tryout-simulation-panel" data-aos="fade-up">
+                        <div>
+                            <span class="tryout-panel-label">Petunjuk Ujian</span>
+                            <h2>Ikuti simulasi setelah memahami aturan pengerjaan</h2>
+                            <p>Simulasi berjalan seperti ujian CAT. Jawaban tersimpan otomatis dan peserta langsung diarahkan ke soal berikutnya setelah memilih jawaban.</p>
+                            <ul class="cat-instructions">
+                                <li>Jumlah soal: <strong>{{ $soals->count() }}</strong>; durasi: <strong>{{ $tryoutPengaturan->durasi_menit ?? 45 }} menit</strong>.</li>
+                                <li>Kerjakan soal sesuai urutan atau gunakan navigasi nomor soal.</li>
+                                <li>Tandai <strong>Ragu-ragu</strong> bila ingin meninjau jawaban sebelum menyelesaikan ujian.</li>
+                                <li>Hasil ujian tersimpan dan dapat dievaluasi pada tab <strong>Evaluasi Hasil</strong>.</li>
+                            </ul>
+                            <div class="cat-actions">
+                                <a href="{{ route('tryout.index', ['mode' => 'ujian']) }}" class="cat-action-btn">
+                                    <i class="bi bi-play-circle"></i>
+                                    Mulai Ujian
+                                </a>
+                                <a href="{{ route('tryout.index', ['tab' => 'materi']) }}" class="cat-action-btn cat-action-secondary">
+                                    <i class="bi bi-journal-bookmark"></i>
+                                    Pelajari Materi
+                                </a>
+                            </div>
+                        </div>
+                        <div class="tryout-simulation-summary">
+                            <span><strong>{{ $soals->count() }}</strong> Soal Aktif</span>
+                            <span><strong>{{ $tryoutPengaturan->durasi_menit ?? 45 }}</strong> Menit</span>
+                            <span><strong>{{ $soals->pluck('kategori')->unique()->count() }}</strong> Kategori</span>
+                        </div>
+                    </div>
+                @elseif ($activeTryoutTab === 'evaluasi')
+                    <div class="tryout-history-card" id="tryoutHistoryCard" data-aos="fade-up">
+                        <div class="tryout-history-header">
+                            <div>
+                                <span>Evaluasi Hasil</span>
+                                <h2>Riwayat mengikuti tryout</h2>
+                                <p>Lihat skor terakhir, jumlah soal terjawab, dan jawaban benar sebagai bahan evaluasi latihan berikutnya.</p>
                             </div>
                         </div>
 
-                        <div class="tryout-materi-table-empty d-none" id="materiTableEmpty">
-                            Materi tidak ditemukan.
+                        <div class="tryout-history-list" id="tryoutHistoryList">
+                            @forelse ($riwayatTryout as $riwayat)
+                                <div class="tryout-history-item">
+                                    <div>
+                                        <strong>{{ $riwayat->finished_at ? $riwayat->finished_at->format('d M Y H:i') : '-' }}</strong>
+                                        <small>{{ $riwayat->total_dijawab }}/{{ $riwayat->total_soal }} dijawab, {{ $riwayat->total_benar }} benar, {{ $riwayat->total_ragu }} ragu</small>
+                                    </div>
+
+                                    <span>
+                                        <small>Skor</small>
+                                        {{ $riwayat->total_skor }}
+                                    </span>
+                                </div>
+                            @empty
+                                <div class="tryout-history-empty" id="tryoutHistoryEmpty">
+                                    Belum ada riwayat. Ikuti simulasi pertamamu; hasilnya akan tampil di sini setelah selesai.
+                                </div>
+                            @endforelse
                         </div>
-                    @else
-                        <div class="tryout-empty-state">
-                            <i class="bi bi-journal-plus"></i>
-                            <h3>Belum ada materi aktif</h3>
-                            <p>Materi pembelajaran belum tersedia. Silakan kembali lagi nanti atau coba simulasi.</p>
-                        </div>
-                    @endif
-                </div>
+                    </div>
+                @endif
             @endif
 
-            @if ($showMateri && $hasMateri)
+            @if ($tryoutMode === 'menu' && $activeTryoutTab === 'materi' && $hasMateri)
                 <script>
                     document.addEventListener('DOMContentLoaded', function() {
                         const searchInput = document.getElementById('materiSearchInput');
@@ -278,7 +311,6 @@
                     });
                 </script>
             @endif
-
             @if ($showExam)
                 @if ($soals->isEmpty())
                     <div class="tryout-empty-state" data-aos="fade-up">
@@ -304,7 +336,7 @@
                         </ul>
                         <div class="cat-actions">
                             <button type="button" class="cat-action-btn" id="startExamButton"><i class="bi bi-play-circle"></i> Mulai Sekarang</button>
-                            <a href="{{ route('tryout.index', ['mode' => 'materi']) }}" class="cat-action-btn cat-action-secondary"><i class="bi bi-journal-bookmark"></i> Pelajari Materi</a>
+                            <a href="{{ route('tryout.index', ['tab' => 'materi']) }}" class="cat-action-btn cat-action-secondary"><i class="bi bi-journal-bookmark"></i> Pelajari Materi</a>
                         </div>
                         <p class="cat-preparation-note">Timer baru berjalan setelah kamu menekan Mulai Sekarang.</p>
                     </div>

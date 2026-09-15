@@ -1304,12 +1304,33 @@
                             </button>
                         </div>
 
-                        <form action="/simpan-tryout-pengaturan" method="POST" class="tryout-setting-card mb-4">
+                        <form action="/simpan-tryout-pengaturan" method="POST" enctype="multipart/form-data" class="tryout-setting-card mb-4">
                             @csrf
 
                             <div>
                                 <h6>Pengaturan Tryout</h6>
-                                <p>Pengaturan ini berlaku untuk peserta di halaman Tryout CAT CPNS.</p>
+                                <p>Pengaturan ini berlaku untuk peserta di halaman Tryout CPNS.</p>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="kisi_kisi_deskripsi" class="form-label fw-semibold">Keterangan Kisi-kisi</label>
+                                <textarea id="kisi_kisi_deskripsi" name="kisi_kisi_deskripsi" rows="4" class="form-control"
+                                    placeholder="Contoh: Materi dan simulasi ujian ini disusun berdasarkan kisi-kisi SKD CPNS terbaru...">{{ old('kisi_kisi_deskripsi', $tryoutPengaturan->kisi_kisi_deskripsi) }}</textarea>
+                                <small class="text-muted">Teks ini tampil di beranda Tryout CPNS sebagai acuan peserta.</small>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="permenpan_file" class="form-label fw-semibold">Upload Surat PermenPAN</label>
+                                <input type="file" id="permenpan_file" name="permenpan_file" class="form-control" accept="application/pdf,.pdf">
+                                <small class="text-muted">
+                                    Format PDF maksimal 5 MB.
+                                    @if ($tryoutPengaturan->permenpan_file)
+                                        File aktif:
+                                        <a href="{{ asset('storage/' . $tryoutPengaturan->permenpan_file) }}" target="_blank" rel="noopener">
+                                            {{ $tryoutPengaturan->permenpan_nama ?: 'Surat PermenPAN' }}
+                                        </a>
+                                    @endif
+                                </small>
                             </div>
 
                             <div class="tryout-setting-fields">

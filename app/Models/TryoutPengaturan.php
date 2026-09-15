@@ -12,6 +12,9 @@ class TryoutPengaturan extends Model
         'acak_jawaban',
         'durasi_menit',
         'jumlah_soal',
+        'kisi_kisi_deskripsi',
+        'permenpan_file',
+        'permenpan_nama',
     ];
 
     protected $casts = [
@@ -27,6 +30,7 @@ class TryoutPengaturan extends Model
         return self::firstOrCreate([], [
             'durasi_menit' => 45,
             'jumlah_soal' => 30,
+            'kisi_kisi_deskripsi' => 'Materi dan simulasi Tryout CPNS disusun berdasarkan kisi-kisi seleksi kompetensi dasar yang berlaku. Admin dapat memperbarui keterangan ini dan mengunggah surat PermenPAN terbaru sebagai acuan belajar peserta.',
         ]);
     }
 }
