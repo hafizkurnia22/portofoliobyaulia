@@ -137,22 +137,37 @@ Route::get('/admin/dashboard', function () {
 
     $tentangSaya = \App\Models\TentangSaya::first();
 
-    $totalPengalaman = \App\Models\Pengalaman::count();
-    $totalSertifikasi = \App\Models\Sertifikasi::count();
-    $totalSkill = \App\Models\Skill::count();
-    $totalProject = \App\Models\Project::count();
-    $totalTryoutSoal = \App\Models\TryoutSoal::count();
-    $totalTryoutKategori = \App\Models\TryoutKategoriSoal::count();
-    $totalTryoutPeserta = \App\Models\TryoutPeserta::count();
-    $totalTryoutRiwayat = \App\Models\TryoutRiwayat::count();
-    $totalTryoutMateri = \App\Models\TryoutMateri::count();
+    $totalPengalaman = 0;
+    $totalSertifikasi = 0;
+    $totalSkill = 0;
+    $totalProject = 0;
+    $totalTryoutSoal = 0;
+    $totalTryoutKategori = 0;
+    $totalTryoutPeserta = 0;
+    $totalTryoutRiwayat = 0;
+    $totalTryoutMateri = 0;
+    $rataSkill = 0;
+    $skillTertinggi = null;
+    $sertifikasiTerbaru = null;
+    $pengalamanTerbaru = null;
+    $projectTerbaru = null;
 
-    $rataSkill = \App\Models\Skill::avg('persentase') ?? 0;
-
-    $skillTertinggi = \App\Models\Skill::orderByDesc('persentase')->first();
-    $sertifikasiTerbaru = \App\Models\Sertifikasi::byLatestYear()->first();
-    $pengalamanTerbaru = \App\Models\Pengalaman::byLatestYear()->first();
-    $projectTerbaru = \App\Models\Project::latest()->first();
+    if ($activeTab === 'dashboard') {
+        $totalPengalaman = \App\Models\Pengalaman::count();
+        $totalSertifikasi = \App\Models\Sertifikasi::count();
+        $totalSkill = \App\Models\Skill::count();
+        $totalProject = \App\Models\Project::count();
+        $totalTryoutSoal = \App\Models\TryoutSoal::count();
+        $totalTryoutKategori = \App\Models\TryoutKategoriSoal::count();
+        $totalTryoutPeserta = \App\Models\TryoutPeserta::count();
+        $totalTryoutRiwayat = \App\Models\TryoutRiwayat::count();
+        $totalTryoutMateri = \App\Models\TryoutMateri::count();
+        $rataSkill = \App\Models\Skill::avg('persentase') ?? 0;
+        $skillTertinggi = \App\Models\Skill::orderByDesc('persentase')->first();
+        $sertifikasiTerbaru = \App\Models\Sertifikasi::byLatestYear()->first();
+        $pengalamanTerbaru = \App\Models\Pengalaman::byLatestYear()->first();
+        $projectTerbaru = \App\Models\Project::latest()->first();
+    }
 
     return view('admin.dashboard', compact(
         'pengalaman',

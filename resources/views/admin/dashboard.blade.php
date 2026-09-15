@@ -37,87 +37,89 @@
                 </div>
             </div>
 
-            <div class="row g-4 mb-4">
-                <div class="col-xl col-md-6" data-aos="fade-up" data-aos-delay="100">
-                    <div class="admin-stat-card">
-                        <i class="bi bi-briefcase-fill"></i>
-                        <div>
-                            <h4>{{ $totalPengalaman }}</h4>
-                            <p>Total Pengalaman</p>
+            @if ($activeTab === 'dashboard')
+                <div class="row g-4 mb-4">
+                    <div class="col-xl col-md-6" data-aos="fade-up" data-aos-delay="100">
+                        <div class="admin-stat-card">
+                            <i class="bi bi-briefcase-fill"></i>
+                            <div>
+                                <h4>{{ $totalPengalaman }}</h4>
+                                <p>Total Pengalaman</p>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <div class="col-xl col-md-6" data-aos="fade-up" data-aos-delay="200">
-                    <div class="admin-stat-card">
-                        <i class="bi bi-kanban-fill"></i>
-                        <div>
-                            <h4>{{ $totalProject }}</h4>
-                            <p>Total Project</p>
+                    <div class="col-xl col-md-6" data-aos="fade-up" data-aos-delay="200">
+                        <div class="admin-stat-card">
+                            <i class="bi bi-kanban-fill"></i>
+                            <div>
+                                <h4>{{ $totalProject }}</h4>
+                                <p>Total Project</p>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <div class="col-xl col-md-6" data-aos="fade-up" data-aos-delay="300">
-                    <div class="admin-stat-card">
-                        <i class="bi bi-award-fill"></i>
-                        <div>
-                            <h4>{{ $totalSertifikasi }}</h4>
-                            <p>Total Sertifikasi</p>
+                    <div class="col-xl col-md-6" data-aos="fade-up" data-aos-delay="300">
+                        <div class="admin-stat-card">
+                            <i class="bi bi-award-fill"></i>
+                            <div>
+                                <h4>{{ $totalSertifikasi }}</h4>
+                                <p>Total Sertifikasi</p>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <div class="col-xl col-md-6" data-aos="fade-up" data-aos-delay="400">
-                    <div class="admin-stat-card">
-                        <i class="bi bi-bar-chart-fill"></i>
-                        <div>
-                            <h4>{{ $totalSkill }}</h4>
-                            <p>Total Skill</p>
+                    <div class="col-xl col-md-6" data-aos="fade-up" data-aos-delay="400">
+                        <div class="admin-stat-card">
+                            <i class="bi bi-bar-chart-fill"></i>
+                            <div>
+                                <h4>{{ $totalSkill }}</h4>
+                                <p>Total Skill</p>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <div class="col-xl col-md-6" data-aos="fade-up" data-aos-delay="500">
-                    <div class="admin-stat-card">
-                        <i class="bi bi-ui-checks-grid"></i>
-                        <div>
-                            <h4>{{ $totalTryoutSoal }}</h4>
-                            <p>Total Soal</p>
+                    <div class="col-xl col-md-6" data-aos="fade-up" data-aos-delay="500">
+                        <div class="admin-stat-card">
+                            <i class="bi bi-ui-checks-grid"></i>
+                            <div>
+                                <h4>{{ $totalTryoutSoal }}</h4>
+                                <p>Total Soal</p>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <div class="col-xl col-md-6" data-aos="fade-up" data-aos-delay="550">
-                    <div class="admin-stat-card">
-                        <i class="bi bi-journal-bookmark-fill"></i>
-                        <div>
-                            <h4>{{ $totalTryoutMateri }}</h4>
-                            <p>Materi Ujian</p>
+                    <div class="col-xl col-md-6" data-aos="fade-up" data-aos-delay="550">
+                        <div class="admin-stat-card">
+                            <i class="bi bi-journal-bookmark-fill"></i>
+                            <div>
+                                <h4>{{ $totalTryoutMateri }}</h4>
+                                <p>Materi Ujian</p>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <div class="col-xl col-md-6" data-aos="fade-up" data-aos-delay="600">
-                    <div class="admin-stat-card">
-                        <i class="bi bi-people-fill"></i>
-                        <div>
-                            <h4>{{ $totalTryoutPeserta }}</h4>
-                            <p>Peserta Tryout</p>
+                    <div class="col-xl col-md-6" data-aos="fade-up" data-aos-delay="600">
+                        <div class="admin-stat-card">
+                            <i class="bi bi-people-fill"></i>
+                            <div>
+                                <h4>{{ $totalTryoutPeserta }}</h4>
+                                <p>Peserta Tryout</p>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <div class="col-xl col-md-6" data-aos="fade-up" data-aos-delay="700">
-                    <div class="admin-stat-card">
-                        <i class="bi bi-clock-history"></i>
-                        <div>
-                            <h4>{{ $totalTryoutRiwayat }}</h4>
-                            <p>Riwayat Tryout</p>
+                    <div class="col-xl col-md-6" data-aos="fade-up" data-aos-delay="700">
+                        <div class="admin-stat-card">
+                            <i class="bi bi-clock-history"></i>
+                            <div>
+                                <h4>{{ $totalTryoutRiwayat }}</h4>
+                                <p>Riwayat Tryout</p>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            @endif
 
 
             <div class="admin-table-card" data-aos="fade-up" data-aos-delay="400">
