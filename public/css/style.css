@@ -6473,3 +6473,81 @@ body:has(.cv-builder-page) .custom-navbar {
         font-size: 22px;
     }
 }
+
+/* Refined public navigation with consistent controls and a clear Profile menu. */
+.custom-navbar .nav-premium {
+    gap: 6px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    box-shadow: none;
+}
+.custom-navbar .nav-premium .nav-link,
+.custom-navbar .btn-login-nav {
+    min-height: 44px;
+    padding: 11px 14px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1.4;
+    white-space: nowrap;
+    transition: background-color .15s ease, color .15s ease;
+}
+.custom-navbar .nav-premium .nav-link:hover,
+.custom-navbar .nav-premium .nav-link.active {
+    transform: none;
+    background: rgba(255, 255, 255, .09);
+}
+.custom-navbar .nav-premium .nav-link.active {
+    color: #f1d392 !important;
+    box-shadow: inset 0 -2px 0 #c9aa68;
+}
+.custom-navbar .nav-premium .nav-link-feature {
+    border: 1px solid rgba(201, 170, 104, .45);
+    background: rgba(201, 170, 104, .08);
+}
+.custom-navbar .nav-login-item { margin-left: 6px; }
+.custom-navbar .btn-login-nav {
+    box-shadow: none;
+    background: #0d9488;
+    gap: 8px;
+}
+.custom-navbar .btn-login-nav:hover {
+    background: #0f766e;
+    box-shadow: none;
+    transform: none;
+}
+.custom-navbar .nav-link:focus-visible,
+.custom-navbar .btn-login-nav:focus-visible,
+.custom-navbar .dropdown-item:focus-visible {
+    outline: 2px solid #c9aa68;
+    outline-offset: 3px;
+}
+.custom-navbar .premium-dropdown-menu {
+    min-width: 250px;
+    padding: 10px;
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+    background: #fff;
+    box-shadow: 0 16px 40px rgba(7, 17, 31, .18);
+}
+.custom-navbar .premium-dropdown-menu .dropdown-item {
+    color: #20334c;
+    font-weight: 600;
+    padding: 11px 12px;
+}
+.custom-navbar .premium-dropdown-menu .dropdown-item i { color: #0f766e; }
+.custom-navbar .premium-dropdown-menu .dropdown-item:hover,
+.custom-navbar .premium-dropdown-menu .dropdown-item:focus,
+.custom-navbar .premium-dropdown-menu .dropdown-item.active {
+    background: #eef5f9;
+    color: #0b1f3a;
+}
+.custom-navbar .premium-dropdown-menu .dropdown-divider { border-color: #e2e8f0; }
+.custom-navbar .premium-dropdown-status small { color: #0f766e; }
+.custom-navbar .premium-dropdown-status strong { color: #20334c; }
+@media (max-width: 1399.98px) {
+    .custom-navbar .nav-login-item { margin-left: 0; }
+    .custom-navbar .nav-premium .nav-link { width: 100%; }
+    .custom-navbar .premium-dropdown-menu { margin: 6px 0 !important; }
+}

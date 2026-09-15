@@ -11,7 +11,7 @@
         </a>
 
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMenu"
-            aria-controls="navbarMenu" aria-expanded="false" aria-label="Toggle navigation">
+            aria-controls="navbarMenu" aria-expanded="false" aria-label="Buka menu navigasi">
             <span class="navbar-toggler-icon"></span>
         </button>
 
@@ -22,14 +22,6 @@
                     <a class="nav-link nav-scroll-link" href="{{ url('/#home') }}" data-section="home">
                         <i class="bi bi-house-door"></i>
                         Beranda
-                    </a>
-                </li>
-
-                <li class="nav-item">
-                    <a class="nav-link {{ request()->routeIs('tryout.index', 'tryout.login', 'tryout.materi.show') ? 'active' : '' }}"
-                        href="{{ route('tryout.index') }}">
-                        <i class="bi bi-pc-display-horizontal"></i>
-                        Tryout CPNS
                     </a>
                 </li>
 
@@ -102,6 +94,14 @@
                     </ul>
                 </li>
 
+                <li class="nav-item">
+                    <a class="nav-link {{ request()->routeIs('tryout.index', 'tryout.login', 'tryout.materi.show') ? 'active' : '' }}"
+                        href="{{ route('tryout.index') }}">
+                        <i class="bi bi-pc-display-horizontal"></i>
+                        Tryout CPNS
+                    </a>
+                </li>
+
                 {{-- Menu ini menggantikan download langsung agar pengunjung bisa memilih template CV dulu. --}}
                 <li class="nav-item">
                     <a class="nav-link nav-link-feature" href="{{ route('cv.builder') }}">
@@ -110,7 +110,7 @@
                     </a>
                 </li>
 
-                <li class="nav-item ms-lg-3">
+                <li class="nav-item nav-login-item">
                     <a href="/admin/login" class="btn-login-nav">
                         <i class="bi bi-box-arrow-in-right"></i>
                         Login Admin
@@ -143,7 +143,7 @@
     const moreToggle = document.querySelector('.nav-more-toggle');
 
     function setActiveNav() {
-        let currentSection = 'home';
+        let currentSection = document.getElementById('home') ? 'home' : null;
 
         sections.forEach(function(section) {
             const sectionTop = section.offsetTop - 140;
