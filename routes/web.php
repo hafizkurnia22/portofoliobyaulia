@@ -64,17 +64,77 @@ Route::get('/admin/dashboard', function () {
         return redirect('/admin/login');
     }
 
-    $pengalaman = \App\Models\Pengalaman::byLatestYear()->paginate(5, ['*'], 'pengalaman_page');
-    $sertifikasi = \App\Models\Sertifikasi::byLatestYear()->paginate(5, ['*'], 'sertifikasi_page');
-    $skill = \App\Models\Skill::latest()->paginate(5, ['*'], 'skill_page');
-    $project = \App\Models\Project::latest()->paginate(5, ['*'], 'project_page');
-    $tryoutKategoriSoal = \App\Models\TryoutKategoriSoal::orderBy('id')->paginate(5, ['*'], 'tryout_kategori_page');
+    $activeTab = request('active_tab', old('active_tab', session('active_tab', 'dashboard')));
+    $allowedTabs = [
+        'dashboard',
+        'pengalaman',
+        'sertifikasi',
+        'skill',
+        'project',
+        'tentang',
+        'master-kategori-soal',
+        'master-materi-tryout',
+        'master-peserta-tryout',
+        'riwayat-tryout',
+        'master-soal',
+    ];
+
+    if (!in_array($activeTab, $allowedTabs, true)) {
+        $activeTab = 'dashboard';
+    }
+
+    $emptyPaginator = function (string $pageName, int $perPage) {
+        return new \Illuminate\Pagination\LengthAwarePaginator(
+            collect(),
+            0,
+            $perPage,
+            request($pageName, 1),
+            [
+                'path' => request()->url(),
+                'pageName' => $pageName,
+            ]
+        );
+    };
+
+    $pengalaman = $activeTab === 'pengalaman'
+        ? \App\Models\Pengalaman::byLatestYear()->paginate(5, ['*'], 'pengalaman_page')
+        : $emptyPaginator('pengalaman_page', 5);
+
+    $sertifikasi = $activeTab === 'sertifikasi'
+        ? \App\Models\Sertifikasi::byLatestYear()->paginate(5, ['*'], 'sertifikasi_page')
+        : $emptyPaginator('sertifikasi_page', 5);
+
+    $skill = $activeTab === 'skill'
+        ? \App\Models\Skill::latest()->paginate(5, ['*'], 'skill_page')
+        : $emptyPaginator('skill_page', 5);
+
+    $project = $activeTab === 'project'
+        ? \App\Models\Project::latest()->paginate(5, ['*'], 'project_page')
+        : $emptyPaginator('project_page', 5);
+
+    $tryoutKategoriSoal = $activeTab === 'master-kategori-soal'
+        ? \App\Models\TryoutKategoriSoal::orderBy('id')->paginate(5, ['*'], 'tryout_kategori_page')
+        : $emptyPaginator('tryout_kategori_page', 5);
+
     $tryoutKategoriOptions = \App\Models\TryoutKategoriSoal::aktif()->orderBy('id')->get();
     $tryoutPengaturan = \App\Models\TryoutPengaturan::current();
-    $tryoutPeserta = \App\Models\TryoutPeserta::latest()->paginate(8, ['*'], 'tryout_peserta_page');
-    $tryoutRiwayat = \App\Models\TryoutRiwayat::with('peserta')->latest()->paginate(10, ['*'], 'tryout_riwayat_page');
-    $tryoutMateri = \App\Models\TryoutMateri::with('kategoriSoal')->latest()->paginate(8, ['*'], 'tryout_materi_page');
-    $tryoutSoal = \App\Models\TryoutSoal::with('kategoriSoal')->latest()->paginate(8, ['*'], 'tryout_soal_page');
+
+    $tryoutPeserta = $activeTab === 'master-peserta-tryout'
+        ? \App\Models\TryoutPeserta::latest()->paginate(8, ['*'], 'tryout_peserta_page')
+        : $emptyPaginator('tryout_peserta_page', 8);
+
+    $tryoutRiwayat = $activeTab === 'riwayat-tryout'
+        ? \App\Models\TryoutRiwayat::with('peserta')->latest()->paginate(10, ['*'], 'tryout_riwayat_page')
+        : $emptyPaginator('tryout_riwayat_page', 10);
+
+    $tryoutMateri = $activeTab === 'master-materi-tryout'
+        ? \App\Models\TryoutMateri::with('kategoriSoal')->latest()->paginate(8, ['*'], 'tryout_materi_page')
+        : $emptyPaginator('tryout_materi_page', 8);
+
+    $tryoutSoal = $activeTab === 'master-soal'
+        ? \App\Models\TryoutSoal::with('kategoriSoal')->latest()->paginate(8, ['*'], 'tryout_soal_page')
+        : $emptyPaginator('tryout_soal_page', 8);
+
     $tentangSaya = \App\Models\TentangSaya::first();
 
     $totalPengalaman = \App\Models\Pengalaman::count();
@@ -107,6 +167,7 @@ Route::get('/admin/dashboard', function () {
         'tryoutMateri',
         'tryoutSoal',
         'tentangSaya',
+        'activeTab',
         'totalPengalaman',
         'totalSertifikasi',
         'totalSkill',

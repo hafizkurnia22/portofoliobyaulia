@@ -4000,6 +4000,12 @@ html:has(.tryout-exam-page) {
     transition-property: transform, opacity !important;
 }
 
+.admin-dashboard [data-aos] {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+}
+
 .hover-float {
     transition: 0.4s ease;
 }

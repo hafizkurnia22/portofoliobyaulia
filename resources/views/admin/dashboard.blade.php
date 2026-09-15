@@ -5,7 +5,7 @@
 @section('content')
 
     @php
-        $activeTab = request('active_tab', old('active_tab', session('active_tab', 'dashboard')));
+        $activeTab = $activeTab ?? request('active_tab', old('active_tab', session('active_tab', 'dashboard')));
     @endphp
 
     <section class="admin-dashboard">
@@ -1481,6 +1481,7 @@
             </div>
     </section>
 
+    <div id="admin-modal-root">
     {{-- MODAL EDIT PENGALAMAN --}}
     @foreach ($pengalaman as $item)
         <div class="modal fade" id="editModal{{ $item->id }}" tabindex="-1">
@@ -2637,6 +2638,7 @@
                 </form>
             </div>
         </div>
+    </div>
     </div>
 
 

@@ -104,10 +104,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    function getActiveTabFromUrl(url) {
-        return new URL(url, window.location.href).searchParams.get('active_tab') || 'dashboard';
-    }
-
     function scrollToActiveData(panel) {
         const target = panel.querySelector('.admin-table-header, .dashboard-stat-section, .tentang-preview-card') || panel;
         const topOffset = 18;
@@ -119,40 +115,10 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    function switchAdminTab(url, pushState = true) {
-        const nextUrl = new URL(url, window.location.href);
-        const activeTab = getActiveTabFromUrl(nextUrl.href);
-        const targetPanel = document.getElementById(`${activeTab}-panel`);
-
-        if (!targetPanel || nextUrl.pathname !== window.location.pathname) return false;
-
-        document.querySelectorAll('.admin-content-panel .tab-pane').forEach(panel => {
-            panel.classList.remove('show', 'active');
-        });
-
-        targetPanel.classList.add('show', 'active');
-
-        document.querySelectorAll('.admin-sidebar-nav .nav-link[href*="active_tab="]').forEach(link => {
-            const linkTab = getActiveTabFromUrl(link.href);
-            link.classList.toggle('active', linkTab === activeTab);
-        });
-
-        if (pushState) {
-            window.history.pushState({ adminPanel: true }, '', nextUrl.href);
-        }
-
-        if (window.AOS) {
-            window.AOS.refreshHard();
-        }
-
-        requestAnimationFrame(() => scrollToActiveData(targetPanel));
-
-        return true;
-    }
-
     async function loadAdminPanel(url, pushState = true) {
         const contentPanel = document.querySelector('.admin-content-panel');
         const currentContent = document.querySelector('.admin-content-panel .tab-content');
+        const currentModalRoot = document.getElementById('admin-modal-root');
 
         if (!contentPanel || !currentContent) {
             window.location.href = url;
@@ -174,18 +140,25 @@ document.addEventListener('DOMContentLoaded', function () {
             const html = await response.text();
             const nextDoc = new DOMParser().parseFromString(html, 'text/html');
             const nextContent = nextDoc.querySelector('.admin-content-panel .tab-content');
+            const nextModalRoot = nextDoc.getElementById('admin-modal-root');
 
             if (!nextContent) throw new Error('Konten admin tidak ditemukan');
 
             currentContent.innerHTML = nextContent.innerHTML;
+            if (currentModalRoot && nextModalRoot) {
+                currentModalRoot.innerHTML = nextModalRoot.innerHTML;
+            }
             updateAdminChrome(nextDoc);
+            initTryoutScoringMode(document);
+            initRichEditors(document);
 
             if (pushState) {
                 window.history.pushState({ adminPanel: true }, '', url);
             }
 
-            if (window.AOS) {
-                window.AOS.refreshHard();
+            const activePanel = currentContent.querySelector('.tab-pane.show.active');
+            if (activePanel) {
+                requestAnimationFrame(() => scrollToActiveData(activePanel));
             }
         } catch (error) {
             window.location.href = url;
@@ -231,10 +204,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (!url || navigationLink.target === '_blank' || new URL(url).origin !== window.location.origin) return;
 
         event.preventDefault();
-
-        if (!switchAdminTab(url)) {
-            loadAdminPanel(url);
-        }
+        loadAdminPanel(url);
     });
 
     document.addEventListener('input', function (event) {
@@ -255,9 +225,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     window.addEventListener('popstate', function () {
-        if (!switchAdminTab(window.location.href, false)) {
-            loadAdminPanel(window.location.href, false);
-        }
+        loadAdminPanel(window.location.href, false);
     });
 
     initTryoutScoringMode();
