@@ -104,6 +104,39 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
+    function getActiveTabFromUrl(url) {
+        return new URL(url, window.location.href).searchParams.get('active_tab') || 'dashboard';
+    }
+
+    function switchAdminTab(url, pushState = true) {
+        const nextUrl = new URL(url, window.location.href);
+        const activeTab = getActiveTabFromUrl(nextUrl.href);
+        const targetPanel = document.getElementById(`${activeTab}-panel`);
+
+        if (!targetPanel || nextUrl.pathname !== window.location.pathname) return false;
+
+        document.querySelectorAll('.admin-content-panel .tab-pane').forEach(panel => {
+            panel.classList.remove('show', 'active');
+        });
+
+        targetPanel.classList.add('show', 'active');
+
+        document.querySelectorAll('.admin-sidebar-nav .nav-link[href*="active_tab="]').forEach(link => {
+            const linkTab = getActiveTabFromUrl(link.href);
+            link.classList.toggle('active', linkTab === activeTab);
+        });
+
+        if (pushState) {
+            window.history.pushState({ adminPanel: true }, '', nextUrl.href);
+        }
+
+        if (window.AOS) {
+            window.AOS.refreshHard();
+        }
+
+        return true;
+    }
+
     async function loadAdminPanel(url, pushState = true) {
         const contentPanel = document.querySelector('.admin-content-panel');
         const currentContent = document.querySelector('.admin-content-panel .tab-content');
@@ -185,7 +218,10 @@ document.addEventListener('DOMContentLoaded', function () {
         if (!url || navigationLink.target === '_blank' || new URL(url).origin !== window.location.origin) return;
 
         event.preventDefault();
-        loadAdminPanel(url);
+
+        if (!switchAdminTab(url)) {
+            loadAdminPanel(url);
+        }
     });
 
     document.addEventListener('input', function (event) {
@@ -206,7 +242,9 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     window.addEventListener('popstate', function () {
-        loadAdminPanel(window.location.href, false);
+        if (!switchAdminTab(window.location.href, false)) {
+            loadAdminPanel(window.location.href, false);
+        }
     });
 
     initTryoutScoringMode();
