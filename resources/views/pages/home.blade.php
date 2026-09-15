@@ -359,7 +359,9 @@
                             </div>
 
                             <h3>{{ $project->nama_project }}</h3>
-                            <p>{{ $project->deskripsi }}</p>
+                            <p class="project-description">
+                                {{ \Illuminate\Support\Str::limit(strip_tags($project->deskripsi), 190) }}
+                            </p>
 
                             @if ($techList->isNotEmpty())
                                 <div class="project-tech-list">
@@ -370,6 +372,12 @@
                             @endif
 
                             <div class="project-actions">
+                                <button type="button" class="project-link project-link-outline"
+                                    data-bs-toggle="modal" data-bs-target="#projectDetailModal{{ $project->id }}">
+                                    Baca Selengkapnya
+                                    <i class="bi bi-arrow-right"></i>
+                                </button>
+
                                 @if ($project->link_demo)
                                     <a href="{{ $project->link_demo }}" target="_blank" class="project-link">
                                         Demo
@@ -404,6 +412,60 @@
                 @endforelse
             </div>
         </div>
+
+        @foreach ($projects as $project)
+            @php
+                $modalTechList = collect(explode(',', $project->teknologi ?? ''))->map(function ($tech) {
+                    return trim($tech);
+                })->filter();
+            @endphp
+
+            <div class="modal fade project-detail-modal" id="projectDetailModal{{ $project->id }}" tabindex="-1"
+                aria-labelledby="projectDetailModalLabel{{ $project->id }}" aria-hidden="true">
+                <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+                    <div class="modal-content">
+                        <button type="button" class="btn-close project-detail-close" data-bs-dismiss="modal"
+                            aria-label="Tutup"></button>
+
+                        @if ($project->gambar)
+                            <img src="{{ asset('images/projects/' . $project->gambar) }}"
+                                alt="{{ $project->nama_project }}" class="project-detail-cover">
+                        @endif
+
+                        <div class="project-detail-body">
+                            <span>{{ $project->kategori ?? 'Project' }}</span>
+                            <h3 id="projectDetailModalLabel{{ $project->id }}">{{ $project->nama_project }}</h3>
+                            <p>{{ $project->deskripsi }}</p>
+
+                            @if ($modalTechList->isNotEmpty())
+                                <div class="project-tech-list">
+                                    @foreach ($modalTechList as $tech)
+                                        <span>{{ $tech }}</span>
+                                    @endforeach
+                                </div>
+                            @endif
+
+                            <div class="project-actions">
+                                @if ($project->link_demo)
+                                    <a href="{{ $project->link_demo }}" target="_blank" class="project-link">
+                                        Demo
+                                        <i class="bi bi-arrow-up-right"></i>
+                                    </a>
+                                @endif
+
+                                @if ($project->link_repository)
+                                    <a href="{{ $project->link_repository }}" target="_blank"
+                                        class="project-link project-link-outline">
+                                        Repository
+                                        <i class="bi bi-github"></i>
+                                    </a>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @endforeach
     </section>
 
     <!-- Sertifikasi -->

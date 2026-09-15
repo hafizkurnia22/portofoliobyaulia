@@ -5870,6 +5870,14 @@ body:has(.cv-builder-page) .custom-navbar {
     margin-bottom: 20px;
 }
 
+.project-description {
+    display: -webkit-box;
+    min-height: 5.25em;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+}
+
 .project-tech-list {
     display: flex;
     flex-wrap: wrap;
@@ -5897,6 +5905,7 @@ body:has(.cv-builder-page) .custom-navbar {
     min-height: 44px;
     width: fit-content;
     padding: 11px 16px;
+    border: 0;
     border-radius: 8px;
     background: #0b1f3a;
     color: #ffffff;
@@ -5934,6 +5943,65 @@ body:has(.cv-builder-page) .custom-navbar {
     display: inline-flex;
     align-items: center;
     font-weight: 800;
+}
+
+.project-detail-modal .modal-content {
+    position: relative;
+    overflow: hidden;
+    border: 0;
+    border-radius: 8px;
+    background: #ffffff;
+    box-shadow: 0 28px 80px rgba(15, 23, 42, 0.22);
+}
+
+.project-detail-close {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    z-index: 2;
+    width: 38px;
+    height: 38px;
+    border-radius: 8px;
+    background-color: #ffffff;
+    opacity: 1;
+    box-shadow: 0 12px 28px rgba(15, 23, 42, 0.16);
+}
+
+.project-detail-cover {
+    width: 100%;
+    max-height: 320px;
+    object-fit: cover;
+    background: #e2e8f0;
+}
+
+.project-detail-body {
+    padding: 30px;
+}
+
+.project-detail-body > span {
+    display: inline-flex;
+    margin-bottom: 12px;
+    padding: 7px 12px;
+    border-radius: 999px;
+    background: #dbeafe;
+    color: #0b1f3a;
+    font-size: 12px;
+    font-weight: 900;
+    text-transform: uppercase;
+}
+
+.project-detail-body h3 {
+    margin: 0 0 14px;
+    color: #0b1f3a;
+    font-size: 28px;
+    font-weight: 900;
+    line-height: 1.25;
+}
+
+.project-detail-body p {
+    margin: 0 0 22px;
+    color: #475569;
+    line-height: 1.8;
 }
 
 .project-empty-state {
