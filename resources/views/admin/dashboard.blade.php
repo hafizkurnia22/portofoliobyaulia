@@ -533,7 +533,7 @@
                         </div>
 
                         <div class="table-responsive" data-aos="fade-up">
-                            <table class="table admin-table align-middle" id="project-table">
+                            <table class="table admin-table align-middle admin-project-table" id="project-table">
                                 <thead>
                                     <tr>
                                         <th>No</th>
@@ -563,8 +563,12 @@
                                             </td>
 
                                             <td>
-                                                <strong>{{ $item->nama_project }}</strong>
-                                                <p class="admin-desc mb-0 mt-1">{{ $item->deskripsi }}</p>
+                                                <div class="admin-project-summary">
+                                                    <strong>{{ $item->nama_project }}</strong>
+                                                    <p class="admin-desc mb-0 mt-1">
+                                                        {{ \Illuminate\Support\Str::limit(strip_tags($item->deskripsi), 145) }}
+                                                    </p>
+                                                </div>
                                             </td>
                                             <td>
                                                 <span class="admin-badge">{{ $item->kategori ?? 'Project' }}</span>

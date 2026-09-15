@@ -463,6 +463,70 @@ body {
     vertical-align: middle;
 }
 
+.admin-project-table {
+    table-layout: fixed;
+}
+
+.admin-project-table th:nth-child(1),
+.admin-project-table td:nth-child(1) {
+    width: 64px;
+}
+
+.admin-project-table th:nth-child(2),
+.admin-project-table td:nth-child(2) {
+    width: 120px;
+}
+
+.admin-project-table th:nth-child(3),
+.admin-project-table td:nth-child(3) {
+    width: 330px;
+}
+
+.admin-project-table th:nth-child(4),
+.admin-project-table td:nth-child(4),
+.admin-project-table th:nth-child(5),
+.admin-project-table td:nth-child(5) {
+    width: 130px;
+}
+
+.admin-project-table th:nth-child(6),
+.admin-project-table td:nth-child(6) {
+    width: 210px;
+}
+
+.admin-project-table th:nth-child(7),
+.admin-project-table td:nth-child(7) {
+    width: 120px;
+}
+
+.admin-project-table th:nth-child(8),
+.admin-project-table td:nth-child(8) {
+    width: 118px;
+}
+
+.admin-project-summary {
+    max-width: 310px;
+}
+
+.admin-project-summary strong {
+    display: -webkit-box;
+    overflow: hidden;
+    color: #0b1f3a;
+    line-height: 1.35;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+}
+
+.admin-project-summary .admin-desc {
+    display: -webkit-box;
+    overflow: hidden;
+    color: #526277;
+    line-height: 1.5;
+    text-align: left;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+}
+
 .admin-logo {
     width: 56px;
     height: 56px;
