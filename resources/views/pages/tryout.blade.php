@@ -593,6 +593,21 @@
                     return soal.jawaban_benar === option ? 5 : 0;
                 }
 
+                function correctDisplayLabel(soal) {
+                    const correctOption = soal.displayOptions.find(function(option) {
+                        return option.originalKey === soal.jawaban_benar;
+                    });
+
+                    return correctOption ? correctOption.label : soal.jawaban_benar;
+                }
+
+                function discussionText(soal) {
+                    const explanation = String(soal.pembahasan || '').replace(/\s*Jawaban\s*:\s*[A-E]\.?\s*$/i, '').trim();
+                    const answerLabel = correctDisplayLabel(soal);
+
+                    return answerLabel ? `${explanation} Jawaban benar: ${answerLabel}.`.trim() : explanation;
+                }
+
                 function updateSummary() {
                     answeredCountEl.textContent = Object.keys(answers).length;
                     markedCountEl.textContent = Object.keys(marked).length;
@@ -683,7 +698,7 @@
                     if (isReview && soal.pembahasan) {
                         const discussion = document.createElement('div');
                         discussion.className = 'cat-discussion';
-                        discussion.textContent = soal.pembahasan;
+                        discussion.textContent = discussionText(soal);
                         questionOptionsEl.appendChild(discussion);
                     }
 
