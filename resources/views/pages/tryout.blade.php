@@ -9,8 +9,12 @@
         $showExam = $tryoutMode === 'ujian';
         $activeTryoutTab = request('tab', 'materi');
         $activeTryoutTab = in_array($activeTryoutTab, ['materi', 'simulasi', 'evaluasi'], true) ? $activeTryoutTab : 'materi';
-        $tryoutKisiKisi = $tryoutPengaturan->kisi_kisi_deskripsi
-            ?: 'Materi dan simulasi Tryout CPNS disusun berdasarkan kisi-kisi seleksi kompetensi dasar yang berlaku. Admin dapat memperbarui keterangan ini dan mengunggah surat PermenPAN terbaru sebagai acuan belajar peserta.';
+        $defaultKisiKisi = 'Pelajari materi dan berlatih menjawab soal untuk persiapan seleksi CPNS. Dokumen acuan membantu Anda memahami cakupan materi yang dipelajari.';
+        $legacyKisiKisi = 'Materi dan simulasi Tryout CPNS disusun berdasarkan kisi-kisi seleksi kompetensi dasar yang berlaku. Admin dapat memperbarui keterangan ini dan mengunggah surat PermenPAN terbaru sebagai acuan belajar peserta.';
+        $tryoutKisiKisi = trim($tryoutPengaturan->kisi_kisi_deskripsi ?? '');
+        if ($tryoutKisiKisi === '' || $tryoutKisiKisi === $legacyKisiKisi) {
+            $tryoutKisiKisi = $defaultKisiKisi;
+        }
         $materiKategori = ['TWK', 'TIU', 'TKP'];
         $allMateri = isset($materiTryout)
             ? $materiTryout->flatten(1)->sortBy(fn ($materi) => optional($materi->kategoriSoal)->kode . $materi->judul)->values()
@@ -34,9 +38,8 @@
                 </div>
             @else
             <div class="tryout-header" data-aos="fade-down">
-                <span class="section-label">Latihan CAT</span>
                 <h1>Tryout CPNS</h1>
-                <p>Latihan TWK, TIU, dan TKP. Pelajari materi, ikuti simulasi, dan pantau hasil latihanmu.</p>
+                <p>Mulai dengan membaca materi, coba latihan ujian, lalu lihat hasil dan pembahasannya.</p>
                 <div class="tryout-participant-bar">
                     <span>
                         <i class="bi bi-person-check"></i>
@@ -47,7 +50,7 @@
                         @csrf
                         <button type="submit">
                             <i class="bi bi-box-arrow-right"></i>
-                            Keluar
+                            Keluar akun
                         </button>
                     </form>
                 </div>
@@ -60,27 +63,25 @@
                         <i class="bi bi-patch-check"></i>
                     </div>
                     <div>
-                        <span>Acuan Materi & Ujian</span>
-                        <h2>Berdasarkan kisi-kisi CPNS yang dapat diperbarui</h2>
+                        <h2>Panduan belajar CPNS</h2>
                         <p>{{ $tryoutKisiKisi }}</p>
-                        <div class="tryout-reference-meta">
-                            <span><i class="bi bi-file-earmark-text"></i> {{ $soals->count() }} soal aktif</span>
-                            <span><i class="bi bi-clock"></i> {{ $tryoutPengaturan->durasi_menit ?? 45 }} menit</span>
-                            <span><i class="bi bi-grid-3x3-gap"></i> TWK · TIU · TKP</span>
-                            @if ($tryoutPengaturan->permenpan_file)
+                        @if ($tryoutPengaturan->permenpan_file)
+                            <div class="tryout-reference-meta">
                                 <a href="{{ asset('storage/' . $tryoutPengaturan->permenpan_file) }}" target="_blank" rel="noopener">
-                                    <i class="bi bi-download"></i>
-                                    {{ $tryoutPengaturan->permenpan_nama ?: 'Unduh Surat PermenPAN' }}
+                                    <i class="bi bi-file-earmark-pdf" aria-hidden="true"></i>
+                                    Baca dokumen acuan (PDF)
+                                    <i class="bi bi-box-arrow-up-right" aria-hidden="true"></i>
+                                    <span class="visually-hidden"> — dibuka di tab baru</span>
                                 </a>
-                            @endif
-                        </div>
+                            </div>
+                        @endif
                     </div>
                 </div>
 
                 <div class="tryout-tabs" role="tablist" aria-label="Menu Tryout CPNS" data-aos="fade-up">
                     <a href="{{ route('tryout.index', ['tab' => 'materi']) }}" class="tryout-tab {{ $activeTryoutTab === 'materi' ? 'active' : '' }}">
                         <span>1</span>
-                        Materi
+                        Pelajari Materi
                     </a>
                     <a href="{{ route('tryout.index', ['tab' => 'simulasi']) }}" class="tryout-tab {{ $activeTryoutTab === 'simulasi' ? 'active' : '' }}">
                         <span>2</span>
@@ -96,7 +97,7 @@
                     <div class="tryout-materi-section" data-aos="fade-up">
                         <div class="tryout-materi-heading">
                             <span>Materi Ujian</span>
-                            <h2>Pembahasan Pembelajaran CAT CPNS</h2>
+                            <h2>Pilih materi yang ingin dipelajari</h2>
                         </div>
 
                         @if ($hasMateri)
@@ -153,7 +154,7 @@
                                                     <td>
                                                         <a href="{{ route('tryout.materi.show', $materi) }}" class="tryout-detail-btn">
                                                             <i class="bi bi-eye"></i>
-                                                            Detail
+                                                            Baca Materi
                                                         </a>
                                                     </td>
                                                 </tr>
@@ -180,13 +181,13 @@
                     <div class="tryout-simulation-panel" data-aos="fade-up">
                         <div>
                             <span class="tryout-panel-label">Petunjuk Ujian</span>
-                            <h2>Ikuti simulasi setelah memahami aturan pengerjaan</h2>
-                            <p>Simulasi berjalan seperti ujian CAT. Jawaban tersimpan otomatis dan peserta langsung diarahkan ke soal berikutnya setelah memilih jawaban.</p>
+                            <h2>Siap mencoba latihan ujian?</h2>
+                            <p>Baca petunjuk berikut sebelum mulai. Saat Anda memilih jawaban, jawaban akan tersimpan otomatis dan soal berikutnya langsung muncul.</p>
                             <ul class="cat-instructions">
                                 <li>Jumlah soal: <strong>{{ $soals->count() }}</strong>; durasi: <strong>{{ $tryoutPengaturan->durasi_menit ?? 45 }} menit</strong>.</li>
-                                <li>Kerjakan soal sesuai urutan atau gunakan navigasi nomor soal.</li>
-                                <li>Tandai <strong>Ragu-ragu</strong> bila ingin meninjau jawaban sebelum menyelesaikan ujian.</li>
-                                <li>Hasil ujian tersimpan dan dapat dievaluasi pada tab <strong>Evaluasi Hasil</strong>.</li>
+                                <li>Klik nomor soal untuk berpindah atau kembali mengubah jawaban.</li>
+                                <li>Jika belum yakin, klik <strong>Ragu-ragu</strong> agar Anda mudah menemukan soal itu kembali.</li>
+                                <li>Setelah selesai, buka tab <strong>Evaluasi Hasil</strong> untuk melihat nilai dan pembahasan jawaban.</li>
                             </ul>
                             <div class="cat-actions">
                                 <a href="{{ route('tryout.index', ['mode' => 'ujian']) }}" class="cat-action-btn">
