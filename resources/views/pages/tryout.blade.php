@@ -92,7 +92,7 @@
                     </a>
                 </div>
 
-                @if ($activeTryoutTab === 'materi')
+                <div class="tryout-tab-panel {{ $activeTryoutTab === 'materi' ? '' : 'd-none' }}" data-tryout-panel="materi">
                     <div class="tryout-materi-section" data-aos="fade-up">
                         <div class="tryout-materi-heading">
                             <span>Materi Ujian</span>
@@ -174,7 +174,9 @@
                             </div>
                         @endif
                     </div>
-                @elseif ($activeTryoutTab === 'simulasi')
+                </div>
+
+                <div class="tryout-tab-panel {{ $activeTryoutTab === 'simulasi' ? '' : 'd-none' }}" data-tryout-panel="simulasi">
                     <div class="tryout-simulation-panel" data-aos="fade-up">
                         <div>
                             <span class="tryout-panel-label">Petunjuk Ujian</span>
@@ -191,7 +193,7 @@
                                     <i class="bi bi-play-circle"></i>
                                     Mulai Ujian
                                 </a>
-                                <a href="{{ route('tryout.index', ['tab' => 'materi']) }}" class="cat-action-btn cat-action-secondary">
+                                <a href="{{ route('tryout.index', ['tab' => 'materi']) }}" class="cat-action-btn cat-action-secondary tryout-tab-inline-link">
                                     <i class="bi bi-journal-bookmark"></i>
                                     Pelajari Materi
                                 </a>
@@ -203,7 +205,9 @@
                             <span><strong>{{ $soals->pluck('kategori')->unique()->count() }}</strong> Kategori</span>
                         </div>
                     </div>
-                @elseif ($activeTryoutTab === 'evaluasi')
+                </div>
+
+                <div class="tryout-tab-panel {{ $activeTryoutTab === 'evaluasi' ? '' : 'd-none' }}" data-tryout-panel="evaluasi">
                     <div class="tryout-history-card" id="tryoutHistoryCard" data-aos="fade-up">
                         <div class="tryout-history-header">
                             <div>
@@ -233,10 +237,10 @@
                             @endforelse
                         </div>
                     </div>
-                @endif
+                </div>
             @endif
 
-            @if ($tryoutMode === 'menu' && $activeTryoutTab === 'materi' && $hasMateri)
+            @if ($tryoutMode === 'menu' && $hasMateri)
                 <script>
                     document.addEventListener('DOMContentLoaded', function() {
                         const searchInput = document.getElementById('materiSearchInput');
@@ -308,6 +312,65 @@
                         filterSelect.addEventListener('change', applyTableControls);
                         sortSelect.addEventListener('change', applyTableControls);
                         applyTableControls();
+                    });
+                </script>
+            @endif
+            @if ($tryoutMode === 'menu')
+                <script>
+                    document.addEventListener('DOMContentLoaded', function() {
+                        const tabs = Array.from(document.querySelectorAll('.tryout-tab'));
+                        const panels = Array.from(document.querySelectorAll('[data-tryout-panel]'));
+                        const localTabLinks = Array.from(document.querySelectorAll('.tryout-tab-inline-link'));
+                        const validTabs = ['materi', 'simulasi', 'evaluasi'];
+
+                        function tabFromUrl(url) {
+                            try {
+                                const parsedUrl = new URL(url, window.location.origin);
+                                const tab = parsedUrl.searchParams.get('tab') || 'materi';
+                                return validTabs.includes(tab) ? tab : 'materi';
+                            } catch (error) {
+                                return 'materi';
+                            }
+                        }
+
+                        function setActiveTab(tab, shouldPushState = true) {
+                            if (!validTabs.includes(tab)) {
+                                tab = 'materi';
+                            }
+
+                            tabs.forEach(function(tabLink) {
+                                const isActive = tabFromUrl(tabLink.href) === tab;
+                                tabLink.classList.toggle('active', isActive);
+                                tabLink.setAttribute('aria-current', isActive ? 'page' : 'false');
+                            });
+
+                            panels.forEach(function(panel) {
+                                panel.classList.toggle('d-none', panel.dataset.tryoutPanel !== tab);
+                            });
+
+                            if (shouldPushState) {
+                                const nextUrl = new URL(window.location.href);
+                                nextUrl.searchParams.set('tab', tab);
+                                nextUrl.searchParams.delete('mode');
+                                window.history.pushState({ tryoutTab: tab }, '', nextUrl);
+                            }
+                        }
+
+                        tabs.concat(localTabLinks).forEach(function(link) {
+                            link.addEventListener('click', function(event) {
+                                const tab = tabFromUrl(link.href);
+                                event.preventDefault();
+                                setActiveTab(tab);
+                                document.querySelector('.tryout-tabs')?.scrollIntoView({
+                                    behavior: 'auto',
+                                    block: 'start'
+                                });
+                            });
+                        });
+
+                        window.addEventListener('popstate', function() {
+                            setActiveTab(tabFromUrl(window.location.href), false);
+                        });
                     });
                 </script>
             @endif
