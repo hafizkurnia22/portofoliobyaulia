@@ -23,7 +23,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
 
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/style.css') }}?v={{ filemtime(public_path('css/style.css')) }}">
 </head>
 
 @php
@@ -40,7 +40,7 @@
         @yield('content')
     </main>
 
-    @if (!request()->is('admin/*'))
+    @if (!request()->is('admin/*') && !$isTryoutExam)
         @php
             $contactName = trim($tentangSaya->nama ?? 'Hafiz');
             $contactRole = trim($tentangSaya->bidang ?? 'Web Developer');

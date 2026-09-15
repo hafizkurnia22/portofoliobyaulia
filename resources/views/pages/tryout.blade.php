@@ -18,6 +18,18 @@
 
     <section class="tryout-page">
         <div class="container">
+            @if ($showExam)
+                <div class="cat-exam-toolbar">
+                    <div class="cat-exam-identity">
+                        <h1>Tryout CPNS</h1>
+                        <span id="examSessionStatus" role="status">Persiapan ujian</span>
+                    </div>
+                    <div class="cat-exam-tools">
+                        <span class="cat-exam-participant"><i class="bi bi-person-check" aria-hidden="true"></i> {{ $peserta->nama ?: $peserta->username }}</span>
+                        <a href="{{ route('tryout.index') }}" class="cat-exam-back"><i class="bi bi-arrow-left" aria-hidden="true"></i> Beranda Tryout</a>
+                    </div>
+                </div>
+            @else
             <div class="tryout-header" data-aos="fade-down">
                 <span class="section-label">{{ $showExam ? 'Simulasi CAT' : ($showMateri ? 'Ruang Belajar' : 'Latihan CAT') }}</span>
                 <h1>{{ $showMateri ? 'Materi Tryout CPNS' : 'Tryout CPNS' }}</h1>
@@ -37,6 +49,7 @@
                     </form>
                 </div>
             </div>
+            @endif
 
             @if ($tryoutMode === 'menu')
                 <ol class="tryout-steps" aria-label="Alur tryout">
@@ -57,24 +70,17 @@
                         <small>Baca pembahasan pembelajaran untuk TIU, TWK, dan TKP sebelum mulai latihan.</small>
                     </a>
                 </div>
-            @else
+            @elseif ($showMateri)
                 <div class="tryout-mode-actions" data-aos="fade-up">
                     <a href="{{ route('tryout.index') }}" class="cat-action-btn cat-action-secondary">
                         <i class="bi bi-grid"></i>
                         Beranda Tryout
                     </a>
 
-                    @if ($showExam)
-                        <a href="{{ route('tryout.index', ['mode' => 'materi']) }}" class="cat-action-btn" id="examMaterialLink">
-                            <i class="bi bi-journal-bookmark"></i>
-                            Materi Ujian
-                        </a>
-                    @else
                         <a href="{{ route('tryout.index', ['mode' => 'ujian']) }}" class="cat-action-btn">
                             <i class="bi bi-display"></i>
                             Ikuti Simulasi
                         </a>
-                    @endif
                 </div>
             @endif
 
@@ -291,12 +297,15 @@
                             <span><i class="bi bi-journal-check"></i> {{ $soals->pluck('kategori')->unique()->implode(' · ') }}</span>
                         </div>
                         <ul class="cat-instructions">
-                            <li>Pilih satu jawaban. Kamu bisa mengubahnya selama waktu masih tersedia.</li>
+                            <li>Pilih satu jawaban untuk menyimpan otomatis di perangkat ini dan lanjut ke soal berikutnya. Kamu tetap bisa kembali untuk mengubah jawaban.</li>
                             <li>Gunakan nomor soal untuk berpindah dan tandai <strong>Ragu-ragu</strong> untuk ditinjau kembali.</li>
                             <li>Klik <strong>Selesaikan Ujian</strong> jika sudah siap. Saat waktu habis, ujian selesai otomatis.</li>
-                            <li>Tetap di halaman ini selama ujian. Memuat ulang atau meninggalkan halaman akan menghapus jawaban yang belum dikirim.</li>
+                            <li>Progres dipulihkan saat halaman dimuat ulang pada browser dan akun yang sama. Waktu ujian tetap berjalan; hasil akhir dikirim ke server saat selesai.</li>
                         </ul>
-                        <button type="button" class="cat-action-btn" id="startExamButton"><i class="bi bi-play-circle"></i> Mulai Sekarang</button>
+                        <div class="cat-actions">
+                            <button type="button" class="cat-action-btn" id="startExamButton"><i class="bi bi-play-circle"></i> Mulai Sekarang</button>
+                            <a href="{{ route('tryout.index', ['mode' => 'materi']) }}" class="cat-action-btn cat-action-secondary"><i class="bi bi-journal-bookmark"></i> Pelajari Materi</a>
+                        </div>
                         <p class="cat-preparation-note">Timer baru berjalan setelah kamu menekan Mulai Sekarang.</p>
                     </div>
                     <div class="cat-shell d-none" id="examShell">
@@ -341,6 +350,7 @@
                                 </button>
                             </div>
 
+                            <p class="cat-save-status" id="answerSaveStatus" role="status">Pilih jawaban untuk menyimpan dan lanjut otomatis.</p>
                             <p class="cat-question-text" id="questionText"></p>
 
                             <div class="cat-options" id="questionOptions"></div>
@@ -433,10 +443,11 @@
                 let hasStarted = false;
                 let deadline = null;
                 let remainingSeconds = Math.max(Number(@json((int) ($tryoutPengaturan->durasi_menit ?? 45))) * 60, 60);
-                const initialSeconds = remainingSeconds;
+                let initialSeconds = remainingSeconds;
                 let startedAt = null;
                 const shouldShuffleQuestions = @json((bool) $tryoutPengaturan->acak_soal);
                 const shouldShuffleAnswers = @json((bool) $tryoutPengaturan->acak_jawaban);
+                const draftKey = 'tryout-cpns-draft:v1:' + @json((string) ($peserta->id ?? $peserta->username));
 
                 const timerEl = document.getElementById('catTimer');
                 const navEl = document.getElementById('questionNav');
@@ -455,10 +466,61 @@
                 const resultMeta = document.getElementById('resultMeta');
                 const resultSaveStatus = document.getElementById('resultSaveStatus');
                 const reviewButton = document.getElementById('reviewButton');
+                const answerSaveStatus = document.getElementById('answerSaveStatus');
                 const resultModal = new bootstrap.Modal(document.getElementById('catResultModal'));
                 const finishModalEl = document.getElementById('catFinishModal');
                 const finishModal = new bootstrap.Modal(finishModalEl);
                 let pendingResultModal = false;
+
+                function saveDraft() {
+                    if (!hasStarted || isReview) return false;
+                    try {
+                        localStorage.setItem(draftKey, JSON.stringify({
+                            soals, answers, marked, currentIndex, deadline, initialSeconds, startedAt,
+                        }));
+                        return true;
+                    } catch (error) {
+                        answerSaveStatus.textContent = 'Penyimpanan perangkat tidak tersedia. Tetap di halaman ini dan gunakan tombol Selanjutnya; jawaban masih tersimpan selama halaman terbuka.';
+                        answerSaveStatus.classList.add('text-danger');
+                        return false;
+                    }
+                }
+
+                function restoreDraft() {
+                    try {
+                        const draft = JSON.parse(localStorage.getItem(draftKey));
+                        if (!draft || !Array.isArray(draft.soals) || !draft.soals.length ||
+                            !Number.isFinite(draft.deadline) || !Number.isFinite(draft.initialSeconds) ||
+                            draft.initialSeconds <= 0 || !Number.isFinite(Date.parse(draft.startedAt)) ||
+                            !draft.answers || !draft.marked ||
+                            !draft.soals.every(soal => soal.id && soal.opsi && soal.skor && Array.isArray(soal.displayOptions) && soal.displayOptions.length)) return false;
+
+                        soals = draft.soals;
+                        Object.assign(answers, draft.answers);
+                        Object.assign(marked, draft.marked);
+                        currentIndex = Math.min(Math.max(Number(draft.currentIndex) || 0, 0), soals.length - 1);
+                        deadline = draft.deadline;
+                        initialSeconds = draft.initialSeconds;
+                        startedAt = draft.startedAt;
+                        remainingSeconds = Math.max(0, Math.ceil((deadline - Date.now()) / 1000));
+                        hasStarted = true;
+                        showExam();
+                        document.getElementById('examProgress').max = soals.length;
+                        renderQuestion();
+                        timerEl.textContent = formatTime(remainingSeconds);
+                        answerSaveStatus.textContent = 'Progres terakhir dipulihkan. Silakan lanjutkan ujian.';
+                        if (remainingSeconds === 0) finishTryout();
+                        return true;
+                    } catch (error) {
+                        return false;
+                    }
+                }
+
+                function showExam() {
+                    document.getElementById('examPreparation').classList.add('d-none');
+                    document.getElementById('examShell').classList.remove('d-none');
+                    document.getElementById('examSessionStatus').textContent = 'Ujian berlangsung';
+                }
 
                 finishModalEl.addEventListener('hidden.bs.modal', function() {
                     if (pendingResultModal) {
@@ -557,6 +619,7 @@
                         numberButton.addEventListener('click', function() {
                             currentIndex = index;
                             renderQuestion();
+                            saveDraft();
                             questionTitleEl.focus({ preventScroll: true });
                         });
 
@@ -596,8 +659,21 @@
 
                         if (!isReview) {
                             optionButton.addEventListener('click', function() {
+                                if (Date.now() >= deadline) { finishTryout(); return; }
                                 answers[soal.id] = option.originalKey;
+                                const answeredIndex = currentIndex;
+                                if (currentIndex < soals.length - 1) currentIndex += 1;
+                                if (saveDraft()) {
+                                    answerSaveStatus.classList.remove('text-danger');
+                                    answerSaveStatus.textContent = answeredIndex === soals.length - 1
+                                        ? 'Jawaban terakhir tersimpan di perangkat. Periksa kembali atau klik Selesaikan Ujian.'
+                                        : `Jawaban soal ${answeredIndex + 1} tersimpan di perangkat. Lanjut ke soal ${currentIndex + 1}.`;
+                                } else {
+                                    currentIndex = answeredIndex;
+                                }
                                 renderQuestion();
+                                questionTitleEl.focus({ preventScroll: true });
+                                document.querySelector('.cat-main:not(.cat-preparation)').scrollIntoView({ behavior: 'smooth', block: 'start' });
                             });
                         }
 
@@ -688,9 +764,12 @@
                     finishButton.classList.add('d-none');
                     showResultButton.classList.remove('d-none');
                     isReview = true;
+                    try { localStorage.removeItem(draftKey); } catch (error) { /* Storage may be unavailable. */ }
+                    answerSaveStatus.textContent = 'Ujian selesai. Kamu dapat meninjau jawaban dan pembahasan.';
+                    answerSaveStatus.classList.remove('text-danger');
                     renderQuestion();
                     timerEl.textContent = formatTime(remainingSeconds);
-                    document.getElementById('examMaterialLink').classList.remove('d-none');
+                    document.getElementById('examSessionStatus').textContent = 'Review jawaban';
                     if (finishModalEl.classList.contains('show')) {
                         pendingResultModal = true;
                         finishModal.hide();
@@ -717,15 +796,14 @@
                     hasStarted = true;
                     startedAt = new Date().toISOString();
                     deadline = Date.now() + initialSeconds * 1000;
-                    document.getElementById('examPreparation').classList.add('d-none');
-                    document.getElementById('examShell').classList.remove('d-none');
-                    document.getElementById('examMaterialLink').classList.add('d-none');
-                    document.getElementById('examShell').scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    showExam();
+                    saveDraft();
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
                     questionTitleEl.focus({ preventScroll: true });
                 });
 
                 window.addEventListener('beforeunload', function(event) {
-                    if (hasStarted && !isReview) {
+                    if (hasStarted && !isReview && !saveDraft()) {
                         event.preventDefault();
                         event.returnValue = '';
                     }
@@ -741,12 +819,14 @@
                     }
 
                     renderQuestion();
+                    saveDraft();
                 });
 
                 prevButton.addEventListener('click', function() {
                     if (currentIndex > 0) {
                         currentIndex -= 1;
                         renderQuestion();
+                        saveDraft();
                     }
                 });
 
@@ -754,6 +834,7 @@
                     if (currentIndex < soals.length - 1) {
                         currentIndex += 1;
                         renderQuestion();
+                        saveDraft();
                     }
                 });
 
@@ -777,7 +858,7 @@
                     });
                 });
 
-                buildSoals();
+                if (!restoreDraft()) buildSoals();
             });
         </script>
     @endif

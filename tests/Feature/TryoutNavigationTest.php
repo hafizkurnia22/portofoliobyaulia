@@ -34,6 +34,11 @@ class TryoutNavigationTest extends TestCase
             if ($mode === 'ujian') {
                 $this->assertStringNotContainsString('id="navbarMenu"', $html);
                 $this->assertStringContainsString('class="tryout-exam-page"', $html);
+                $this->assertStringContainsString('class="cat-exam-toolbar"', $html);
+                $this->assertStringNotContainsString('class="tryout-header"', $html);
+                $this->assertStringNotContainsString('class="tryout-mode-actions"', $html);
+                $this->assertStringNotContainsString('class="floating-whatsapp"', $html);
+                $this->assertStringNotContainsString('id="examMaterialLink"', $html);
                 $this->assertStringContainsString('Beranda Tryout', $html);
                 $this->assertStringContainsString('id="examPreparation"', $html);
                 $this->assertStringContainsString('class="cat-shell d-none"', $html);
