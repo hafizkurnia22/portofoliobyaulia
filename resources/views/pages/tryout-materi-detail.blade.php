@@ -26,12 +26,12 @@
             </div>
 
             <div class="tryout-mode-actions" data-aos="fade-up">
-                <a href="{{ route('tryout.index', ['mode' => 'materi']) }}" class="cat-action-btn cat-action-secondary">
+                <a href="{{ route('tryout.index', ['tab' => 'materi']) }}" class="cat-action-btn cat-action-secondary">
                     <i class="bi bi-arrow-left"></i>
-                    Daftar Materi
+                    Kembali ke daftar materi
                 </a>
 
-                <a href="{{ route('tryout.index', ['mode' => 'ujian']) }}" class="cat-action-btn">
+                <a href="{{ route('tryout.index', ['tab' => 'simulasi']) }}" class="cat-action-btn">
                     <i class="bi bi-display"></i>
                     Ikuti Simulasi
                 </a>
@@ -44,6 +44,9 @@
                 </div>
 
                 <div class="tryout-materi-detail-card">
+                    @if ($materi->topikPelajaran())
+                        <p class="materi-topic-label">Topik pelajaran: {{ implode(' · ', $materi->topikPelajaran()) }}</p>
+                    @endif
                     @if ($materi->ringkasan)
                         <p class="tryout-materi-lead">{{ $materi->ringkasan }}</p>
                     @endif

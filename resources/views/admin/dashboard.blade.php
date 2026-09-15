@@ -1905,6 +1905,7 @@
                                     </select>
                                 </div>
 
+                                @include('components.materi-topik-fields', ['selectedTopics' => $item->topikPelajaran()])
                                 <div class="col-12 mb-3">
                                     <label class="form-label">Ringkasan</label>
                                     <textarea name="ringkasan" class="form-control" rows="3">{{ $item->ringkasan }}</textarea>
@@ -2458,6 +2459,7 @@
                                 </select>
                             </div>
 
+                            @include('components.materi-topik-fields', ['selectedTopics' => old('topik', [])])
                             <div class="col-12 mb-3">
                                 <label class="form-label">Ringkasan</label>
                                 <textarea name="ringkasan" class="form-control" rows="3"
