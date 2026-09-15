@@ -5,9 +5,7 @@
 @section('content')
 
     @php
-        $activeTab = request('active_tab', old('active_tab', session('active_tab', 'pengalaman')));
-        $profileTabs = ['pengalaman', 'sertifikasi', 'skill', 'project', 'tentang'];
-        $showProfileDashboard = in_array($activeTab, $profileTabs);
+        $activeTab = request('active_tab', old('active_tab', session('active_tab', 'dashboard')));
     @endphp
 
     <section class="admin-dashboard">
@@ -133,6 +131,13 @@
 
                             <ul class="nav nav-pills admin-tabs admin-sidebar-nav" id="adminTabs">
                                 <li class="nav-item">
+                                    <a class="nav-link {{ $activeTab == 'dashboard' ? 'active' : '' }}"
+                                        href="{{ url('/admin/dashboard?active_tab=dashboard') }}">
+                                        <i class="bi bi-speedometer2"></i> Ringkasan
+                                    </a>
+                                </li>
+
+                                <li class="nav-item">
                                     <a class="nav-link {{ $activeTab == 'pengalaman' ? 'active' : '' }}"
                                         href="{{ url('/admin/dashboard?active_tab=pengalaman') }}">
                                         <i class="bi bi-briefcase"></i> Pengalaman
@@ -216,6 +221,174 @@
 
                     <main class="admin-content-panel">
                         <div class="tab-content">
+
+                    {{-- TAB RINGKASAN --}}
+                    <div class="tab-pane fade {{ $activeTab == 'dashboard' ? 'show active' : '' }}"
+                        id="dashboard-panel" role="tabpanel">
+                        @php
+                            $complete = 0;
+
+                            if (!empty($tentangSaya->nama)) {
+                                $complete += 20;
+                            }
+                            if (!empty($tentangSaya->bidang)) {
+                                $complete += 20;
+                            }
+                            if (!empty($tentangSaya->status)) {
+                                $complete += 20;
+                            }
+                            if (!empty($tentangSaya->foto)) {
+                                $complete += 20;
+                            }
+                            if (!empty($tentangSaya->deskripsi_1)) {
+                                $complete += 20;
+                            }
+                        @endphp
+
+                        <div class="dashboard-stat-section">
+                            <div class="row g-4 mb-4">
+
+                                <div class="col-lg-4 col-md-6">
+                                    <div class="dashboard-insight-card">
+                                        <div class="insight-icon blue">
+                                            <i class="bi bi-speedometer2"></i>
+                                        </div>
+
+                                        <div class="w-100">
+                                            <span>Rata-rata Skill</span>
+                                            <h3>{{ number_format($rataSkill, 0) }}%</h3>
+
+                                            <div class="insight-progress">
+                                                <div style="width: {{ number_format($rataSkill, 0) }}%"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-4 col-md-6">
+                                    <div class="dashboard-insight-card">
+                                        <div class="insight-icon green">
+                                            <i class="bi bi-trophy-fill"></i>
+                                        </div>
+
+                                        <div>
+                                            <span>Skill Tertinggi</span>
+                                            <h3>{{ $skillTertinggi->nama_skill ?? 'Belum ada' }}</h3>
+                                            <p>{{ $skillTertinggi->persentase ?? 0 }}%</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-4 col-md-12">
+                                    <div class="dashboard-insight-card">
+                                        <div class="insight-icon purple">
+                                            <i class="bi bi-award-fill"></i>
+                                        </div>
+
+                                        <div>
+                                            <span>Sertifikasi Terbaru</span>
+                                            <h3>{{ $sertifikasiTerbaru->nama_sertifikat ?? 'Belum ada' }}</h3>
+                                            <p>{{ $sertifikasiTerbaru->tahun ?? '-' }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="quick-action-card mb-4">
+                            <div>
+                                <h4>Quick Action</h4>
+                                <p>Akses cepat untuk mengelola data portfolio.</p>
+                            </div>
+
+                            <div class="quick-action-buttons">
+                                <button class="quick-btn" data-bs-toggle="modal" data-bs-target="#tambahModal">
+                                    <i class="bi bi-briefcase-fill"></i>
+                                    Tambah Pengalaman
+                                </button>
+
+                                <button class="quick-btn" data-bs-toggle="modal" data-bs-target="#tambahProjectModal">
+                                    <i class="bi bi-kanban-fill"></i>
+                                    Tambah Project
+                                </button>
+
+                                <button class="quick-btn" data-bs-toggle="modal" data-bs-target="#tambahSertifikasiModal">
+                                    <i class="bi bi-award-fill"></i>
+                                    Tambah Sertifikasi
+                                </button>
+
+                                <button class="quick-btn" data-bs-toggle="modal" data-bs-target="#tambahSkillModal">
+                                    <i class="bi bi-bar-chart-fill"></i>
+                                    Tambah Skill
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="row g-4">
+
+                            <div class="col-lg-6">
+                                <div class="recent-card">
+                                    <div class="recent-header">
+                                        <i class="bi bi-clock-history"></i>
+                                        <h5>Aktivitas Terbaru</h5>
+                                    </div>
+
+                                    <div class="recent-item">
+                                        <i class="bi bi-briefcase"></i>
+                                        <div>
+                                            <strong>Pengalaman Terbaru</strong>
+                                            <p>{{ $pengalamanTerbaru->nama_perusahaan ?? 'Belum ada data' }}</p>
+                                        </div>
+                                    </div>
+
+                                    <div class="recent-item">
+                                        <i class="bi bi-kanban"></i>
+                                        <div>
+                                            <strong>Project Terbaru</strong>
+                                            <p>{{ $projectTerbaru->nama_project ?? 'Belum ada data' }}</p>
+                                        </div>
+                                    </div>
+
+                                    <div class="recent-item">
+                                        <i class="bi bi-award"></i>
+                                        <div>
+                                            <strong>Sertifikasi Terbaru</strong>
+                                            <p>{{ $sertifikasiTerbaru->nama_sertifikat ?? 'Belum ada data' }}</p>
+                                        </div>
+                                    </div>
+
+                                    <div class="recent-item">
+                                        <i class="bi bi-bar-chart"></i>
+                                        <div>
+                                            <strong>Skill Tertinggi</strong>
+                                            <p>{{ $skillTertinggi->nama_skill ?? 'Belum ada data' }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-6">
+                                <div class="profile-completion-card">
+                                    <div class="recent-header">
+                                        <i class="bi bi-person-check-fill"></i>
+                                        <h5>Kelengkapan Profil</h5>
+                                    </div>
+
+                                    <div class="completion-circle" style="--progress: {{ $complete }}%;">
+                                        <span>{{ $complete }}%</span>
+                                    </div>
+
+                                    <p class="text-muted text-center mt-3">
+                                        Semakin lengkap profil, semakin profesional tampilan portfolio kamu.
+                                    </p>
+
+                                    <div class="completion-bar">
+                                        <div style="width: {{ $complete }}%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
                     {{-- TAB PENGALAMAN --}}
                     <div class="tab-pane fade {{ $activeTab == 'pengalaman' ? 'show active' : '' }}" id="pengalaman-panel"
@@ -1297,171 +1470,6 @@
                     </main>
                 </div>
             </div>
-
-            @if ($showProfileDashboard)
-                @php
-                    $complete = 0;
-
-                    if (!empty($tentangSaya->nama)) {
-                        $complete += 20;
-                    }
-                    if (!empty($tentangSaya->bidang)) {
-                        $complete += 20;
-                    }
-                    if (!empty($tentangSaya->status)) {
-                        $complete += 20;
-                    }
-                    if (!empty($tentangSaya->foto)) {
-                        $complete += 20;
-                    }
-                    if (!empty($tentangSaya->deskripsi_1)) {
-                        $complete += 20;
-                    }
-                @endphp
-                <div class="dashboard-stat-section">
-                    <div class="row g-4 mb-4">
-
-                        <div class="col-lg-4 col-md-6">
-                            <div class="dashboard-insight-card">
-                                <div class="insight-icon blue">
-                                    <i class="bi bi-speedometer2"></i>
-                                </div>
-
-                                <div class="w-100">
-                                    <span>Rata-rata Skill</span>
-                                    <h3>{{ number_format($rataSkill, 0) }}%</h3>
-
-                                    <div class="insight-progress">
-                                        <div style="width: {{ number_format($rataSkill, 0) }}%"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-lg-4 col-md-6">
-                            <div class="dashboard-insight-card">
-                                <div class="insight-icon green">
-                                    <i class="bi bi-trophy-fill"></i>
-                                </div>
-
-                                <div>
-                                    <span>Skill Tertinggi</span>
-                                    <h3>{{ $skillTertinggi->nama_skill ?? 'Belum ada' }}</h3>
-                                    <p>{{ $skillTertinggi->persentase ?? 0 }}%</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-lg-4 col-md-12">
-                            <div class="dashboard-insight-card">
-                                <div class="insight-icon purple">
-                                    <i class="bi bi-award-fill"></i>
-                                </div>
-
-                                <div>
-                                    <span>Sertifikasi Terbaru</span>
-                                    <h3>{{ $sertifikasiTerbaru->nama_sertifikat ?? 'Belum ada' }}</h3>
-                                    <p>{{ $sertifikasiTerbaru->tahun ?? '-' }}</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="quick-action-card mb-4">
-                    <div>
-                        <h4>Quick Action</h4>
-                        <p>Akses cepat untuk mengelola data portfolio.</p>
-                    </div>
-
-                    <div class="quick-action-buttons">
-                        <button class="quick-btn" data-bs-toggle="modal" data-bs-target="#tambahModal">
-                            <i class="bi bi-briefcase-fill"></i>
-                            Tambah Pengalaman
-                        </button>
-
-                        <button class="quick-btn" data-bs-toggle="modal" data-bs-target="#tambahProjectModal">
-                            <i class="bi bi-kanban-fill"></i>
-                            Tambah Project
-                        </button>
-
-                        <button class="quick-btn" data-bs-toggle="modal" data-bs-target="#tambahSertifikasiModal">
-                            <i class="bi bi-award-fill"></i>
-                            Tambah Sertifikasi
-                        </button>
-
-                        <button class="quick-btn" data-bs-toggle="modal" data-bs-target="#tambahSkillModal">
-                            <i class="bi bi-bar-chart-fill"></i>
-                            Tambah Skill
-                        </button>
-                    </div>
-                </div>
-
-                <div class="row g-4 mb-4">
-
-                    <div class="col-lg-6">
-                        <div class="recent-card">
-                            <div class="recent-header">
-                                <i class="bi bi-clock-history"></i>
-                                <h5>Aktivitas Terbaru</h5>
-                            </div>
-
-                            <div class="recent-item">
-                                <i class="bi bi-briefcase"></i>
-                                <div>
-                                    <strong>Pengalaman Terbaru</strong>
-                                    <p>{{ $pengalamanTerbaru->nama_perusahaan ?? 'Belum ada data' }}</p>
-                                </div>
-                            </div>
-
-                            <div class="recent-item">
-                                <i class="bi bi-kanban"></i>
-                                <div>
-                                    <strong>Project Terbaru</strong>
-                                    <p>{{ $projectTerbaru->nama_project ?? 'Belum ada data' }}</p>
-                                </div>
-                            </div>
-
-                            <div class="recent-item">
-                                <i class="bi bi-award"></i>
-                                <div>
-                                    <strong>Sertifikasi Terbaru</strong>
-                                    <p>{{ $sertifikasiTerbaru->nama_sertifikat ?? 'Belum ada data' }}</p>
-                                </div>
-                            </div>
-
-                            <div class="recent-item">
-                                <i class="bi bi-bar-chart"></i>
-                                <div>
-                                    <strong>Skill Tertinggi</strong>
-                                    <p>{{ $skillTertinggi->nama_skill ?? 'Belum ada data' }}</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-6">
-                        <div class="profile-completion-card">
-                            <div class="recent-header">
-                                <i class="bi bi-person-check-fill"></i>
-                                <h5>Kelengkapan Profil</h5>
-                            </div>
-
-                            <div class="completion-circle" style="--progress: {{ $complete }}%;">
-                                <span>{{ $complete }}%</span>
-                            </div>
-
-                            <p class="text-muted text-center mt-3">
-                                Semakin lengkap profil, semakin profesional tampilan portfolio kamu.
-                            </p>
-
-                            <div class="completion-bar">
-                                <div style="width: {{ $complete }}%"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            @endif
     </section>
 
     {{-- MODAL EDIT PENGALAMAN --}}
