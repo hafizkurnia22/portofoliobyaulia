@@ -415,97 +415,44 @@
                 <p>Beberapa sertifikasi dan pelatihan keahlian yang pernah saya ikuti.</p>
             </div>
 
-            <div id="sertifikasiCarousel" class="carousel slide" data-bs-ride="carousel" data-aos="zoom-in">
-
-                <div class="carousel-inner">
-
-                    @forelse($sertifikasi as $index => $item)
-                        <div class="carousel-item {{ $index == 0 ? 'active' : '' }}">
-                            <article class="certificate-showcase-card">
-                                <div class="certificate-badge-panel">
-                                    <div class="certificate-icon-shell">
-                                        <i class="bi bi-award-fill"></i>
-                                    </div>
-
-                                    <div class="certificate-badge-copy">
-                                        <span>Sertifikasi</span>
-                                        <strong>{{ $item->tahun ?? 'Tahun' }}</strong>
-                                    </div>
-                                </div>
-
-                                <div class="certificate-content">
-                                    <span class="certificate-label">Sertifikasi Unggulan</span>
-
-                                    <h4>{{ $item->nama_sertifikat }}</h4>
-
-                                    <div class="certificate-meta-grid">
-                                        <div class="certificate-meta-item">
-                                            <small>Penyelenggara</small>
-                                            <strong>{{ $item->penyelenggara }}</strong>
-                                        </div>
-
-                                        <div class="certificate-meta-item">
-                                            <small>Tahun</small>
-                                            <strong>{{ $item->tahun }}</strong>
-                                        </div>
-                                    </div>
-
-                                    @if (!empty($item->deskripsi))
-                                        <p class="certificate-description">
-                                            {{ $item->deskripsi }}
-                                        </p>
-                                    @endif
-
-                                    @if ($item->file_pdf)
-                                        <a href="{{ asset('sertifikat/' . $item->file_pdf) }}" target="_blank"
-                                            class="certificate-action">
-                                            <i class="bi bi-file-earmark-pdf"></i>
-                                            Lihat Sertifikat PDF
-                                        </a>
-                                    @else
-                                        <span class="certificate-action certificate-action-muted">
-                                            <i class="bi bi-file-earmark-lock"></i>
-                                            PDF belum tersedia
-                                        </span>
-                                    @endif
-                                </div>
-                            </article>
+            <div class="certificate-grid" data-aos="fade-up">
+                @forelse($sertifikasi as $item)
+                    <article class="certificate-card">
+                        <div class="certificate-card-icon">
+                            <i class="bi bi-award-fill"></i>
                         </div>
-                    @empty
-                        <div class="carousel-item active">
-                            <div class="text-center">
-                                <p class="text-muted">
-                                    Belum ada data sertifikasi
+
+                        <div class="certificate-card-body">
+                            <span class="certificate-card-year">{{ $item->tahun ?? 'Tahun' }}</span>
+                            <h4>{{ $item->nama_sertifikat }}</h4>
+                            <p class="certificate-card-provider">{{ $item->penyelenggara }}</p>
+
+                            @if (!empty($item->deskripsi))
+                                <p class="certificate-card-description">
+                                    {{ \Illuminate\Support\Str::limit(strip_tags($item->deskripsi), 150) }}
                                 </p>
-                            </div>
+                            @endif
                         </div>
-                    @endforelse
 
-                </div>
-
-                @if ($sertifikasi->count() > 1)
-                    <div class="carousel-indicators custom-indicators">
-                        @foreach ($sertifikasi as $index => $item)
-                            <button type="button" data-bs-target="#sertifikasiCarousel"
-                                data-bs-slide-to="{{ $index }}" class="{{ $index == 0 ? 'active' : '' }}"
-                                aria-label="Slide {{ $index + 1 }}">
-                            </button>
-                        @endforeach
+                        @if ($item->file_pdf)
+                            <a href="{{ asset('sertifikat/' . $item->file_pdf) }}" target="_blank"
+                                class="certificate-card-action">
+                                <i class="bi bi-file-earmark-pdf"></i>
+                                Lihat PDF
+                            </a>
+                        @else
+                            <span class="certificate-card-action certificate-card-action-muted">
+                                <i class="bi bi-file-earmark-lock"></i>
+                                PDF belum tersedia
+                            </span>
+                        @endif
+                    </article>
+                @empty
+                    <div class="certificate-empty">
+                        <i class="bi bi-award"></i>
+                        <p>Belum ada data sertifikasi</p>
                     </div>
-                @endif
-
-                @if ($sertifikasi->count() > 1)
-                    <button class="carousel-control-prev" type="button" data-bs-target="#sertifikasiCarousel"
-                        data-bs-slide="prev">
-                        <span class="carousel-control-prev-icon bg-primary-dark rounded-circle p-3"></span>
-                    </button>
-
-                    <button class="carousel-control-next" type="button" data-bs-target="#sertifikasiCarousel"
-                        data-bs-slide="next">
-                        <span class="carousel-control-next-icon bg-primary-dark rounded-circle p-3"></span>
-                    </button>
-                @endif
-
+                @endforelse
             </div>
 
             <div class="text-center mt-5" data-aos="fade-up" data-aos-delay="200">

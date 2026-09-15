@@ -14,7 +14,7 @@ public function index()
     $pengalaman = Pengalaman::byLatestYear()
         ->paginate(6, ['*'], 'pengalaman_page');
 
-    $sertifikasi = Sertifikasi::byLatestYear()->get();
+    $sertifikasi = Sertifikasi::byLatestYear()->take(4)->get();
     $skill = \App\Models\Skill::latest()->get();
     $projects = Project::latest()->get();
     $tentangSaya = \App\Models\TentangSaya::first();
