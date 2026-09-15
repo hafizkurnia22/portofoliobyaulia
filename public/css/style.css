@@ -467,6 +467,68 @@ body {
     table-layout: fixed;
 }
 
+.admin-experience-table,
+.admin-certificate-table {
+    min-width: 1120px;
+    table-layout: fixed;
+}
+
+.admin-certificate-table {
+    min-width: 1180px;
+}
+
+.admin-experience-table th:nth-child(1),
+.admin-experience-table td:nth-child(1),
+.admin-certificate-table th:nth-child(1),
+.admin-certificate-table td:nth-child(1) {
+    width: 64px;
+}
+
+.admin-experience-table th:nth-child(2),
+.admin-experience-table td:nth-child(2) {
+    width: 96px;
+}
+
+.admin-experience-table th:nth-child(3),
+.admin-experience-table td:nth-child(3),
+.admin-certificate-table th:nth-child(2),
+.admin-certificate-table td:nth-child(2) {
+    width: 250px;
+}
+
+.admin-experience-table th:nth-child(4),
+.admin-experience-table td:nth-child(4),
+.admin-certificate-table th:nth-child(3),
+.admin-certificate-table td:nth-child(3) {
+    width: 210px;
+}
+
+.admin-experience-table th:nth-child(5),
+.admin-experience-table td:nth-child(5),
+.admin-certificate-table th:nth-child(4),
+.admin-certificate-table td:nth-child(4) {
+    width: 130px;
+}
+
+.admin-experience-table th:nth-child(6),
+.admin-experience-table td:nth-child(6),
+.admin-certificate-table th:nth-child(5),
+.admin-certificate-table td:nth-child(5) {
+    width: 280px;
+}
+
+.admin-certificate-table th:nth-child(6),
+.admin-certificate-table td:nth-child(6) {
+    width: 120px;
+}
+
+.admin-experience-table th:nth-child(7),
+.admin-experience-table td:nth-child(7),
+.admin-certificate-table th:nth-child(7),
+.admin-certificate-table td:nth-child(7) {
+    width: 118px;
+}
+
 .admin-project-table th:nth-child(1),
 .admin-project-table td:nth-child(1) {
     width: 64px;
@@ -525,6 +587,22 @@ body {
     text-align: left;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 3;
+}
+
+.admin-table-summary {
+    display: -webkit-box;
+    overflow: hidden;
+    color: #526277;
+    line-height: 1.5;
+    text-align: left;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+}
+
+.admin-content-panel.is-loading {
+    opacity: 0.55;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
 }
 
 .admin-logo {

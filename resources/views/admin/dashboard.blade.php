@@ -413,7 +413,7 @@
                         </div>
 
                         <div class="table-responsive" data-aos="fade-up">
-                            <table class="table admin-table align-middle"id="pengalaman-table">
+                            <table class="table admin-table align-middle admin-experience-table" id="pengalaman-table">
                                 <thead>
                                     <tr>
                                         <th>No</th>
@@ -446,7 +446,11 @@
                                             <td>
                                                 <span class="admin-badge">{{ $item->periode }}</span>
                                             </td>
-                                            <td class="admin-desc">{{ $item->deskripsi }}</td>
+                                            <td>
+                                                <p class="admin-desc admin-table-summary mb-0">
+                                                    {{ \Illuminate\Support\Str::limit(strip_tags($item->deskripsi), 135) }}
+                                                </p>
+                                            </td>
 
                                             <td>
                                                 <div class="d-flex gap-2">
@@ -508,7 +512,8 @@
                         </div>
 
                         <div class="table-responsive" data-aos="fade-up">
-                            <table class="table admin-table align-middle"id="sertifikasi-table">
+                            <table class="table admin-table align-middle admin-certificate-table"
+                                id="sertifikasi-table">
                                 <thead>
                                     <tr>
                                         <th>No</th>
@@ -530,7 +535,11 @@
                                             <td>
                                                 <span class="admin-badge">{{ $item->tahun }}</span>
                                             </td>
-                                            <td class="admin-desc">{{ $item->deskripsi }}</td>
+                                            <td>
+                                                <p class="admin-desc admin-table-summary mb-0">
+                                                    {{ \Illuminate\Support\Str::limit(strip_tags($item->deskripsi), 135) }}
+                                                </p>
+                                            </td>
 
                                             <td>
                                                 @if ($item->file_pdf)

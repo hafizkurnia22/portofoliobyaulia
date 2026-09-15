@@ -1,9 +1,160 @@
 document.addEventListener('DOMContentLoaded', function () {
+    const body = document.body;
+    const adminDashboard = document.querySelector('.admin-dashboard');
 
-    // SWEETALERT DELETE
-    document.querySelectorAll('.btn-delete').forEach(button => {
-        button.addEventListener('click', function () {
-            const form = this.closest('.delete-form');
+    if (!adminDashboard) return;
+
+    function initTryoutScoringMode(root = document) {
+        root.querySelectorAll('.tryout-soal-form').forEach(form => {
+            if (form.dataset.scoringReady === 'true') return;
+
+            const categorySelect = form.querySelector('.tryout-kategori-select');
+            const answerGroup = form.querySelector('.tryout-answer-key-group');
+            const answerSelect = answerGroup ? answerGroup.querySelector('select[name="jawaban_benar"]') : null;
+            const scoreGroup = form.querySelector('.tryout-score-group');
+            const scoreInputs = form.querySelectorAll('.tryout-score-input');
+
+            if (!categorySelect) return;
+
+            form.dataset.scoringReady = 'true';
+
+            function selectedCategoryCode() {
+                const selectedOption = categorySelect.options[categorySelect.selectedIndex];
+                return selectedOption ? selectedOption.dataset.kode : '';
+            }
+
+            function applyScoringMode() {
+                const code = selectedCategoryCode();
+                const isTkp = code === 'TKP';
+
+                if (answerGroup && answerSelect) {
+                    answerGroup.classList.toggle('d-none', isTkp);
+                    answerSelect.disabled = isTkp;
+                    answerSelect.required = !isTkp;
+                }
+
+                if (scoreGroup) {
+                    scoreGroup.classList.toggle('d-none', !isTkp);
+                }
+
+                scoreInputs.forEach((input, index) => {
+                    input.disabled = !isTkp;
+                    input.required = isTkp;
+                    input.min = isTkp ? 1 : 0;
+                    input.max = 5;
+
+                    if (isTkp && (!input.value || Number(input.value) === 0)) {
+                        input.value = 5 - index;
+                    }
+                });
+            }
+
+            categorySelect.addEventListener('change', applyScoringMode);
+            applyScoringMode();
+        });
+    }
+
+    function initRichEditors(root = document) {
+        root.querySelectorAll('[data-rich-editor]').forEach(editor => {
+            if (editor.dataset.editorReady === 'true') return;
+
+            const toolbar = editor.querySelector('.rich-editor-toolbar');
+            const area = editor.querySelector('.rich-editor-area');
+            const input = editor.querySelector('.rich-editor-input');
+            const form = editor.closest('form');
+
+            if (!toolbar || !area || !input || !form) return;
+
+            editor.dataset.editorReady = 'true';
+
+            toolbar.querySelectorAll('button[data-command]').forEach(button => {
+                button.addEventListener('click', function () {
+                    const command = this.dataset.command;
+                    let value = this.dataset.value || null;
+
+                    area.focus();
+
+                    if (command === 'createLink') {
+                        value = window.prompt('Masukkan link, contoh: https://example.com');
+
+                        if (!value) return;
+                    }
+
+                    document.execCommand(command, false, value);
+                    input.value = area.innerHTML.trim();
+                });
+            });
+
+            area.addEventListener('input', function () {
+                input.value = area.innerHTML.trim();
+            });
+
+            form.addEventListener('submit', function () {
+                input.value = area.innerHTML.trim();
+            });
+        });
+    }
+
+    function updateAdminChrome(nextDoc) {
+        const currentSidebar = document.querySelector('.admin-sidebar');
+        const nextSidebar = nextDoc.querySelector('.admin-sidebar');
+
+        if (currentSidebar && nextSidebar) {
+            currentSidebar.innerHTML = nextSidebar.innerHTML;
+        }
+    }
+
+    async function loadAdminPanel(url, pushState = true) {
+        const contentPanel = document.querySelector('.admin-content-panel');
+        const currentContent = document.querySelector('.admin-content-panel .tab-content');
+
+        if (!contentPanel || !currentContent) {
+            window.location.href = url;
+            return;
+        }
+
+        contentPanel.classList.add('is-loading');
+
+        try {
+            const response = await fetch(url, {
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                credentials: 'same-origin'
+            });
+
+            if (!response.ok) throw new Error('Gagal memuat menu admin');
+
+            const html = await response.text();
+            const nextDoc = new DOMParser().parseFromString(html, 'text/html');
+            const nextContent = nextDoc.querySelector('.admin-content-panel .tab-content');
+
+            if (!nextContent) throw new Error('Konten admin tidak ditemukan');
+
+            currentContent.innerHTML = nextContent.innerHTML;
+            updateAdminChrome(nextDoc);
+
+            if (pushState) {
+                window.history.pushState({ adminPanel: true }, '', url);
+            }
+
+            if (window.AOS) {
+                window.AOS.refreshHard();
+            }
+        } catch (error) {
+            window.location.href = url;
+        } finally {
+            contentPanel.classList.remove('is-loading');
+        }
+    }
+
+    document.addEventListener('click', function (event) {
+        const deleteButton = event.target.closest('.btn-delete');
+
+        if (deleteButton) {
+            const form = deleteButton.closest('.delete-form');
+
+            if (!form) return;
 
             Swal.fire({
                 title: 'Hapus Data?',
@@ -21,109 +172,47 @@ document.addEventListener('DOMContentLoaded', function () {
                     form.submit();
                 }
             });
-        });
-    });
 
-    // LIVE SEARCH
-    document.querySelectorAll('.admin-live-search').forEach(input => {
-        input.addEventListener('keyup', function () {
-            const keyword = this.value.toLowerCase();
-            const tableId = this.getAttribute('data-target');
-            const table = document.getElementById(tableId);
-
-            if (!table) return;
-
-            table.querySelectorAll('tbody tr').forEach(row => {
-                const text = row.innerText.toLowerCase();
-                row.style.display = text.includes(keyword) ? '' : 'none';
-            });
-        });
-    });
-
-    // TRYOUT SCORING MODE
-    document.querySelectorAll('.tryout-soal-form').forEach(form => {
-        const categorySelect = form.querySelector('.tryout-kategori-select');
-        const answerGroup = form.querySelector('.tryout-answer-key-group');
-        const answerSelect = answerGroup ? answerGroup.querySelector('select[name="jawaban_benar"]') : null;
-        const scoreGroup = form.querySelector('.tryout-score-group');
-        const scoreInputs = form.querySelectorAll('.tryout-score-input');
-
-        if (!categorySelect) return;
-
-        function selectedCategoryCode() {
-            const selectedOption = categorySelect.options[categorySelect.selectedIndex];
-            return selectedOption ? selectedOption.dataset.kode : '';
+            return;
         }
 
-        function applyScoringMode() {
-            const code = selectedCategoryCode();
-            const isTkp = code === 'TKP';
+        const navigationLink = event.target.closest('.admin-sidebar-nav .nav-link[href*="active_tab="]');
 
-            if (answerGroup && answerSelect) {
-                answerGroup.classList.toggle('d-none', isTkp);
-                answerSelect.disabled = isTkp;
-                answerSelect.required = !isTkp;
-            }
+        if (!navigationLink || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
 
-            if (scoreGroup) {
-                scoreGroup.classList.toggle('d-none', !isTkp);
-            }
+        const url = navigationLink.href;
 
-            scoreInputs.forEach((input, index) => {
-                input.disabled = !isTkp;
-                input.required = isTkp;
-                input.min = isTkp ? 1 : 0;
-                input.max = 5;
+        if (!url || navigationLink.target === '_blank' || new URL(url).origin !== window.location.origin) return;
 
-                if (isTkp && (!input.value || Number(input.value) === 0)) {
-                    input.value = 5 - index;
-                }
-            });
-        }
-
-        categorySelect.addEventListener('change', applyScoringMode);
-        applyScoringMode();
+        event.preventDefault();
+        loadAdminPanel(url);
     });
 
-    // RICH TEXT EDITOR
-    document.querySelectorAll('[data-rich-editor]').forEach(editor => {
-        const toolbar = editor.querySelector('.rich-editor-toolbar');
-        const area = editor.querySelector('.rich-editor-area');
-        const input = editor.querySelector('.rich-editor-input');
-        const form = editor.closest('form');
+    document.addEventListener('input', function (event) {
+        const input = event.target.closest('.admin-live-search');
 
-        if (!toolbar || !area || !input || !form) return;
+        if (!input) return;
 
-        toolbar.querySelectorAll('button[data-command]').forEach(button => {
-            button.addEventListener('click', function () {
-                const command = this.dataset.command;
-                let value = this.dataset.value || null;
+        const keyword = input.value.toLowerCase();
+        const tableId = input.getAttribute('data-target');
+        const table = document.getElementById(tableId);
 
-                area.focus();
+        if (!table) return;
 
-                if (command === 'createLink') {
-                    value = window.prompt('Masukkan link, contoh: https://example.com');
-
-                    if (!value) return;
-                }
-
-                document.execCommand(command, false, value);
-                input.value = area.innerHTML.trim();
-            });
-        });
-
-        area.addEventListener('input', function () {
-            input.value = area.innerHTML.trim();
-        });
-
-        form.addEventListener('submit', function () {
-            input.value = area.innerHTML.trim();
+        table.querySelectorAll('tbody tr').forEach(row => {
+            const text = row.innerText.toLowerCase();
+            row.style.display = text.includes(keyword) ? '' : 'none';
         });
     });
 
-    // DARK MODE
+    window.addEventListener('popstate', function () {
+        loadAdminPanel(window.location.href, false);
+    });
+
+    initTryoutScoringMode();
+    initRichEditors();
+
     const toggle = document.getElementById('darkModeToggle');
-    const body = document.body;
 
     if (toggle) {
         if (localStorage.getItem('adminDarkMode') === 'enabled') {
