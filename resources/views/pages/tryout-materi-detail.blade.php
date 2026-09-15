@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', $materi->judul . ' | Materi Tryout')
+@section('title', $materi->judul . ' | Materi Tryout CPNS')
 
 @section('content')
     <section class="tryout-page">
@@ -33,7 +33,7 @@
 
                 <a href="{{ route('tryout.index', ['mode' => 'ujian']) }}" class="cat-action-btn">
                     <i class="bi bi-display"></i>
-                    Mulai Ujian
+                    Ikuti Simulasi
                 </a>
             </div>
 

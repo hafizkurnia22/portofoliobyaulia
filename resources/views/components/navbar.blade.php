@@ -2,7 +2,7 @@
     $availabilityText = trim($tentangSaya->status ?? 'Open for Collaboration');
 @endphp
 
-<nav class="navbar navbar-expand-xl custom-navbar fixed-top" data-aos="fade-down">
+<nav class="navbar navbar-expand-xxl custom-navbar fixed-top" data-aos="fade-down">
     <div class="container">
         <a class="navbar-brand brand-premium" href="{{ url('/') }}">
             <span class="brand-logo-shell">
@@ -20,7 +20,7 @@
         </button>
 
         <div class="collapse navbar-collapse" id="navbarMenu">
-            <ul class="navbar-nav nav-premium ms-auto align-items-xl-center">
+            <ul class="navbar-nav nav-premium ms-auto align-items-xxl-center">
 
                 <li class="nav-item">
                     <a class="nav-link nav-scroll-link" href="{{ url('/#home') }}" data-section="home">
@@ -54,7 +54,7 @@
                     <a class="nav-link {{ request()->routeIs('tryout.index', 'tryout.login', 'tryout.materi.show') ? 'active' : '' }}"
                         href="{{ route('tryout.index') }}">
                         <i class="bi bi-pc-display-horizontal"></i>
-                        Tryout
+                        Tryout CPNS
                     </a>
                 </li>
 

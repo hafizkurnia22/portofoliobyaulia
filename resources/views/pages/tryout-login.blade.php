@@ -1,14 +1,14 @@
 @extends('layouts.app')
 
-@section('title', 'Login Tryout CAT CPNS')
+@section('title', 'Login Tryout CPNS')
 
 @section('content')
     <section class="tryout-login-page">
         <div class="container">
             <div class="tryout-login-card" data-aos="fade-up">
                 <div class="tryout-login-copy">
-                    <span class="section-label">Tryout</span>
-                    <h1>Masuk Tryout CAT CPNS</h1>
+                    <span class="section-label">Tryout CPNS</span>
+                    <h1>Masuk Tryout CPNS</h1>
                     <p>Gunakan username dan PIN yang sudah dibuat oleh admin untuk mulai mengerjakan soal.</p>
                 </div>
 

@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Tryout CAT CPNS')
+@section('title', 'Tryout CPNS')
 
 @section('content')
     @php
@@ -19,9 +19,9 @@
     <section class="tryout-page">
         <div class="container">
             <div class="tryout-header" data-aos="fade-down">
-                <span class="section-label">Tryout</span>
-                <h1>Simulasi CAT CPNS</h1>
-                <p>Latihan soal TWK, TIU, dan TKP dengan tampilan ujian berbasis komputer.</p>
+                <span class="section-label">{{ $showExam ? 'Simulasi CAT' : ($showMateri ? 'Ruang Belajar' : 'Latihan CAT') }}</span>
+                <h1>{{ $showMateri ? 'Materi Tryout CPNS' : 'Tryout CPNS' }}</h1>
+                <p>{{ $showExam ? 'Siapkan diri, kerjakan soal, lalu pelajari hasil latihanmu.' : 'Latihan TWK, TIU, dan TKP. Pelajari materi, ikuti simulasi, dan pantau hasil latihanmu.' }}</p>
                 <div class="tryout-participant-bar">
                     <span>
                         <i class="bi bi-person-check"></i>
@@ -39,11 +39,16 @@
             </div>
 
             @if ($tryoutMode === 'menu')
+                <ol class="tryout-steps" aria-label="Alur tryout">
+                    <li><span>1</span> Pelajari materi</li>
+                    <li><span>2</span> Ikuti simulasi</li>
+                    <li><span>3</span> Evaluasi hasil</li>
+                </ol>
                 <div class="tryout-choice-grid" data-aos="fade-up">
                     <a href="{{ route('tryout.index', ['mode' => 'ujian']) }}" class="tryout-choice-card">
                         <span><i class="bi bi-display"></i></span>
-                        <strong>Mulai Ujian</strong>
-                        <small>Masuk ke simulasi CAT CPNS dan kerjakan soal aktif yang sudah disiapkan admin.</small>
+                        <strong>Ikuti Simulasi</strong>
+                        <small>{{ $soals->count() }} soal · {{ $tryoutPengaturan->durasi_menit ?? 45 }} menit. Lihat petunjuk sebelum mulai; waktu berjalan setelah kamu siap.</small>
                     </a>
 
                     <a href="{{ route('tryout.index', ['mode' => 'materi']) }}" class="tryout-choice-card">
@@ -56,24 +61,24 @@
                 <div class="tryout-mode-actions" data-aos="fade-up">
                     <a href="{{ route('tryout.index') }}" class="cat-action-btn cat-action-secondary">
                         <i class="bi bi-grid"></i>
-                        Pilihan Tryout
+                        Beranda Tryout
                     </a>
 
                     @if ($showExam)
-                        <a href="{{ route('tryout.index', ['mode' => 'materi']) }}" class="cat-action-btn">
+                        <a href="{{ route('tryout.index', ['mode' => 'materi']) }}" class="cat-action-btn" id="examMaterialLink">
                             <i class="bi bi-journal-bookmark"></i>
                             Materi Ujian
                         </a>
                     @else
                         <a href="{{ route('tryout.index', ['mode' => 'ujian']) }}" class="cat-action-btn">
                             <i class="bi bi-display"></i>
-                            Mulai Ujian
+                            Ikuti Simulasi
                         </a>
                     @endif
                 </div>
             @endif
 
-            @if (!$showMateri)
+            @if ($tryoutMode === 'menu')
                 <div class="tryout-history-card" id="tryoutHistoryCard" data-aos="fade-up">
                     <div class="tryout-history-header">
                         <div>
@@ -97,25 +102,11 @@
                             </div>
                         @empty
                             <div class="tryout-history-empty" id="tryoutHistoryEmpty">
-                                Belum ada riwayat tryout.
+                                Belum ada riwayat. Ikuti simulasi pertamamu; hasilnya akan tampil di sini setelah selesai.
                             </div>
                         @endforelse
                     </div>
                 </div>
-            @endif
-
-            @if ($riwayatTryout->isNotEmpty() && !$showMateri)
-                <script>
-                    document.addEventListener('DOMContentLoaded', function() {
-                        const historyList = document.getElementById('tryoutHistoryList');
-
-                        if (!historyList) {
-                            return;
-                        }
-
-                        historyList.dataset.hasInitialHistory = '1';
-                    });
-                </script>
             @endif
 
             @if ($showMateri)
@@ -200,7 +191,7 @@
                         <div class="tryout-empty-state">
                             <i class="bi bi-journal-plus"></i>
                             <h3>Belum ada materi aktif</h3>
-                            <p>Silakan input materi dari menu Admin Tryout > Master Materi.</p>
+                            <p>Materi pembelajaran belum tersedia. Silakan kembali lagi nanti atau coba simulasi.</p>
                         </div>
                     @endif
                 </div>
@@ -287,10 +278,28 @@
                     <div class="tryout-empty-state" data-aos="fade-up">
                         <i class="bi bi-journal-plus"></i>
                         <h3>Belum ada soal aktif</h3>
-                        <p>Silakan input soal dari menu Admin Tryout > Master Soal.</p>
+                        <p>Soal latihan belum tersedia. Kamu bisa mempelajari materi terlebih dahulu.</p>
                     </div>
                 @else
-                    <div class="cat-shell" data-aos="fade-up">
+                    <div class="cat-preparation cat-main" id="examPreparation">
+                        <span class="cat-kategori">Sebelum mulai</span>
+                        <h2>Siap berlatih?</h2>
+                        <p>Luangkan waktu dan pastikan koneksi internetmu stabil.</p>
+                        <div class="cat-preparation-stats">
+                            <span><i class="bi bi-file-earmark-text"></i> <strong>{{ $soals->count() }} soal</strong></span>
+                            <span><i class="bi bi-clock"></i> <strong>{{ $tryoutPengaturan->durasi_menit ?? 45 }} menit</strong></span>
+                            <span><i class="bi bi-journal-check"></i> {{ $soals->pluck('kategori')->unique()->implode(' · ') }}</span>
+                        </div>
+                        <ul class="cat-instructions">
+                            <li>Pilih satu jawaban. Kamu bisa mengubahnya selama waktu masih tersedia.</li>
+                            <li>Gunakan nomor soal untuk berpindah dan tandai <strong>Ragu-ragu</strong> untuk ditinjau kembali.</li>
+                            <li>Klik <strong>Selesaikan Ujian</strong> jika sudah siap. Saat waktu habis, ujian selesai otomatis.</li>
+                            <li>Tetap di halaman ini selama ujian. Memuat ulang atau meninggalkan halaman akan menghapus jawaban yang belum dikirim.</li>
+                        </ul>
+                        <button type="button" class="cat-action-btn" id="startExamButton"><i class="bi bi-play-circle"></i> Mulai Sekarang</button>
+                        <p class="cat-preparation-note">Timer baru berjalan setelah kamu menekan Mulai Sekarang.</p>
+                    </div>
+                    <div class="cat-shell d-none" id="examShell">
                         <aside class="cat-sidebar">
                             <div class="cat-timer">
                                 <span>Sisa Waktu</span>
@@ -308,14 +317,22 @@
                                 </div>
                             </div>
 
-                            <div class="cat-number-grid" id="questionNav"></div>
+                            <label class="cat-progress-label" for="examProgress" id="examProgressLabel">0 dari {{ $soals->count() }} soal dijawab</label>
+                            <progress class="cat-progress" id="examProgress" max="{{ $soals->count() }}" value="0"></progress>
+                            <h3 class="cat-nav-title">Navigasi soal</h3>
+                            <div class="cat-number-grid" id="questionNav" aria-label="Navigasi soal"></div>
+                            <div class="cat-nav-legend">
+                                <span><i class="legend-unanswered"></i> Belum dijawab</span>
+                                <span><i class="legend-answered"></i> Terjawab</span>
+                                <span><i class="legend-marked"></i> Ragu-ragu</span>
+                            </div>
                         </aside>
 
                         <div class="cat-main">
                             <div class="cat-question-top">
                                 <div>
                                     <span class="cat-kategori" id="questionCategory">TWK</span>
-                                    <h2 id="questionTitle">Soal 1</h2>
+                                    <h2 id="questionTitle" tabindex="-1">Soal 1</h2>
                                 </div>
 
                                 <button type="button" class="cat-mark-btn" id="markButton">
@@ -341,7 +358,7 @@
 
                                 <button type="button" class="cat-action-btn cat-finish-btn" id="finishButton">
                                     <i class="bi bi-check-circle"></i>
-                                    Selesai
+                                    Selesaikan Ujian
                                 </button>
 
                                 <button type="button" class="cat-action-btn cat-result-back-btn d-none" id="showResultButton">
@@ -357,16 +374,34 @@
     </section>
 
     @if ($showExam && $soals->isNotEmpty())
+        <div class="modal fade" id="catFinishModal" tabindex="-1" aria-labelledby="catFinishTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2 class="modal-title fs-5" id="catFinishTitle">Selesaikan ujian?</h2>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p id="finishSummary"></p>
+                        <p class="mb-0">Periksa kembali jawabanmu. Setelah selesai, jawaban tidak bisa diubah.</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="cat-action-btn cat-action-secondary" data-bs-dismiss="modal">Lanjut Mengerjakan</button>
+                        <button type="button" class="cat-action-btn" id="confirmFinishButton">Ya, Selesaikan</button>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="modal fade cat-result-modal" id="catResultModal" tabindex="-1" aria-hidden="true"
-            data-bs-backdrop="static" data-bs-keyboard="false">
+            aria-labelledby="resultTitle" data-bs-backdrop="static" data-bs-keyboard="false">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="cat-result-modal-body">
-                        <span class="cat-result-label">Hasil Tryout</span>
+                        <span class="cat-result-label" id="resultTitle">Hasil Tryout CPNS</span>
                         <strong class="cat-result-score-label">Skor</strong>
                         <h2 id="resultScore">0</h2>
                         <p id="resultMeta"></p>
-                        <small id="resultSaveStatus">Menyimpan riwayat...</small>
+                        <small id="resultSaveStatus" role="status">Menyimpan riwayat...</small>
 
                         <div class="cat-result-modal-actions">
                             <button type="button" class="cat-action-btn" id="reviewButton" data-bs-dismiss="modal">
@@ -377,6 +412,9 @@
                             <a href="{{ route('tryout.index', ['mode' => 'ujian']) }}" class="cat-action-btn cat-action-secondary">
                                 <i class="bi bi-arrow-repeat"></i>
                                 Kerjakan Lagi
+                            </a>
+                            <a href="{{ route('tryout.index') }}" class="cat-action-btn cat-action-secondary">
+                                <i class="bi bi-house"></i> Beranda Tryout
                             </a>
                         </div>
                     </div>
@@ -392,9 +430,11 @@
                 let soals = [];
                 let currentIndex = 0;
                 let isReview = false;
+                let hasStarted = false;
+                let deadline = null;
                 let remainingSeconds = Math.max(Number(@json((int) ($tryoutPengaturan->durasi_menit ?? 45))) * 60, 60);
                 const initialSeconds = remainingSeconds;
-                const startedAt = new Date().toISOString();
+                let startedAt = null;
                 const shouldShuffleQuestions = @json((bool) $tryoutPengaturan->acak_soal);
                 const shouldShuffleAnswers = @json((bool) $tryoutPengaturan->acak_jawaban);
 
@@ -411,13 +451,21 @@
                 const nextButton = document.getElementById('nextButton');
                 const finishButton = document.getElementById('finishButton');
                 const showResultButton = document.getElementById('showResultButton');
-                const historyList = document.getElementById('tryoutHistoryList');
-                const historyEmpty = document.getElementById('tryoutHistoryEmpty');
                 const resultScore = document.getElementById('resultScore');
                 const resultMeta = document.getElementById('resultMeta');
                 const resultSaveStatus = document.getElementById('resultSaveStatus');
                 const reviewButton = document.getElementById('reviewButton');
                 const resultModal = new bootstrap.Modal(document.getElementById('catResultModal'));
+                const finishModalEl = document.getElementById('catFinishModal');
+                const finishModal = new bootstrap.Modal(finishModalEl);
+                let pendingResultModal = false;
+
+                finishModalEl.addEventListener('hidden.bs.modal', function() {
+                    if (pendingResultModal) {
+                        pendingResultModal = false;
+                        resultModal.show();
+                    }
+                });
 
                 function formatTime(totalSeconds) {
                     const hours = String(Math.floor(totalSeconds / 3600)).padStart(2, '0');
@@ -486,6 +534,8 @@
                 function updateSummary() {
                     answeredCountEl.textContent = Object.keys(answers).length;
                     markedCountEl.textContent = Object.keys(marked).length;
+                    document.getElementById('examProgress').value = Object.keys(answers).length;
+                    document.getElementById('examProgressLabel').textContent = `${Object.keys(answers).length} dari ${soals.length} soal dijawab`;
                 }
 
                 function renderNav() {
@@ -497,6 +547,8 @@
                         numberButton.type = 'button';
                         numberButton.textContent = index + 1;
                         numberButton.className = 'cat-number-btn';
+                        numberButton.setAttribute('aria-label', `Soal ${index + 1}, ${answers[soal.id] ? 'terjawab' : 'belum dijawab'}${marked[soal.id] ? ', ragu-ragu' : ''}`);
+                        if (index === currentIndex) numberButton.setAttribute('aria-current', 'step');
 
                         if (index === currentIndex) numberButton.classList.add('active');
                         if (answers[soal.id]) numberButton.classList.add('answered');
@@ -505,6 +557,7 @@
                         numberButton.addEventListener('click', function() {
                             currentIndex = index;
                             renderQuestion();
+                            questionTitleEl.focus({ preventScroll: true });
                         });
 
                         navEl.appendChild(numberButton);
@@ -515,7 +568,7 @@
                     const soal = soals[currentIndex];
                     const selectedAnswer = answers[soal.id];
                     questionCategoryEl.textContent = soal.kategori;
-                    questionTitleEl.textContent = `Soal ${currentIndex + 1}`;
+                    questionTitleEl.textContent = `Soal ${currentIndex + 1} dari ${soals.length}`;
                     questionTextEl.textContent = soal.pertanyaan;
                     questionOptionsEl.innerHTML = '';
 
@@ -523,6 +576,8 @@
                         const optionButton = document.createElement('button');
                         optionButton.type = 'button';
                         optionButton.className = 'cat-option-btn';
+                        optionButton.setAttribute('aria-pressed', String(selectedAnswer === option.originalKey));
+                        optionButton.disabled = isReview;
 
                         if (selectedAnswer === option.originalKey) optionButton.classList.add('selected');
                         if (isReview && soal.jawaban_benar === option.originalKey) optionButton.classList.add('correct');
@@ -557,6 +612,7 @@
                     }
 
                     markButton.classList.toggle('active', Boolean(marked[soal.id]));
+                    markButton.setAttribute('aria-pressed', String(Boolean(marked[soal.id])));
                     markButton.disabled = isReview;
                     prevButton.disabled = currentIndex === 0;
                     nextButton.disabled = currentIndex === soals.length - 1;
@@ -577,42 +633,6 @@
                         total_skor_browser: totalScore,
                         total_benar_browser: correctCount,
                     };
-                }
-
-                function prependHistory(data) {
-                    if (!historyList) {
-                        return;
-                    }
-
-                    if (historyEmpty) {
-                        historyEmpty.remove();
-                    }
-
-                    const item = document.createElement('div');
-                    item.className = 'tryout-history-item';
-
-                    const meta = document.createElement('div');
-                    const finishedAt = document.createElement('strong');
-                    finishedAt.textContent = data.finished_at || 'Baru saja';
-
-                    const detail = document.createElement('small');
-                    detail.textContent = `${data.total_dijawab}/${data.total_soal} dijawab, ${data.total_benar} benar`;
-
-                    const score = document.createElement('span');
-                    const scoreLabel = document.createElement('small');
-                    scoreLabel.textContent = 'Skor';
-                    score.appendChild(scoreLabel);
-                    score.appendChild(document.createTextNode(data.total_skor));
-
-                    meta.appendChild(finishedAt);
-                    meta.appendChild(detail);
-                    item.appendChild(meta);
-                    item.appendChild(score);
-                    historyList.prepend(item);
-
-                    while (historyList.querySelectorAll('.tryout-history-item').length > 5) {
-                        historyList.querySelector('.tryout-history-item:last-child').remove();
-                    }
                 }
 
                 function saveResult(payload) {
@@ -637,8 +657,7 @@
                         .then(function(data) {
                             resultScore.textContent = data.total_skor;
                             resultMeta.textContent = `${data.total_dijawab} dari ${data.total_soal} soal dijawab. Jawaban benar: ${data.total_benar}. Ragu-ragu: ${data.total_ragu}.`;
-                            resultSaveStatus.textContent = 'Riwayat tryout sudah tersimpan.';
-                            prependHistory(data);
+                            resultSaveStatus.textContent = 'Hasil tersimpan. Riwayat dapat dilihat di Beranda Tryout.';
                         })
                         .catch(function() {
                             resultSaveStatus.textContent = 'Riwayat belum tersimpan. Silakan hubungi admin jika diperlukan.';
@@ -646,6 +665,8 @@
                 }
 
                 function finishTryout() {
+                    if (!hasStarted || isReview) return;
+                    remainingSeconds = Math.max(0, Math.ceil((deadline - Date.now()) / 1000));
                     let totalScore = 0;
                     let correctCount = 0;
 
@@ -668,13 +689,20 @@
                     showResultButton.classList.remove('d-none');
                     isReview = true;
                     renderQuestion();
-                    resultModal.show();
+                    timerEl.textContent = formatTime(remainingSeconds);
+                    document.getElementById('examMaterialLink').classList.remove('d-none');
+                    if (finishModalEl.classList.contains('show')) {
+                        pendingResultModal = true;
+                        finishModal.hide();
+                    } else {
+                        resultModal.show();
+                    }
                     saveResult(buildResultPayload(totalScore, correctCount));
                 }
 
                 setInterval(function() {
-                    if (remainingSeconds <= 0 || isReview) return;
-                    remainingSeconds -= 1;
+                    if (!hasStarted || isReview) return;
+                    remainingSeconds = Math.max(0, Math.ceil((deadline - Date.now()) / 1000));
                     timerEl.textContent = formatTime(remainingSeconds);
 
                     if (remainingSeconds === 0) {
@@ -683,6 +711,25 @@
                 }, 1000);
 
                 timerEl.textContent = formatTime(remainingSeconds);
+
+                document.getElementById('startExamButton').addEventListener('click', function() {
+                    if (hasStarted) return;
+                    hasStarted = true;
+                    startedAt = new Date().toISOString();
+                    deadline = Date.now() + initialSeconds * 1000;
+                    document.getElementById('examPreparation').classList.add('d-none');
+                    document.getElementById('examShell').classList.remove('d-none');
+                    document.getElementById('examMaterialLink').classList.add('d-none');
+                    document.getElementById('examShell').scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    questionTitleEl.focus({ preventScroll: true });
+                });
+
+                window.addEventListener('beforeunload', function(event) {
+                    if (hasStarted && !isReview) {
+                        event.preventDefault();
+                        event.returnValue = '';
+                    }
+                });
 
                 markButton.addEventListener('click', function() {
                     const soal = soals[currentIndex];
@@ -710,7 +757,12 @@
                     }
                 });
 
-                finishButton.addEventListener('click', finishTryout);
+                finishButton.addEventListener('click', function() {
+                    const unanswered = soals.length - Object.keys(answers).length;
+                    document.getElementById('finishSummary').textContent = `${Object.keys(answers).length} dari ${soals.length} soal sudah dijawab. ${unanswered} belum dijawab dan ${Object.keys(marked).length} ditandai ragu-ragu.`;
+                    finishModal.show();
+                });
+                document.getElementById('confirmFinishButton').addEventListener('click', finishTryout);
 
                 showResultButton.addEventListener('click', function() {
                     resultModal.show();
