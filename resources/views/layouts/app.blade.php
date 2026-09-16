@@ -30,7 +30,7 @@
     $isTryoutExam = request()->is('tryout') && request('mode') === 'ujian';
 @endphp
 
-<body @class(['tryout-exam-page' => $isTryoutExam])>
+<body id="page-top" @class(['tryout-exam-page' => $isTryoutExam])>
 
     @if (!request()->is('admin/*') && !$isTryoutExam)
         @include('components.navbar')

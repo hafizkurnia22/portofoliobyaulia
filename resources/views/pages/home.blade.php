@@ -527,29 +527,23 @@
     </section>
 
     <!-- Contact CTA -->
-    <section class="section-padding contact-cta premium-contact-cta text-center">
-        <div class="container" data-aos="zoom-in">
-            <span class="contact-cta-kicker">
-                <span class="availability-live-dot"></span>
-                Smart Contact
-            </span>
+    <section class="footer-invitation" aria-labelledby="footerInvitationTitle">
+        <div class="container footer-invitation-inner">
+            <div>
+            <span class="footer-invitation-label">KONTAK & KERJA SAMA</span>
 
-            <h2 class="fw-bold">Mulai Percakapan yang Tepat</h2>
+            <h2 id="footerInvitationTitle">Punya ide atau peluang? Mari berdiskusi.</h2>
             <p class="mt-3">
-                Pilih tujuan kontak agar pesan WhatsApp langsung rapi, profesional, dan sesuai kebutuhan Anda.
+                Sampaikan kebutuhan Anda, mulai dari pengembangan website hingga peluang karier.
             </p>
 
-            <div class="contact-intent-preview" aria-hidden="true">
-                <span><i class="bi bi-briefcase-fill"></i> Rekrutmen</span>
-                <span><i class="bi bi-stars"></i> Kerja Sama</span>
-                <span><i class="bi bi-file-earmark-person-fill"></i> Minta CV</span>
             </div>
 
-            <button type="button" class="btn btn-main contact-intent-button" data-bs-toggle="modal"
+            <button type="button" class="footer-invitation-button" data-bs-toggle="modal"
                 data-bs-target="#smartContactModal">
 
                 <i class="bi bi-whatsapp"></i>
-                Pilih Tujuan Kontak
+                Mulai percakapan
 
             </button>
         </div>
