@@ -20,7 +20,7 @@ class TryoutMateri extends Model
     // Cakupan SKD pada KepmenPANRB Nomor 321 Tahun 2024.
     public const TOPIK = [
         'TWK' => ['Nasionalisme', 'Integritas', 'Bela Negara', 'Pilar Negara', 'Bahasa Negara'],
-        'TIU' => ['Kemampuan Verbal', 'Kemampuan Numerik', 'Kemampuan Figural'],
+        'TIU' => ['Analogi Verbal', 'Silogisme', 'Analitis', 'Berhitung', 'Deret Angka', 'Perbandingan Kuantitatif', 'Soal Cerita', 'Analogi Figural', 'Ketidaksamaan', 'Serial', 'Kemampuan Verbal', 'Kemampuan Numerik', 'Kemampuan Figural'],
         'TKP' => ['Pelayanan Publik', 'Jejaring Kerja', 'Sosial Budaya', 'Teknologi Informasi dan Komunikasi', 'Profesionalisme', 'Anti Radikalisme'],
     ];
 

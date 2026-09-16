@@ -6585,3 +6585,76 @@ body:has(.cv-builder-page) .custom-navbar {
     .materi-read-link { justify-self: start; }
     .materi-library h2 { font-size: 23px; }
 }
+
+/* Learning: restrained system typography and a comfortable reading measure. */
+.learning-page { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif; background: #f6f7f9; color: #213047; }
+.learning-page p, .learning-page li { font-weight: 400; text-align: left; }
+.learning-page .tryout-header { margin-bottom: 24px; }
+.learning-page .tryout-header h1 { font-size: clamp(28px, 3vw, 36px); font-weight: 600; letter-spacing: -.6px; }
+.learning-page .tryout-header > p { font-size: 16px; line-height: 1.7; color: #526174; }
+.learning-page .tryout-reference-card { box-shadow: none; padding: 22px; border-color: #dfe4ea; gap: 18px; }
+.learning-page .tryout-reference-card h2 { font-size: 20px; font-weight: 600; }
+.learning-page .tryout-reference-card p { font-size: 15px; line-height: 1.7; }
+.learning-page .tryout-reference-icon { width: 42px; height: 42px; min-width: 42px; font-size: 22px; border-radius: 8px; background: #edf4f4; }
+.learning-page .tryout-tabs { gap: 12px; }
+.learning-page .tryout-tab { min-height: 60px; padding: 14px 20px; font-size: 16px; font-weight: 600; border-radius: 8px; box-shadow: none; }
+.learning-page .tryout-tab span { width: 28px; height: 28px; font-size: 14px; }
+.learning-page .tryout-participant-bar { margin-top: 18px; box-shadow: none; }
+.learning-page [data-aos] { opacity: 1 !important; transform: none !important; transition: none !important; }
+.learning-page .materi-library { padding: 32px; box-shadow: none; }
+.learning-eyebrow { font-size: 12px; font-weight: 600 !important; letter-spacing: 1px; color: #47606d; margin-bottom: 12px; }
+.learning-page .materi-library h2 { font-size: clamp(23px, 2.5vw, 28px); letter-spacing: -.4px; }
+.learning-page .materi-library header p { max-width: 68ch; font-size: 16px; line-height: 1.7; }
+.learning-page .materi-controls { background: #f8fafb; border: 1px solid #e5e9ed; border-radius: 8px; padding: 20px; }
+.learning-page .materi-controls input, .learning-page .materi-controls select { font-size: 15px; }
+.learning-page .materi-reading-item { padding: 26px 0; }
+.learning-page .materi-reading-item h3 { font-size: 20px; line-height: 1.4; }
+.learning-page .materi-reading-summary { font-size: 16px; line-height: 1.7; max-width: 72ch; }
+.learning-page .materi-category-label { font-size: 13px; }
+.learning-page .materi-category-label span { color: #657183; font-weight: 400; margin-left: 6px; }
+.learning-page .materi-topic-label { line-height: 1.6; }
+.learning-page .materi-read-link { font-size: 15px; min-height: 44px; }
+.reading-breadcrumb { display: flex; gap: 14px; font-size: 14px; margin-bottom: 30px; align-items: center; }
+.reading-breadcrumb a { color: #355265; text-decoration: none; padding: 8px 0; }
+.reading-header { max-width: 850px; margin-bottom: 32px; }
+.reading-header h1 { font-size: clamp(28px, 3.4vw, 40px); font-weight: 600; letter-spacing: -.7px; line-height: 1.2; margin: 0 0 16px; }
+.reading-header > p:not(.learning-eyebrow) { font-size: 18px; line-height: 1.7; color: #526174; }
+.reading-meta { display: flex; flex-wrap: wrap; gap: 12px 24px; color: #627083; font-size: 14px; }
+.reading-layout { display: grid; grid-template-columns: 230px minmax(0, 850px); gap: 40px; align-items: start; }
+.reading-layout:has(.reading-sidebar[hidden]) { grid-template-columns: minmax(0, 850px); }
+.reading-sidebar { position: sticky; top: 125px; font-size: 14px; padding: 12px 0; }
+.reading-sidebar h2 { font-size: 15px; font-weight: 600; margin-bottom: 16px; }
+.reading-sidebar ol { list-style: none; padding: 0; margin: 0 0 24px; }
+.reading-sidebar li a { display: block; padding: 10px 12px; border-left: 2px solid #dce2e8; color: #536175; text-decoration: none; line-height: 1.5; }
+.reading-sidebar li a:hover, .reading-sidebar li a:focus-visible { border-color: #16746e; color: #125c57; background: #edf3f3; }
+.reading-sidebar > a { color: #125c57; }
+.reading-article { background: #fff; border: 1px solid #e0e5eb; border-radius: 10px; padding: 40px 48px; font-size: 17px; line-height: 1.85; overflow-wrap: anywhere; }
+.reading-article h2 { font-size: 23px; font-weight: 600; letter-spacing: -.3px; margin: 36px 0 16px; line-height: 1.4; scroll-margin-top: 130px; }
+.reading-article h2:first-child { margin-top: 0; }
+.reading-article h3 { font-size: 20px; margin: 28px 0 14px; scroll-margin-top: 130px; }
+.reading-article p { margin-bottom: 20px; }
+.reading-article li { padding-left: 5px; margin-bottom: 12px; }
+.reading-article strong { font-weight: 600; }
+.reading-article a { color: #116b65; text-underline-offset: 3px; }
+.reading-next { display: flex; flex-wrap: wrap; gap: 18px; align-items: center; justify-content: space-between; margin: 28px 0; padding: 24px 0; border-bottom: 1px solid #dce2e8; }
+.reading-next h2, .reading-related h2 { font-size: 19px; font-weight: 600; margin-bottom: 8px; }
+.reading-next p { font-size: 15px; color: #617083; margin: 0; }
+.reading-related > a { display: flex; gap: 14px; align-items: center; padding: 16px 0; border-bottom: 1px solid #e0e5eb; text-decoration: none; color: #243b50; font-size: 16px; }
+.reading-related > a span { font-size: 12px; color: #627083; }
+.reading-related > a i { margin-left: auto; }
+.learning-reader :focus-visible { outline: 2px solid #14756e; outline-offset: 4px; }
+body:has(.learning-reader) .floating-whatsapp { display: none; }
+@media(max-width: 991px) {
+    .reading-layout { grid-template-columns: 1fr; gap: 24px; }
+    .reading-sidebar { position: static; padding: 18px; border: 1px solid #dfe4ea; border-radius: 8px; background: #fff; }
+    .reading-sidebar ol { margin-bottom: 12px; }
+}
+@media(max-width: 767px) {
+    .learning-page .materi-library { padding: 22px 16px; }
+    .learning-page .materi-controls { padding: 14px; }
+    .learning-page .tryout-tabs { gap: 8px; }
+    .learning-page .tryout-tab { padding: 12px; font-size: 14px; }
+    .reading-article { padding: 26px 20px; font-size: 16px; line-height: 1.8; }
+    .reading-article h2 { font-size: 21px; }
+    .reading-header > p:not(.learning-eyebrow) { font-size: 16px; }
+}

@@ -21,7 +21,7 @@ class MateriLibraryTest extends TestCase
 
     public function test_library_renders_topic_filters_and_safe_reading_links(): void
     {
-        $materi = new TryoutMateri(['judul' => 'Nasionalisme', 'ringkasan' => '<b>Belajar</b>', 'topik' => ['Nasionalisme']]);
+        $materi = new TryoutMateri(['judul' => 'Nasionalisme', 'ringkasan' => '<b>Belajar</b>', 'isi_materi' => '<h2>Konsep</h2><p>Belajar bersama.</p>', 'topik' => ['Nasionalisme']]);
         $materi->id = 123;
         $materi->setRelation('kategoriSoal', new TryoutKategoriSoal(['kode' => 'TWK']));
         $html = view('components.materi-library', [
@@ -32,5 +32,31 @@ class MateriLibraryTest extends TestCase
         $this->assertStringContainsString('/tryout/materi/123', $html);
         $this->assertStringNotContainsString('<table', $html);
         $this->assertStringNotContainsString('<b>Belajar</b>', $html);
+    }
+
+    public function test_curriculum_covers_all_21_topics_with_examples_and_explanations(): void
+    {
+        $lessons = require database_path('seeders/data/materi-skd-2024.php');
+        $this->assertCount(21, $lessons);
+        $this->assertSame(['TWK' => 5, 'TIU' => 10, 'TKP' => 6], array_count_values(array_column($lessons, 0)));
+        $this->assertCount(21, array_unique(array_column($lessons, 1)));
+        foreach ($lessons as $lesson) {
+            $this->assertContains($lesson[1], TryoutMateri::TOPIK[$lesson[0]]);
+            $this->assertCount(3, $lesson[4]);
+            $this->assertNotEmpty($lesson[5]);
+            $this->assertNotEmpty($lesson[6]);
+            $this->assertNotEmpty($lesson[7]);
+        }
+    }
+
+    public function test_reader_renders_content_and_return_to_learning_links(): void
+    {
+        $materi = new TryoutMateri(['judul' => 'Nasionalisme', 'ringkasan' => 'Belajar', 'isi_materi' => '<h2>Konsep</h2><p>Penjelasan.</p>', 'topik' => ['Nasionalisme']]);
+        $materi->setRelation('kategoriSoal', new TryoutKategoriSoal(['kode' => 'TWK', 'nama' => 'Tes Wawasan Kebangsaan']));
+        $html = view('pages.tryout-materi-detail', ['materi' => $materi, 'materiLainnya' => collect()])->render();
+        $this->assertStringContainsString('readingContentsList', $html);
+        $this->assertStringContainsString('<h2>Konsep</h2>', $html);
+        $this->assertStringContainsString('tab=materi', $html);
+        $this->assertStringContainsString('tab=simulasi', $html);
     }
 }

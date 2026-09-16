@@ -17,13 +17,18 @@
         }
         $materiKategori = ['TWK', 'TIU', 'TKP'];
         $allMateri = isset($materiTryout)
-            ? $materiTryout->flatten(1)->sortBy(fn ($materi) => optional($materi->kategoriSoal)->kode . $materi->judul)->values()
+            ? $materiTryout->flatten(1)->sortBy(function ($materi) {
+                $kode = optional($materi->kategoriSoal)->kode;
+                $group = array_search($kode, ['TWK', 'TIU', 'TKP']);
+                $topic = array_search($materi->judul, \App\Models\TryoutMateri::TOPIK[$kode] ?? []);
+                return sprintf('%02d-%03d-%s', $group === false ? 9 : $group, $topic === false ? 99 : $topic, $materi->judul);
+            })->values()
             : collect();
         $kategoriMateriOptions = $allMateri->map(fn ($materi) => optional($materi->kategoriSoal)->kode ?? 'LAIN')->unique()->values();
         $hasMateri = $allMateri->isNotEmpty();
     @endphp
 
-    <section class="tryout-page">
+    <section class="tryout-page {{ $showExam ? '' : 'learning-page' }}">
         <div class="container">
             @if ($showExam)
                 <div class="cat-exam-toolbar">

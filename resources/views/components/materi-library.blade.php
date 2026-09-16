@@ -1,7 +1,8 @@
 <div class="materi-library" id="materiLibrary">
     <header>
-        <h2>Materi belajar</h2>
-        <p>Pilih jenis tes dan topik yang ingin Anda pelajari, lalu buka bacaannya.</p>
+        <div class="learning-eyebrow">RUANG BELAJAR</div>
+        <h2>Belajar satu topik setiap hari</h2>
+        <p>Mulai dari topik yang ingin Anda pahami. Setiap materi berisi penjelasan, contoh latihan, dan pembahasan.</p>
     </header>
     <div class="materi-controls">
         <label>Cari materi
@@ -44,7 +45,7 @@
             <article class="materi-reading-item" data-category="{{ $materi->kategoriSoal->kode ?? 'LAIN' }}"
                 data-topics="{{ json_encode($topics) }}" data-search="{{ $materi->judul . ' ' . $summary . ' ' . implode(' ', $topics) }}">
                 <div>
-                    <p class="materi-category-label">{{ $materi->kategoriSoal->kode ?? 'Materi tambahan' }}</p>
+                    <p class="materi-category-label">{{ $materi->kategoriSoal->kode ?? 'Materi tambahan' }} <span>· {{ max(1, (int) ceil(count(preg_split('/\s+/u', strip_tags($materi->isi_materi), -1, PREG_SPLIT_NO_EMPTY)) / 180)) }} menit baca</span></p>
                     <h3><a href="{{ route('tryout.materi.show', $materi) }}">{{ $materi->judul }}</a></h3>
                     <p class="materi-reading-summary">{{ \Illuminate\Support\Str::limit($summary, 160) }}</p>
                     <p class="materi-topic-label">Topik: {{ $topics ? implode(' · ', $topics) : 'Materi umum' }}</p>
