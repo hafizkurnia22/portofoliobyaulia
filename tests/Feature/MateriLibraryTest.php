@@ -38,14 +38,19 @@ class MateriLibraryTest extends TestCase
     {
         $lessons = require database_path('seeders/data/materi-skd-2024.php');
         $this->assertCount(21, $lessons);
-        $this->assertSame(['TWK' => 5, 'TIU' => 10, 'TKP' => 6], array_count_values(array_column($lessons, 0)));
-        $this->assertCount(21, array_unique(array_column($lessons, 1)));
+        $this->assertSame(['TWK' => 5, 'TIU' => 10, 'TKP' => 6], array_count_values(array_column($lessons, 'kategori')));
+        $this->assertCount(21, array_unique(array_column($lessons, 'topik')));
         foreach ($lessons as $lesson) {
-            $this->assertContains($lesson[1], TryoutMateri::TOPIK[$lesson[0]]);
-            $this->assertCount(3, $lesson[4]);
-            $this->assertNotEmpty($lesson[5]);
-            $this->assertNotEmpty($lesson[6]);
-            $this->assertNotEmpty($lesson[7]);
+            $this->assertContains($lesson['topik'], TryoutMateri::TOPIK[$lesson['kategori']]);
+            $this->assertArrayHasKey('Tujuan belajar', $lesson['bagian']);
+            $this->assertArrayHasKey('Konsep kunci', $lesson['bagian']);
+            $this->assertArrayHasKey('Contoh latihan', $lesson['bagian']);
+            $this->assertArrayHasKey('Pembahasan', $lesson['bagian']);
+            $this->assertArrayHasKey('Catatan penting', $lesson['bagian']);
+            $this->assertGreaterThanOrEqual(7, count($lesson['bagian']));
+            foreach ($lesson['bagian'] as $content) {
+                $this->assertNotEmpty($content);
+            }
         }
     }
 

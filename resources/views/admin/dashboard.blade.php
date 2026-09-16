@@ -1913,6 +1913,7 @@
 
                                 <div class="col-12 mb-3">
                                     <label class="form-label">Isi Materi</label>
+                                    <small class="text-muted d-block mb-2">Judul bagian di isi materi akan otomatis menjadi menu “Dalam materi ini” di halaman pembaca.</small>
                                     <div class="rich-editor" data-rich-editor>
                                         <div class="rich-editor-toolbar">
                                             <button type="button" data-command="bold"><i class="bi bi-type-bold"></i></button>
@@ -2468,6 +2469,7 @@
 
                             <div class="col-12 mb-3">
                                 <label class="form-label">Isi Materi</label>
+                                <small class="text-muted d-block mb-2">Judul bagian di isi materi akan otomatis menjadi menu “Dalam materi ini” di halaman pembaca.</small>
                                 <div class="rich-editor" data-rich-editor>
                                     <div class="rich-editor-toolbar">
                                         <button type="button" data-command="bold"><i class="bi bi-type-bold"></i></button>
