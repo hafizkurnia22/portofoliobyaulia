@@ -64,4 +64,15 @@ class MateriLibraryTest extends TestCase
         $this->assertStringContainsString('tab=materi', $html);
         $this->assertStringContainsString('tab=simulasi', $html);
     }
+
+    public function test_seeded_materials_include_core_topics_question_types_and_reading_guidance(): void
+    {
+        $this->seed(\Database\Seeders\MateriSkd2024Seeder::class);
+
+        TryoutMateri::whereIn('judul', ['Nasionalisme', 'Berhitung', 'Pelayanan Publik'])->get()->each(function (TryoutMateri $materi) {
+            $this->assertStringContainsString('<h2>Materi pokok yang perlu dikuasai</h2>', $materi->isi_materi);
+            $this->assertStringContainsString('<h2>Bentuk soal yang sering keluar</h2>', $materi->isi_materi);
+            $this->assertStringContainsString('<h2>Bacaan dan penguasaan tambahan</h2>', $materi->isi_materi);
+        });
+    }
 }
