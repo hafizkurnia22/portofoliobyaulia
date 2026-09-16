@@ -34,7 +34,16 @@
     </div>
     <div class="materi-list-status">
         <p id="materiResultCount" role="status">{{ $allMateri->count() }} bacaan tersedia</p>
-        <button type="button" id="materiReset" hidden>Hapus pencarian & filter</button>
+        <div class="materi-list-actions">
+            <label>Tampilkan
+                <select id="materiPerPage" aria-label="Jumlah materi per halaman">
+                    <option value="5" selected>5 data</option>
+                    <option value="10">10 data</option>
+                    <option value="20">20 data</option>
+                </select>
+            </label>
+            <button type="button" id="materiReset" hidden>Hapus pencarian & filter</button>
+        </div>
     </div>
     <div class="materi-reading-list">
         @foreach ($allMateri as $materi)
@@ -58,5 +67,10 @@
         <h3>Belum ada bacaan yang sesuai</h3>
         <p>Coba topik lain atau hapus pencarian dan filter untuk melihat semua materi.</p>
     </div>
+    <nav class="materi-pagination" id="materiPagination" aria-label="Halaman materi" hidden>
+        <button type="button" id="materiPrevPage"><i class="bi bi-arrow-left" aria-hidden="true"></i> Sebelumnya</button>
+        <div id="materiPageNumbers" class="materi-page-numbers"></div>
+        <button type="button" id="materiNextPage">Berikutnya <i class="bi bi-arrow-right" aria-hidden="true"></i></button>
+    </nav>
     <p class="materi-source">Pengelompokan topik mengacu pada <a href="https://jdih.menpan.go.id/dokumen-hukum/keputusan-menteri-pendayagunaan-aparatur-negara-dan-reformasi-birokrasi-nomor-321-tahun-2024-tentang-1851" target="_blank" rel="noopener">KepmenPANRB No. 321 Tahun 2024<span class="visually-hidden"> (tab baru)</span></a>.</p>
 </div>

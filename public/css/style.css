@@ -6562,6 +6562,9 @@ body:has(.cv-builder-page) .custom-navbar {
 .materi-library :focus-visible { outline: 2px solid #0f766e; outline-offset: 3px; }
 .materi-list-status { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-top: 24px; }
 .materi-list-status p, .materi-topic-label { color: #606d7c; font-size: 13px; font-weight: 400; }
+.materi-list-actions { display: flex; align-items: center; flex-wrap: wrap; justify-content: flex-end; gap: 12px; }
+.materi-list-actions label { display: inline-flex; align-items: center; gap: 8px; color: #4e5b6b; font-size: 13px; font-weight: 500; }
+.materi-list-actions select { min-height: 36px; border: 1px solid #cbd2da; border-radius: 6px; background: #fff; color: #263547; padding: 6px 28px 6px 10px; font: inherit; }
 .materi-list-status button { border: 0; background: none; color: #0f766e; text-decoration: underline; font-size: 13px; }
 .materi-reading-item { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 32px; padding: 24px 0; border-top: 1px solid #e2e6eb; }
 .materi-library [hidden] { display: none !important; }
@@ -6578,9 +6581,17 @@ body:has(.cv-builder-page) .custom-navbar {
 .materi-empty { padding: 36px 0; }
 .materi-empty h3 { font-size: 18px; }
 .materi-empty p { font-size: 14px; font-weight: 400; }
+.materi-pagination { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 10px; border-top: 1px solid #e2e6eb; padding: 22px 0; }
+.materi-pagination button { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 38px; border: 1px solid #cbd2da; border-radius: 6px; background: #fff; color: #1f3145; padding: 8px 12px; font-size: 13px; font-weight: 500; }
+.materi-pagination button:hover:not(:disabled), .materi-pagination button.active { border-color: #0f766e; background: #eaf5f3; color: #0f5f59; }
+.materi-pagination button:disabled { color: #9aa4af; cursor: not-allowed; }
+.materi-page-numbers { display: flex; flex-wrap: wrap; gap: 6px; }
+.materi-page-numbers button { width: 38px; padding-inline: 0; }
 @media (max-width: 767px) {
     .materi-library { padding: 20px 16px; }
     .materi-controls { grid-template-columns: 1fr; gap: 14px; }
+    .materi-list-status { align-items: flex-start; flex-direction: column; }
+    .materi-list-actions { justify-content: flex-start; }
     .materi-reading-item { grid-template-columns: 1fr; gap: 16px; }
     .materi-read-link { justify-self: start; }
     .materi-library h2 { font-size: 23px; }

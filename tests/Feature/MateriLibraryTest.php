@@ -28,6 +28,11 @@ class MateriLibraryTest extends TestCase
             'allMateri' => collect([$materi]), 'kategoriMateriOptions' => collect(['TWK']),
         ])->render();
         $this->assertStringContainsString('Jenis pelajaran', $html);
+        $this->assertStringContainsString('id="materiPerPage"', $html);
+        $this->assertStringContainsString('5 data', $html);
+        $this->assertStringContainsString('10 data', $html);
+        $this->assertStringContainsString('20 data', $html);
+        $this->assertStringContainsString('id="materiPagination"', $html);
         $this->assertStringContainsString('Kemampuan Figural', $html);
         $this->assertStringContainsString('/tryout/materi/123', $html);
         $this->assertStringNotContainsString('<table', $html);
