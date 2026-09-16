@@ -35,7 +35,7 @@
                 <div class="intro-portrait-frame">
                     <img src="{{ asset('images/' . ($tentangSaya->foto ?? 'profile.jpeg')) }}" alt="Potret {{ $tentangSaya->nama ?? 'Hafiz' }}" fetchpriority="high" width="440" height="500">
                 </div>
-                <div class="intro-portrait-caption"><span>PORTOFOLIO PRIBADI</span><span>Pengalaman, karya & keahlian</span></div>
+                <div class="intro-portrait-caption"><i class="bi bi-code-slash" aria-hidden="true"></i><span>Teknologi yang memudahkan pekerjaan.</span></div>
             </div>
         </div>
     </section>
