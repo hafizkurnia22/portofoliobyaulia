@@ -7,76 +7,35 @@
         $availabilityText = trim($tentangSaya->status ?? 'Open for Collaboration');
     @endphp
 
-    <!-- Hero Carousel -->
-    <section id="home" class="hero-section d-flex align-items-center" data-aos="fade-up">
-        <div class="container">
-            <div id="heroCarousel" class="carousel slide" data-bs-ride="carousel">
-
-                <div class="carousel-inner">
-
-                    <div class="carousel-item active">
-                        <div class="row align-items-center">
-                            <div class="col-md-7" data-aos="fade-right" data-aos-delay="200">
-                                @if ($availabilityText !== '')
-                                    <button type="button" class="hero-availability-card" data-bs-toggle="modal"
-                                        data-bs-target="#smartContactModal">
-                                        <span class="availability-live-dot"></span>
-                                        <span>Live Availability</span>
-                                        <strong>{{ $availabilityText }}</strong>
-                                        <i class="bi bi-arrow-up-right"></i>
-                                    </button>
-                                @endif
-
-                                <h1>
-                                    Halo, Saya {{ $tentangSaya->nama ?? 'Nama Anda' }}
-                                </h1>
-
-                                <p class="hero-text mt-3">
-                                    Saya seorang profesional yang memiliki pengalaman kerja,
-                                    kemampuan teknis, dan semangat untuk terus berkembang.
-                                </p>
-
-                                <div class="mt-4" data-aos="fade-up" data-aos-delay="400">
-                                    <a href="#tentang" class="btn btn-main me-2">Tentang Saya</a>
-                                    <a href="#pengalaman" class="btn btn-outline-main">Lihat Pengalaman</a>
-                                </div>
-                            </div>
-
-                            <div class="col-md-5 text-center mt-5 mt-md-0" data-aos="zoom-in" data-aos-delay="300">
-                                <img src="{{ asset('images/' . ($tentangSaya->foto ?? 'profile.jpeg')) }}" class="hero-img"
-                                    alt="Foto Profile">
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="carousel-item">
-                        <div class="row align-items-center">
-                            <div class="col-md-7">
-                                <h1 class="display-4 fw-bold">
-                                    Portfolio & Curriculum Vitae
-                                </h1>
-                                <p class="lead mt-3">
-                                    Website ini berisi profil, pengalaman kerja, skill, dan informasi profesional saya.
-                                </p>
-                                <a href="#skill" class="btn btn-main mt-3">Lihat Skill</a>
-                            </div>
-
-                            <div class="col-md-5 text-center mt-5 mt-md-0">
-                                <i class="bi bi-person-workspace" style="font-size: 180px;"></i>
-                            </div>
-                        </div>
-                    </div>
-
+    <section id="home" class="portfolio-intro" aria-labelledby="intro-title">
+        <div class="container portfolio-intro-grid">
+            <div class="portfolio-intro-copy">
+                @if ($availabilityText !== '')
+                    @php
+                        $friendlyAvailability = match (strtolower($availabilityText)) {
+                            'open to freelance', 'open for freelance' => 'Terbuka untuk project freelance',
+                            'open for collaboration' => 'Terbuka untuk kerja sama',
+                            'open to work' => 'Terbuka untuk peluang kerja',
+                            default => $availabilityText,
+                        };
+                    @endphp
+                    <div class="intro-status"><i class="bi bi-briefcase" aria-hidden="true"></i><span>{{ $friendlyAvailability }}</span></div>
+                @endif
+                <p class="intro-greeting">Halo, saya</p>
+                <h1 id="intro-title">{{ $tentangSaya->nama ?? 'Hafiz' }}</h1>
+                <p class="intro-role">{{ $tentangSaya->bidang ?? 'Pengembang website' }}</p>
+                <p class="intro-description">Membangun solusi digital yang praktis, mudah digunakan, dan membantu pekerjaan sehari-hari.</p>
+                <div class="intro-actions">
+                    <button type="button" class="intro-primary" data-bs-toggle="modal" data-bs-target="#smartContactModal">Mari berdiskusi <i class="bi bi-arrow-up-right" aria-hidden="true"></i></button>
+                    <a href="#my-project" class="intro-secondary">Lihat karya saya <i class="bi bi-arrow-right" aria-hidden="true"></i></a>
                 </div>
-
-                <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
-                    <span class="carousel-control-prev-icon"></span>
-                </button>
-
-                <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
-                    <span class="carousel-control-next-icon"></span>
-                </button>
-
+                <a href="#tentang" class="intro-about">Kenali saya lebih dekat <i class="bi bi-arrow-down" aria-hidden="true"></i></a>
+            </div>
+            <div class="intro-portrait">
+                <div class="intro-portrait-frame">
+                    <img src="{{ asset('images/' . ($tentangSaya->foto ?? 'profile.jpeg')) }}" alt="Potret {{ $tentangSaya->nama ?? 'Hafiz' }}" fetchpriority="high" width="440" height="500">
+                </div>
+                <div class="intro-portrait-caption"><span>PORTOFOLIO PRIBADI</span><span>Pengalaman, karya & keahlian</span></div>
             </div>
         </div>
     </section>

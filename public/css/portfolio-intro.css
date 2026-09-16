@@ -1,0 +1,25 @@
+.portfolio-intro { background: #f5f7f7; color: #152f38; padding: 176px 0 80px; }
+.portfolio-intro-grid { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); align-items: center; gap: 80px; }
+.portfolio-intro-copy { max-width: 660px; }
+.intro-status { display: inline-flex; align-items: center; gap: 10px; padding: 9px 14px; border: 1px solid #c7dcd5; border-radius: 8px; background: #eaf3ee; color: #28624f; font-size: 13px; font-weight: 500; line-height: 1.5; margin-bottom: 32px; }
+.intro-greeting { font-size: 19px; color: #53666c; margin: 0 0 8px; }
+.portfolio-intro h1 { font-size: clamp(36px, 4.2vw, 60px); font-weight: 600; letter-spacing: -2px; line-height: 1.12; margin: 0 0 20px; max-width: 650px; }
+.intro-role { font-size: 19px; color: #08776e; font-weight: 500; margin: 0 0 18px; }
+.intro-description { font-size: 17px; line-height: 1.85; color: #53666c; max-width: 510px; text-align: left; margin-bottom: 30px; }
+.intro-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 14px; }
+.intro-primary, .intro-secondary { display: inline-flex; align-items: center; justify-content: center; gap: 14px; min-height: 50px; padding: 13px 20px; border-radius: 8px; font-size: 14px; font-weight: 600; text-decoration: none; }
+.intro-primary { background: #08776e; border: 1px solid #08776e; color: white; }
+.intro-primary:hover { background: #075e57; }
+.intro-secondary { border: 1px solid #c6d0d4; background: transparent; color: #243d47; }
+.intro-secondary:hover { color: #075e57; border-color: #08776e; background: #eaf3ee; }
+.intro-about { display: inline-flex; gap: 12px; align-items: center; color: #53666c; font-size: 13px; text-decoration: none; margin-top: 28px; padding: 8px 0; }
+.intro-about:hover { color: #075e57; text-decoration: underline; }
+.intro-portrait { width: 100%; max-width: 410px; justify-self: end; }
+.intro-portrait-frame { background: #e1e8e6; border-radius: 22px; overflow: hidden; border: 1px solid #d8e1de; }
+.intro-portrait img { display: block; width: 100%; height: auto; aspect-ratio: 4 / 4.6; object-fit: cover; object-position: center top; }
+.intro-portrait-caption { display: flex; flex-direction: column; gap: 6px; padding: 18px 2px 0; color: #61716f; font-size: 12px; }
+.intro-portrait-caption span:first-child { letter-spacing: 1.5px; font-size: 10px; font-weight: 600; }
+.portfolio-intro :is(a, button):focus-visible { outline: 3px solid #08776e; outline-offset: 5px; }
+@media (max-width: 991px) { .portfolio-intro-grid { gap: 36px; } .portfolio-intro { padding-top: 145px; } .portfolio-intro h1 { letter-spacing: -1px; } }
+@media (max-width: 767px) { .portfolio-intro { padding: 124px 0 48px; } .portfolio-intro-grid { grid-template-columns: 1fr; gap: 36px; } .intro-status { margin-bottom: 24px; } .intro-portrait { justify-self: start; max-width: 340px; } .intro-description { font-size: 16px; } }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto !important; } }
