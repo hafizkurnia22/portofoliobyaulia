@@ -28,13 +28,27 @@ class TryoutSoalController extends Controller
 
         $tryoutPengaturan = TryoutPengaturan::current();
         $riwayatTryout = $peserta->riwayats()->latest()->limit(5)->get();
+        $practiceCategory = $this->practiceCategory(request('latihan'));
         $materiTryout = TryoutMateri::aktif()
             ->with('kategoriSoal')
             ->get()
             ->groupBy(function (TryoutMateri $materi) {
                 return $materi->kategoriSoal->kode ?? 'Lainnya';
             });
-        $soals = $this->selectedSoals($tryoutPengaturan)
+        $latihanKategori = TryoutKategoriSoal::aktif()
+            ->withCount([
+                'soals as soal_aktif_count' => function ($query) {
+                    $query->aktif();
+                },
+                'materis as materi_aktif_count' => function ($query) {
+                    $query->aktif();
+                },
+            ])
+            ->whereIn('kode', ['TWK', 'TIU', 'TKP'])
+            ->orderByRaw("CASE kode WHEN 'TWK' THEN 1 WHEN 'TIU' THEN 2 WHEN 'TKP' THEN 3 ELSE 4 END")
+            ->get();
+        $examDurationMinutes = $this->examDurationMinutes($tryoutPengaturan, $practiceCategory);
+        $soals = $this->selectedSoals($tryoutPengaturan, $practiceCategory)
             ->map(function (TryoutSoal $soal) {
                 return [
                     'id' => $soal->id,
@@ -61,7 +75,16 @@ class TryoutSoalController extends Controller
                 ];
             });
 
-        return view('pages.tryout', compact('soals', 'tryoutPengaturan', 'peserta', 'riwayatTryout', 'materiTryout'));
+        return view('pages.tryout', compact(
+            'soals',
+            'tryoutPengaturan',
+            'peserta',
+            'riwayatTryout',
+            'materiTryout',
+            'latihanKategori',
+            'practiceCategory',
+            'examDurationMinutes'
+        ));
     }
 
     public function materiDetail(TryoutMateri $materi)
@@ -485,11 +508,19 @@ class TryoutSoalController extends Controller
         return array_key_first($scores);
     }
 
-    private function selectedSoals(TryoutPengaturan $pengaturan)
+    private function selectedSoals(TryoutPengaturan $pengaturan, ?string $practiceCategory = null)
     {
         $jumlahSoal = max((int) ($pengaturan->jumlah_soal ?? 30), 1);
         $soals = TryoutSoal::aktif()
             ->with('kategoriSoal')
+            ->when($practiceCategory, function ($query) use ($practiceCategory) {
+                $query->where(function ($categoryQuery) use ($practiceCategory) {
+                    $categoryQuery->where('kategori', $practiceCategory)
+                        ->orWhereHas('kategoriSoal', function ($relationQuery) use ($practiceCategory) {
+                            $relationQuery->where('kode', $practiceCategory);
+                        });
+                });
+            })
             ->latest()
             ->get();
 
@@ -506,6 +537,37 @@ class TryoutSoalController extends Controller
         }
 
         return $this->balancedRandomSoals($soals, $jumlahSoal);
+    }
+
+    private function practiceCategory(?string $category): ?string
+    {
+        $category = strtoupper((string) $category);
+
+        return in_array($category, ['TWK', 'TIU', 'TKP'], true) ? $category : null;
+    }
+
+    private function examDurationMinutes(TryoutPengaturan $pengaturan, ?string $practiceCategory = null): int
+    {
+        $configuredMinutes = max((int) ($pengaturan->durasi_menit ?? 45), 1);
+
+        if (!$practiceCategory) {
+            return $configuredMinutes;
+        }
+
+        $activeQuestionCount = TryoutSoal::aktif()
+            ->where(function ($query) use ($practiceCategory) {
+                $query->where('kategori', $practiceCategory)
+                    ->orWhereHas('kategoriSoal', function ($relationQuery) use ($practiceCategory) {
+                        $relationQuery->where('kode', $practiceCategory);
+                    });
+            })
+            ->count();
+
+        if ($activeQuestionCount === 0) {
+            return $configuredMinutes;
+        }
+
+        return min($configuredMinutes, max(10, (int) ceil($activeQuestionCount * 1.2)));
     }
 
     private function balancedRandomSoals($soals, int $jumlahSoal)

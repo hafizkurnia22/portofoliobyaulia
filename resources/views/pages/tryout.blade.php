@@ -7,6 +7,24 @@
         $tryoutMode = request('mode', 'menu');
         $tryoutMode = $tryoutMode === 'ujian' ? 'ujian' : 'menu';
         $showExam = $tryoutMode === 'ujian';
+        $practiceCategory = $practiceCategory ?? null;
+        $practiceLabels = [
+            'TWK' => 'Tes Wawasan Kebangsaan',
+            'TIU' => 'Tes Intelegensia Umum',
+            'TKP' => 'Tes Karakteristik Pribadi',
+        ];
+        $practiceFocus = [
+            'TWK' => 'Pancasila, UUD 1945, NKRI, Bhinneka Tunggal Ika, nasionalisme, integritas, bela negara, dan bahasa negara.',
+            'TIU' => 'Kemampuan verbal, numerik, logika, analitis, figural, deret, perbandingan, dan soal cerita.',
+            'TKP' => 'Pelayanan publik, jejaring kerja, sosial budaya, teknologi informasi, profesionalisme, dan anti radikalisme.',
+        ];
+        $practiceIcons = [
+            'TWK' => 'bi-bank',
+            'TIU' => 'bi-calculator',
+            'TKP' => 'bi-people',
+        ];
+        $practiceLabel = $practiceCategory ? ($practiceLabels[$practiceCategory] ?? $practiceCategory) : null;
+        $examTitle = $practiceCategory ? 'Latihan ' . $practiceCategory : 'Tryout CPNS';
         $activeTryoutTab = request('tab', 'materi');
         $activeTryoutTab = in_array($activeTryoutTab, ['materi', 'simulasi', 'evaluasi'], true) ? $activeTryoutTab : 'materi';
         $defaultKisiKisi = 'Pelajari materi dan berlatih menjawab soal untuk persiapan seleksi CPNS. Dokumen acuan membantu Anda memahami cakupan materi yang dipelajari.';
@@ -33,12 +51,12 @@
             @if ($showExam)
                 <div class="cat-exam-toolbar">
                     <div class="cat-exam-identity">
-                        <h1>Tryout CPNS</h1>
+                        <h1>{{ $examTitle }}</h1>
                         <span id="examSessionStatus" role="status">Persiapan ujian</span>
                     </div>
                     <div class="cat-exam-tools">
                         <span class="cat-exam-participant"><i class="bi bi-person-check" aria-hidden="true"></i> {{ $peserta->nama ?: $peserta->username }}</span>
-                        <a href="{{ route('tryout.index') }}" class="cat-exam-back"><i class="bi bi-arrow-left" aria-hidden="true"></i> Beranda Tryout</a>
+                        <a href="{{ route('tryout.index', ['tab' => 'simulasi']) }}" class="cat-exam-back"><i class="bi bi-arrow-left" aria-hidden="true"></i> Beranda Latihan</a>
                     </div>
                 </div>
             @else
@@ -106,18 +124,18 @@
                     <div class="tryout-simulation-panel" data-aos="fade-up">
                         <div>
                             <span class="tryout-panel-label">Petunjuk Ujian</span>
-                            <h2>Siap mencoba latihan ujian?</h2>
-                            <p>Baca petunjuk berikut sebelum mulai. Saat Anda memilih jawaban, jawaban akan tersimpan otomatis dan soal berikutnya langsung muncul.</p>
+                            <h2>Pilih cara latihan yang paling sesuai</h2>
+                            <p>Mulai dari latihan kategori jika ingin fokus memperbaiki bagian tertentu, atau gunakan simulasi penuh untuk merasakan suasana ujian lengkap.</p>
                             <ul class="cat-instructions">
-                                <li>Jumlah soal: <strong>{{ $soals->count() }}</strong>; durasi: <strong>{{ $tryoutPengaturan->durasi_menit ?? 45 }} menit</strong>.</li>
-                                <li>Klik nomor soal untuk berpindah atau kembali mengubah jawaban.</li>
-                                <li>Jika belum yakin, klik <strong>Ragu-ragu</strong> agar Anda mudah menemukan soal itu kembali.</li>
-                                <li>Setelah selesai, buka tab <strong>Evaluasi Hasil</strong> untuk melihat nilai dan pembahasan jawaban.</li>
+                                <li><strong>Latihan kategori</strong> cocok untuk belajar TWK, TIU, atau TKP secara bertahap.</li>
+                                <li><strong>Simulasi penuh</strong> memakai semua kategori aktif sesuai pengaturan admin.</li>
+                                <li>Setiap jawaban tersimpan otomatis dan soal berikutnya langsung muncul.</li>
+                                <li>Setelah selesai, buka tab <strong>Evaluasi Hasil</strong> untuk melihat skor latihan.</li>
                             </ul>
                             <div class="cat-actions">
                                 <a href="{{ route('tryout.index', ['mode' => 'ujian']) }}" class="cat-action-btn">
                                     <i class="bi bi-play-circle"></i>
-                                    Mulai Ujian
+                                    Simulasi Penuh
                                 </a>
                                 <a href="{{ route('tryout.index', ['tab' => 'materi']) }}" class="cat-action-btn cat-action-secondary tryout-tab-inline-link">
                                     <i class="bi bi-journal-bookmark"></i>
@@ -127,8 +145,54 @@
                         </div>
                         <div class="tryout-simulation-summary">
                             <span><strong>{{ $soals->count() }}</strong> Soal Aktif</span>
-                            <span><strong>{{ $tryoutPengaturan->durasi_menit ?? 45 }}</strong> Menit</span>
+                            <span><strong>{{ $examDurationMinutes ?? ($tryoutPengaturan->durasi_menit ?? 45) }}</strong> Menit</span>
                             <span><strong>{{ $soals->pluck('kategori')->unique()->count() }}</strong> Kategori</span>
+                        </div>
+                    </div>
+
+                    <div class="practice-category-section" data-aos="fade-up">
+                        <div class="practice-category-heading">
+                            <span class="tryout-panel-label">Mode Latihan</span>
+                            <h2>Latihan per kategori</h2>
+                            <p>Pilih satu kategori agar belajar lebih fokus. Cocok untuk mengulang bagian yang masih lemah sebelum mencoba simulasi penuh.</p>
+                        </div>
+
+                        <div class="practice-category-grid">
+                            @forelse ($latihanKategori as $kategoriLatihan)
+                                @php
+                                    $kodeLatihan = $kategoriLatihan->kode;
+                                @endphp
+                                <article class="practice-category-card">
+                                    <div class="practice-category-icon">
+                                        <i class="bi {{ $practiceIcons[$kodeLatihan] ?? 'bi-journal-check' }}" aria-hidden="true"></i>
+                                    </div>
+                                    <div class="practice-category-copy">
+                                        <span>{{ $kodeLatihan }}</span>
+                                        <h3>{{ $practiceLabels[$kodeLatihan] ?? $kategoriLatihan->nama }}</h3>
+                                        <p>{{ $practiceFocus[$kodeLatihan] ?? ($kategoriLatihan->deskripsi ?: 'Latihan soal berdasarkan kategori yang tersedia.') }}</p>
+                                    </div>
+                                    <dl class="practice-category-meta">
+                                        <div>
+                                            <dt>Soal</dt>
+                                            <dd>{{ $kategoriLatihan->soal_aktif_count }}</dd>
+                                        </div>
+                                        <div>
+                                            <dt>Materi</dt>
+                                            <dd>{{ $kategoriLatihan->materi_aktif_count }}</dd>
+                                        </div>
+                                    </dl>
+                                    <a href="{{ route('tryout.index', ['mode' => 'ujian', 'latihan' => $kodeLatihan]) }}"
+                                        class="practice-category-action {{ $kategoriLatihan->soal_aktif_count < 1 ? 'disabled' : '' }}"
+                                        @if ($kategoriLatihan->soal_aktif_count < 1) aria-disabled="true" tabindex="-1" @endif>
+                                        Mulai latihan {{ $kodeLatihan }}
+                                        <i class="bi bi-arrow-right" aria-hidden="true"></i>
+                                    </a>
+                                </article>
+                            @empty
+                                <div class="tryout-history-empty">
+                                    Kategori latihan belum tersedia. Admin dapat mengaktifkan kategori TWK, TIU, atau TKP terlebih dahulu.
+                                </div>
+                            @endforelse
                         </div>
                     </div>
                 </div>
@@ -145,10 +209,20 @@
 
                         <div class="tryout-history-list" id="tryoutHistoryList">
                             @forelse ($riwayatTryout as $riwayat)
+                                @php
+                                    $riwayatKategori = collect($riwayat->detail_jawaban ?? [])
+                                        ->pluck('kategori')
+                                        ->filter()
+                                        ->unique()
+                                        ->values();
+                                    $riwayatMode = $riwayatKategori->count() === 1
+                                        ? 'Latihan ' . $riwayatKategori->first()
+                                        : 'Simulasi penuh';
+                                @endphp
                                 <div class="tryout-history-item">
                                     <div>
                                         <strong>{{ $riwayat->finished_at ? $riwayat->finished_at->format('d M Y H:i') : '-' }}</strong>
-                                        <small>{{ $riwayat->total_dijawab }}/{{ $riwayat->total_soal }} dijawab, {{ $riwayat->total_benar }} benar, {{ $riwayat->total_ragu }} ragu</small>
+                                        <small>{{ $riwayatMode }} · {{ $riwayat->total_dijawab }}/{{ $riwayat->total_soal }} dijawab, {{ $riwayat->total_benar }} benar, {{ $riwayat->total_ragu }} ragu</small>
                                     </div>
 
                                     <span>
@@ -236,11 +310,11 @@
                 @else
                     <div class="cat-preparation cat-main" id="examPreparation">
                         <span class="cat-kategori">Sebelum mulai</span>
-                        <h2>Siap berlatih?</h2>
-                        <p>Luangkan waktu dan pastikan koneksi internetmu stabil.</p>
+                        <h2>{{ $practiceCategory ? 'Siap latihan ' . $practiceCategory . '?' : 'Siap berlatih?' }}</h2>
+                        <p>{{ $practiceCategory ? 'Mode ini hanya menampilkan soal ' . $practiceLabel . ' agar kamu bisa fokus pada satu kemampuan.' : 'Luangkan waktu dan pastikan koneksi internetmu stabil.' }}</p>
                         <div class="cat-preparation-stats">
                             <span><i class="bi bi-file-earmark-text"></i> <strong>{{ $soals->count() }} soal</strong></span>
-                            <span><i class="bi bi-clock"></i> <strong>{{ $tryoutPengaturan->durasi_menit ?? 45 }} menit</strong></span>
+                            <span><i class="bi bi-clock"></i> <strong>{{ $examDurationMinutes ?? ($tryoutPengaturan->durasi_menit ?? 45) }} menit</strong></span>
                             <span><i class="bi bi-journal-check"></i> {{ $soals->pluck('kategori')->unique()->implode(' · ') }}</span>
                         </div>
                         <ul class="cat-instructions">
@@ -354,7 +428,7 @@
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="cat-result-modal-body">
-                        <span class="cat-result-label" id="resultTitle">Hasil Tryout CPNS</span>
+                        <span class="cat-result-label" id="resultTitle">{{ $practiceCategory ? 'Hasil Latihan ' . $practiceCategory : 'Hasil Tryout CPNS' }}</span>
                         <strong class="cat-result-score-label">Skor</strong>
                         <h2 id="resultScore">0</h2>
                         <p id="resultMeta"></p>
@@ -366,11 +440,11 @@
                                 Review Jawaban
                             </button>
 
-                            <a href="{{ route('tryout.index', ['mode' => 'ujian']) }}" class="cat-action-btn cat-action-secondary">
+                            <a href="{{ route('tryout.index', array_filter(['mode' => 'ujian', 'latihan' => $practiceCategory])) }}" class="cat-action-btn cat-action-secondary">
                                 <i class="bi bi-arrow-repeat"></i>
                                 Kerjakan Lagi
                             </a>
-                            <a href="{{ route('tryout.index') }}" class="cat-action-btn cat-action-secondary">
+                            <a href="{{ route('tryout.index', ['tab' => 'simulasi']) }}" class="cat-action-btn cat-action-secondary">
                                 <i class="bi bi-house"></i> Beranda Tryout
                             </a>
                         </div>
@@ -389,12 +463,12 @@
                 let isReview = false;
                 let hasStarted = false;
                 let deadline = null;
-                let remainingSeconds = Math.max(Number(@json((int) ($tryoutPengaturan->durasi_menit ?? 45))) * 60, 60);
+                let remainingSeconds = Math.max(Number(@json((int) ($examDurationMinutes ?? ($tryoutPengaturan->durasi_menit ?? 45)))) * 60, 60);
                 let initialSeconds = remainingSeconds;
                 let startedAt = null;
                 const shouldShuffleQuestions = @json((bool) $tryoutPengaturan->acak_soal);
                 const shouldShuffleAnswers = @json((bool) $tryoutPengaturan->acak_jawaban);
-                const draftKey = 'tryout-cpns-draft:v1:' + @json((string) ($peserta->id ?? $peserta->username));
+                const draftKey = 'tryout-cpns-draft:v1:' + @json((string) ($peserta->id ?? $peserta->username)) + ':' + @json($practiceCategory ?: 'FULL');
 
                 const timerEl = document.getElementById('catTimer');
                 const navEl = document.getElementById('questionNav');
