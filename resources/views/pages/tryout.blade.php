@@ -9,6 +9,10 @@
         $showExam = $tryoutMode === 'ujian';
         $practiceCategory = $practiceCategory ?? null;
         $latihanKategori = $latihanKategori ?? collect();
+        $materiProgress = $materiProgress ?? collect();
+        $scoreTrend = $scoreTrend ?? collect();
+        $recommendedMateri = $recommendedMateri ?? collect();
+        $wrongReviewItems = $wrongReviewItems ?? collect();
         $examDurationMinutes = $examDurationMinutes ?? (int) ($tryoutPengaturan->durasi_menit ?? 45);
         $practiceLabels = [
             'TWK' => 'Tes Wawasan Kebangsaan',
@@ -203,6 +207,81 @@
                 </div>
 
                 <div class="tryout-tab-panel {{ $activeTryoutTab === 'evaluasi' ? '' : 'd-none' }}" data-tryout-panel="evaluasi">
+                    <div class="tryout-evaluation-grid" data-aos="fade-up">
+                        <section class="tryout-evaluation-card tryout-score-card" aria-labelledby="scoreTrendHeading">
+                            <div class="tryout-evaluation-heading">
+                                <span>Perkembangan</span>
+                                <h2 id="scoreTrendHeading">Grafik skor latihan</h2>
+                                <p>Pantau perubahan skor dari beberapa latihan terakhir.</p>
+                            </div>
+
+                            @if ($scoreTrend->isNotEmpty())
+                                <div class="tryout-score-chart" aria-label="Grafik perkembangan skor">
+                                    @foreach ($scoreTrend as $point)
+                                        <div class="tryout-score-bar">
+                                            <div style="height: {{ max($point['percentage'], 6) }}%"></div>
+                                            <strong>{{ $point['score'] }}</strong>
+                                            <span>{{ $point['label'] }}</span>
+                                            <small>{{ $point['mode'] }}</small>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            @else
+                                <div class="tryout-history-empty">Grafik akan tampil setelah kamu menyelesaikan latihan pertama.</div>
+                            @endif
+                        </section>
+
+                        <section class="tryout-evaluation-card" aria-labelledby="recommendationHeading">
+                            <div class="tryout-evaluation-heading">
+                                <span>Rekomendasi</span>
+                                <h2 id="recommendationHeading">Materi yang sebaiknya dipelajari</h2>
+                                <p>Rekomendasi diambil dari kategori yang masih perlu diperbaiki dan status bacaanmu.</p>
+                            </div>
+
+                            <div class="tryout-recommendation-list">
+                                @forelse ($recommendedMateri as $materiRekomendasi)
+                                    @php
+                                        $progress = $materiProgress->get($materiRekomendasi->id);
+                                    @endphp
+                                    <article class="tryout-recommendation-item">
+                                        <div>
+                                            <span>{{ $materiRekomendasi->kategoriSoal->kode ?? 'Materi' }}</span>
+                                            <h3>{{ $materiRekomendasi->judul }}</h3>
+                                            <p>{{ \Illuminate\Support\Str::limit(strip_tags($materiRekomendasi->ringkasan ?: $materiRekomendasi->isi_materi), 110) }}</p>
+                                            <small>{{ $progress?->read_at ? 'Sudah dibaca' : 'Belum dibaca' }}{{ $progress?->is_bookmarked ? ' · Bookmark' : '' }}</small>
+                                        </div>
+                                        <a href="{{ route('tryout.materi.show', $materiRekomendasi) }}">Baca</a>
+                                    </article>
+                                @empty
+                                    <div class="tryout-history-empty">Selesaikan latihan dulu agar sistem dapat memberi rekomendasi materi.</div>
+                                @endforelse
+                            </div>
+                        </section>
+                    </div>
+
+                    <section class="tryout-evaluation-card tryout-wrong-review" data-aos="fade-up" aria-labelledby="wrongReviewHeading">
+                        <div class="tryout-evaluation-heading">
+                            <span>Review Cepat</span>
+                            <h2 id="wrongReviewHeading">Jawaban salah yang perlu ditinjau</h2>
+                            <p>Mulai dari soal yang salah agar kamu tahu bagian mana yang perlu diulang.</p>
+                        </div>
+
+                        <div class="tryout-wrong-list">
+                            @forelse ($wrongReviewItems as $item)
+                                <article class="tryout-wrong-item">
+                                    <span>{{ $item['kategori'] ?? 'Soal' }}</span>
+                                    <h3>{{ \Illuminate\Support\Str::limit($item['pertanyaan'], 170) }}</h3>
+                                    <p>Jawabanmu: <strong>{{ $item['jawaban'] }}</strong> · Jawaban benar: <strong>{{ $item['jawaban_benar'] }}</strong></p>
+                                    @if ($item['pembahasan'])
+                                        <small>{{ \Illuminate\Support\Str::limit(strip_tags($item['pembahasan']), 220) }}</small>
+                                    @endif
+                                </article>
+                            @empty
+                                <div class="tryout-history-empty">Belum ada jawaban salah dari latihan terakhir. Kalau sudah latihan, bagian ini akan berisi soal yang perlu ditinjau.</div>
+                            @endforelse
+                        </div>
+                    </section>
+
                     <div class="tryout-history-card" id="tryoutHistoryCard" data-aos="fade-up">
                         <div class="tryout-history-header">
                             <div>
@@ -444,6 +523,10 @@
                                 <i class="bi bi-search"></i>
                                 Review Jawaban
                             </button>
+                            <button type="button" class="cat-action-btn cat-action-secondary" id="wrongReviewButton" data-bs-dismiss="modal">
+                                <i class="bi bi-exclamation-circle"></i>
+                                Review Salah
+                            </button>
 
                             <a href="{{ route('tryout.index', array_filter(['mode' => 'ujian', 'latihan' => $practiceCategory])) }}" class="cat-action-btn cat-action-secondary">
                                 <i class="bi bi-arrow-repeat"></i>
@@ -492,6 +575,7 @@
                 const resultMeta = document.getElementById('resultMeta');
                 const resultSaveStatus = document.getElementById('resultSaveStatus');
                 const reviewButton = document.getElementById('reviewButton');
+                const wrongReviewButton = document.getElementById('wrongReviewButton');
                 const answerSaveStatus = document.getElementById('answerSaveStatus');
                 const resultModal = new bootstrap.Modal(document.getElementById('catResultModal'));
                 const finishModalEl = document.getElementById('catFinishModal');
@@ -893,6 +977,21 @@
                 reviewButton.addEventListener('click', function() {
                     currentIndex = 0;
                     renderQuestion();
+                    document.querySelector('.cat-shell').scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                });
+
+                wrongReviewButton.addEventListener('click', function() {
+                    const firstWrongIndex = soals.findIndex(function(soal) {
+                        return answers[soal.id] && soal.jawaban_benar && answers[soal.id] !== soal.jawaban_benar;
+                    });
+                    currentIndex = firstWrongIndex >= 0 ? firstWrongIndex : 0;
+                    renderQuestion();
+                    answerSaveStatus.textContent = firstWrongIndex >= 0
+                        ? 'Menampilkan jawaban salah pertama. Gunakan tombol Selanjutnya untuk meninjau soal lain.'
+                        : 'Tidak ada jawaban salah yang ditemukan. Kamu bisa tetap meninjau seluruh jawaban.';
                     document.querySelector('.cat-shell').scrollIntoView({
                         behavior: 'smooth',
                         block: 'start'

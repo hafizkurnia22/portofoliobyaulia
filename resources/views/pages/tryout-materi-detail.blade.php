@@ -1,6 +1,9 @@
 @extends('layouts.app')
 @section('title', $materi->judul . ' | Materi Tryout CPNS')
 @section('content')
+@php
+    $progress = $progress ?? null;
+@endphp
 <section class="tryout-page learning-page learning-reader">
     <div class="container">
         <nav class="reading-breadcrumb" aria-label="Jejak halaman">
@@ -13,10 +16,32 @@
             <p>{{ $materi->ringkasan }}</p>
             <div class="reading-meta">
                 <span><i class="bi bi-clock" aria-hidden="true"></i> {{ max(1, (int) ceil(count(preg_split('/\s+/u', strip_tags($materi->isi_materi), -1, PREG_SPLIT_NO_EMPTY)) / 180)) }} menit baca</span>
+                <span><i class="bi bi-check2-circle" aria-hidden="true"></i> {{ $progress?->read_at ? 'Sudah dibaca' : 'Belum dibaca' }}</span>
+                @if ($progress?->is_bookmarked)
+                    <span><i class="bi bi-bookmark-fill" aria-hidden="true"></i> Bookmark</span>
+                @endif
                 @if ($materi->topikPelajaran())
                     <span>{{ implode(' · ', $materi->topikPelajaran()) }}</span>
                 @endif
             </div>
+            @if ($materi->getKey())
+                <div class="reading-actions">
+                    <form action="{{ route('tryout.materi.bookmark', $materi) }}" method="POST">
+                        @csrf
+                        <button type="submit" class="materi-read-link">
+                            <i class="bi {{ $progress?->is_bookmarked ? 'bi-bookmark-fill' : 'bi-bookmark' }}" aria-hidden="true"></i>
+                            {{ $progress?->is_bookmarked ? 'Hapus bookmark' : 'Bookmark materi' }}
+                        </button>
+                    </form>
+                    <form action="{{ route('tryout.materi.read', $materi) }}" method="POST">
+                        @csrf
+                        <button type="submit" class="materi-read-link">
+                            <i class="bi bi-check2-circle" aria-hidden="true"></i>
+                            Tandai sudah dibaca
+                        </button>
+                    </form>
+                </div>
+            @endif
         </header>
         <div class="reading-layout">
             <aside class="reading-sidebar" id="readingContents" hidden>

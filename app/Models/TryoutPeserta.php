@@ -31,4 +31,9 @@ class TryoutPeserta extends Model
     {
         return $this->hasMany(TryoutRiwayat::class);
     }
+
+    public function materiProgresses()
+    {
+        return $this->hasMany(TryoutMateriProgress::class);
+    }
 }

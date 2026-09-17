@@ -43,6 +43,11 @@ class TryoutMateri extends Model
         return $this->belongsTo(TryoutKategoriSoal::class, 'tryout_kategori_soal_id');
     }
 
+    public function progresses()
+    {
+        return $this->hasMany(TryoutMateriProgress::class, 'tryout_materi_id');
+    }
+
     public function scopeAktif($query)
     {
         return $query->where('status', 'aktif');

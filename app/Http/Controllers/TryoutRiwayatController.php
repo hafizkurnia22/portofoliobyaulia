@@ -74,11 +74,20 @@ class TryoutRiwayatController extends Controller
                 'soal_id' => $soal->id,
                 'kode_soal' => $soal->kode_soal,
                 'kategori' => $soal->kategoriSoal->kode ?? $soal->kategori,
+                'pertanyaan' => $soal->pertanyaan,
+                'opsi' => [
+                    'A' => $soal->opsi_a,
+                    'B' => $soal->opsi_b,
+                    'C' => $soal->opsi_c,
+                    'D' => $soal->opsi_d,
+                    'E' => $soal->opsi_e,
+                ],
                 'jawaban' => $answer,
                 'jawaban_benar' => $soal->jawaban_benar,
                 'skor' => $score,
                 'benar' => $isCorrect,
                 'ragu' => (bool) ($marked[$questionId] ?? false),
+                'pembahasan' => $soal->pembahasan,
             ];
         }
 

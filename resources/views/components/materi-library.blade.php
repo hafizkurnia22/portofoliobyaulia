@@ -50,6 +50,7 @@
             @php
                 $topics = $materi->topikPelajaran();
                 $summary = strip_tags($materi->ringkasan ?: $materi->isi_materi);
+                $progress = ($materiProgress ?? collect())->get($materi->id);
             @endphp
             <article class="materi-reading-item" data-category="{{ $materi->kategoriSoal->kode ?? 'LAIN' }}"
                 data-topics="{{ json_encode($topics) }}" data-search="{{ $materi->judul . ' ' . $summary . ' ' . implode(' ', $topics) }}">
@@ -58,8 +59,27 @@
                     <h3><a href="{{ route('tryout.materi.show', $materi) }}">{{ $materi->judul }}</a></h3>
                     <p class="materi-reading-summary">{{ \Illuminate\Support\Str::limit($summary, 160) }}</p>
                     <p class="materi-topic-label">Topik: {{ $topics ? implode(' · ', $topics) : 'Materi umum' }}</p>
+                    <div class="materi-progress-tags">
+                        @if ($progress?->read_at)
+                            <span><i class="bi bi-check2-circle" aria-hidden="true"></i> Sudah dibaca</span>
+                        @else
+                            <span class="muted"><i class="bi bi-circle" aria-hidden="true"></i> Belum dibaca</span>
+                        @endif
+
+                        @if ($progress?->is_bookmarked)
+                            <span><i class="bi bi-bookmark-fill" aria-hidden="true"></i> Bookmark</span>
+                        @endif
+                    </div>
                 </div>
-                <a class="materi-read-link" href="{{ route('tryout.materi.show', $materi) }}">Baca materi <i class="bi bi-arrow-right" aria-hidden="true"></i><span class="visually-hidden">: {{ $materi->judul }}</span></a>
+                <div class="materi-reading-actions">
+                    <form action="{{ route('tryout.materi.bookmark', $materi) }}" method="POST">
+                        @csrf
+                        <button type="submit" class="materi-icon-action" aria-label="{{ $progress?->is_bookmarked ? 'Hapus bookmark' : 'Bookmark materi' }}: {{ $materi->judul }}">
+                            <i class="bi {{ $progress?->is_bookmarked ? 'bi-bookmark-fill' : 'bi-bookmark' }}" aria-hidden="true"></i>
+                        </button>
+                    </form>
+                    <a class="materi-read-link" href="{{ route('tryout.materi.show', $materi) }}">Baca materi <i class="bi bi-arrow-right" aria-hidden="true"></i><span class="visually-hidden">: {{ $materi->judul }}</span></a>
+                </div>
             </article>
         @endforeach
     </div>

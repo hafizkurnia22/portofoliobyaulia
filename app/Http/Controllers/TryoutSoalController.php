@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\TryoutKategoriSoal;
 use App\Models\TryoutMateri;
+use App\Models\TryoutMateriProgress;
 use App\Models\TryoutPengaturan;
 use App\Models\TryoutPeserta;
 use App\Models\TryoutSoal;
@@ -28,6 +29,7 @@ class TryoutSoalController extends Controller
 
         $tryoutPengaturan = TryoutPengaturan::current();
         $riwayatTryout = $peserta->riwayats()->latest()->limit(5)->get();
+        $scoreTrend = $this->scoreTrend($peserta);
         $practiceCategory = $this->practiceCategory(request('latihan'));
         $materiTryout = TryoutMateri::aktif()
             ->with('kategoriSoal')
@@ -47,6 +49,12 @@ class TryoutSoalController extends Controller
             ->whereIn('kode', ['TWK', 'TIU', 'TKP'])
             ->orderByRaw("CASE kode WHEN 'TWK' THEN 1 WHEN 'TIU' THEN 2 WHEN 'TKP' THEN 3 ELSE 4 END")
             ->get();
+        $materiProgress = TryoutMateriProgress::where('tryout_peserta_id', $peserta->id)
+            ->get()
+            ->keyBy('tryout_materi_id');
+        $latestRiwayat = $riwayatTryout->first();
+        $recommendedMateri = $this->recommendedMateri($peserta, $latestRiwayat, $materiProgress);
+        $wrongReviewItems = $this->wrongReviewItems($latestRiwayat);
         $examDurationMinutes = $this->examDurationMinutes($tryoutPengaturan, $practiceCategory);
         $soals = $this->selectedSoals($tryoutPengaturan, $practiceCategory)
             ->map(function (TryoutSoal $soal) {
@@ -83,7 +91,11 @@ class TryoutSoalController extends Controller
             'materiTryout',
             'latihanKategori',
             'practiceCategory',
-            'examDurationMinutes'
+            'examDurationMinutes',
+            'materiProgress',
+            'scoreTrend',
+            'recommendedMateri',
+            'wrongReviewItems'
         ));
     }
 
@@ -102,6 +114,16 @@ class TryoutSoalController extends Controller
         }
 
         $materi->load('kategoriSoal');
+        $progress = TryoutMateriProgress::firstOrCreate([
+            'tryout_peserta_id' => $peserta->id,
+            'tryout_materi_id' => $materi->id,
+        ]);
+
+        if (!$progress->read_at) {
+            $progress->update(['read_at' => now()]);
+            $progress->refresh();
+        }
+
         $materiLainnya = TryoutMateri::aktif()
             ->with('kategoriSoal')
             ->where('id', '!=', $materi->id)
@@ -109,7 +131,7 @@ class TryoutSoalController extends Controller
             ->limit(4)
             ->get();
 
-        return view('pages.tryout-materi-detail', compact('materi', 'materiLainnya', 'peserta'));
+        return view('pages.tryout-materi-detail', compact('materi', 'materiLainnya', 'peserta', 'progress'));
     }
 
     public function store(Request $request)
@@ -557,6 +579,107 @@ class TryoutSoalController extends Controller
         }
 
         return $pengaturan->durasiMenitKategori($practiceCategory);
+    }
+
+    private function scoreTrend(TryoutPeserta $peserta)
+    {
+        return $peserta->riwayats()
+            ->latest('finished_at')
+            ->limit(8)
+            ->get()
+            ->reverse()
+            ->values()
+            ->map(function ($riwayat, $index) {
+                $maxScore = max((int) $riwayat->total_soal * 5, 1);
+                $percentage = min(100, (int) round(((int) $riwayat->total_skor / $maxScore) * 100));
+
+                return [
+                    'label' => $riwayat->finished_at ? $riwayat->finished_at->format('d M') : 'Latihan ' . ($index + 1),
+                    'score' => (int) $riwayat->total_skor,
+                    'percentage' => $percentage,
+                    'mode' => $this->historyMode($riwayat->detail_jawaban ?? []),
+                ];
+            });
+    }
+
+    private function recommendedMateri(TryoutPeserta $peserta, $latestRiwayat, $materiProgress)
+    {
+        $categoryOrder = ['TWK', 'TIU', 'TKP'];
+        $priorityCategories = collect($latestRiwayat?->detail_jawaban ?? [])
+            ->groupBy(fn ($item) => $item['kategori'] ?? 'LAIN')
+            ->map(function ($items, $category) {
+                $total = $items->count();
+                $wrong = $items
+                    ->filter(fn ($item) => !($item['benar'] ?? false))
+                    ->count();
+
+                return [
+                    'category' => $category,
+                    'wrong' => $wrong,
+                    'accuracy' => $total > 0 ? (int) round((($total - $wrong) / $total) * 100) : 0,
+                ];
+            })
+            ->sortByDesc('wrong')
+            ->pluck('category')
+            ->filter()
+            ->values();
+
+        $categories = $priorityCategories->merge($categoryOrder)->unique()->values();
+        $recommendations = collect();
+
+        foreach ($categories as $category) {
+            $items = TryoutMateri::aktif()
+                ->with('kategoriSoal')
+                ->whereHas('kategoriSoal', fn ($query) => $query->where('kode', $category))
+                ->orderBy('judul')
+                ->get()
+                ->sortBy(function (TryoutMateri $materi) use ($materiProgress) {
+                    $progress = $materiProgress->get($materi->id);
+                    return ($progress?->read_at ? 1 : 0) . ($progress?->is_bookmarked ? 0 : 1) . $materi->judul;
+                });
+
+            foreach ($items as $materi) {
+                if ($recommendations->count() >= 4) {
+                    break 2;
+                }
+
+                $recommendations->push($materi);
+            }
+        }
+
+        return $recommendations;
+    }
+
+    private function wrongReviewItems($latestRiwayat)
+    {
+        $details = collect($latestRiwayat?->detail_jawaban ?? [])
+            ->filter(fn ($item) => ($item['jawaban'] ?? null) && !($item['benar'] ?? false))
+            ->take(6)
+            ->values();
+
+        $soals = TryoutSoal::with('kategoriSoal')
+            ->whereIn('id', $details->pluck('soal_id')->filter()->all())
+            ->get()
+            ->keyBy('id');
+
+        return $details->map(function ($item) use ($soals) {
+            $soal = $soals->get($item['soal_id'] ?? null);
+
+            return [
+                'kategori' => $item['kategori'] ?? ($soal?->kategoriSoal?->kode ?? $soal?->kategori),
+                'pertanyaan' => $soal?->pertanyaan ?? ($item['pertanyaan'] ?? 'Soal tidak ditemukan.'),
+                'jawaban' => $item['jawaban'] ?? '-',
+                'jawaban_benar' => $item['jawaban_benar'] ?? $soal?->jawaban_benar,
+                'pembahasan' => $soal?->pembahasan ?? ($item['pembahasan'] ?? null),
+            ];
+        });
+    }
+
+    private function historyMode(array $detailJawaban): string
+    {
+        $categories = collect($detailJawaban)->pluck('kategori')->filter()->unique();
+
+        return $categories->count() === 1 ? 'Latihan ' . $categories->first() : 'Simulasi';
     }
 
     private function balancedRandomSoals($soals, int $jumlahSoal)

@@ -1420,6 +1420,140 @@ html:has(.tryout-exam-page) {
     font-weight: 700;
 }
 
+.tryout-evaluation-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(320px, .95fr);
+    gap: 18px;
+    margin-bottom: 18px;
+}
+
+.tryout-evaluation-card {
+    padding: 22px;
+    border: 1px solid #dbeafe;
+    border-radius: 8px;
+    background: #ffffff;
+    box-shadow: 0 18px 42px rgba(15, 23, 42, 0.07);
+}
+
+.tryout-evaluation-heading {
+    margin-bottom: 18px;
+}
+
+.tryout-evaluation-heading span,
+.tryout-recommendation-item span,
+.tryout-wrong-item > span {
+    color: #0f766e;
+    font-size: 12px;
+    font-weight: 900;
+    text-transform: uppercase;
+}
+
+.tryout-evaluation-heading h2 {
+    margin: 4px 0 6px;
+    color: #0b1f3a;
+    font-size: 22px;
+    font-weight: 900;
+}
+
+.tryout-evaluation-heading p {
+    margin: 0;
+    color: #64748b;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.tryout-score-chart {
+    min-height: 230px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(72px, 1fr));
+    align-items: end;
+    gap: 12px;
+    padding-top: 12px;
+}
+
+.tryout-score-bar {
+    min-height: 210px;
+    display: grid;
+    grid-template-rows: 1fr auto auto auto;
+    gap: 7px;
+    align-items: end;
+    text-align: center;
+}
+
+.tryout-score-bar div {
+    width: 100%;
+    min-height: 12px;
+    border-radius: 8px 8px 3px 3px;
+    background: linear-gradient(180deg, #14b8a6, #0b1f3a);
+}
+
+.tryout-score-bar strong {
+    color: #0b1f3a;
+    font-size: 16px;
+    font-weight: 900;
+}
+
+.tryout-score-bar span,
+.tryout-score-bar small {
+    color: #64748b;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.tryout-recommendation-list,
+.tryout-wrong-list {
+    display: grid;
+    gap: 12px;
+}
+
+.tryout-recommendation-item,
+.tryout-wrong-item {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 12px;
+    padding: 14px;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    background: #f8fbff;
+}
+
+.tryout-recommendation-item h3,
+.tryout-wrong-item h3 {
+    margin: 4px 0 6px;
+    color: #0b1f3a;
+    font-size: 16px;
+    font-weight: 900;
+    line-height: 1.45;
+}
+
+.tryout-recommendation-item p,
+.tryout-wrong-item p,
+.tryout-recommendation-item small,
+.tryout-wrong-item small {
+    color: #64748b;
+    font-size: 13px;
+    line-height: 1.55;
+}
+
+.tryout-recommendation-item a {
+    align-self: center;
+    padding: 9px 13px;
+    border-radius: 6px;
+    background: #0b1f3a;
+    color: #ffffff;
+    font-size: 13px;
+    font-weight: 800;
+    text-decoration: none;
+}
+
+.tryout-wrong-review {
+    margin-bottom: 18px;
+}
+
+.tryout-wrong-item {
+    grid-template-columns: 1fr;
+}
+
 .tryout-materi-section {
     padding: 28px;
     border: 1px solid #dbeafe;
@@ -2567,6 +2701,14 @@ html:has(.tryout-exam-page) {
     }
 
     .tryout-history-list {
+        grid-template-columns: 1fr;
+    }
+
+    .tryout-evaluation-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .tryout-recommendation-item {
         grid-template-columns: 1fr;
     }
 
@@ -3836,6 +3978,9 @@ html:has(.tryout-exam-page) {
 .dark-mode .tryout-participant-bar,
 .dark-mode .tryout-choice-card,
 .dark-mode .tryout-history-card,
+.dark-mode .tryout-evaluation-card,
+.dark-mode .tryout-recommendation-item,
+.dark-mode .tryout-wrong-item,
 .dark-mode .tryout-history-item,
 .dark-mode .tryout-history-empty,
 .dark-mode .tryout-materi-section,
@@ -3866,6 +4011,10 @@ html:has(.tryout-exam-page) {
 .dark-mode .tryout-choice-card,
 .dark-mode .tryout-choice-card:hover,
 .dark-mode .tryout-history-header h2,
+.dark-mode .tryout-evaluation-heading h2,
+.dark-mode .tryout-recommendation-item h3,
+.dark-mode .tryout-wrong-item h3,
+.dark-mode .tryout-score-bar strong,
 .dark-mode .tryout-history-item strong,
 .dark-mode .tryout-materi-heading h2,
 .dark-mode .tryout-materi-group-title strong,
@@ -3905,6 +4054,13 @@ html:has(.tryout-exam-page) {
 .dark-mode .tryout-login-copy p,
 .dark-mode .tryout-choice-card small,
 .dark-mode .tryout-history-item small,
+.dark-mode .tryout-evaluation-heading p,
+.dark-mode .tryout-recommendation-item p,
+.dark-mode .tryout-wrong-item p,
+.dark-mode .tryout-recommendation-item small,
+.dark-mode .tryout-wrong-item small,
+.dark-mode .tryout-score-bar span,
+.dark-mode .tryout-score-bar small,
 .dark-mode .tryout-materi-card p,
 .dark-mode .tryout-materi-content,
 .dark-mode .tryout-materi-table td,
@@ -6891,6 +7047,13 @@ body:has(.cv-builder-page) .custom-navbar {
 .materi-reading-item h3 a:hover { text-decoration: underline; }
 .materi-reading-summary { max-width: 78ch; color: #566171; line-height: 1.7; font-size: 14px; font-weight: 400; text-align: left; margin-bottom: 10px; }
 .materi-topic-label { margin-bottom: 0; }
+.materi-progress-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.materi-progress-tags span { display: inline-flex; align-items: center; gap: 6px; padding: 5px 9px; border-radius: 999px; background: #eaf5f3; color: #0f766e; font-size: 12px; font-weight: 700; }
+.materi-progress-tags span.muted { background: #f1f5f9; color: #64748b; }
+.materi-reading-actions { display: flex; align-items: center; justify-content: flex-end; gap: 10px; }
+.materi-reading-actions form, .reading-actions form { margin: 0; }
+.materi-icon-action { width: 42px; height: 42px; display: inline-flex; align-items: center; justify-content: center; border: 1px solid #b8c5cd; border-radius: 6px; background: #ffffff; color: #17364a; }
+.materi-icon-action:hover { background: #eaf5f3; color: #0f766e; }
 .materi-read-link { display: inline-flex; align-items: center; justify-content: center; gap: 12px; padding: 11px 16px; border: 1px solid #b8c5cd; border-radius: 6px; color: #17364a; text-decoration: none; font-size: 14px; font-weight: 500; }
 .materi-read-link:hover { background: #f1f6f7; color: #0f766e; }
 .materi-source { border-top: 1px solid #e2e6eb; padding-top: 20px; margin-bottom: 0; font-size: 12px; font-weight: 400; color: #687482; }
@@ -6910,6 +7073,7 @@ body:has(.cv-builder-page) .custom-navbar {
     .materi-list-status { align-items: flex-start; flex-direction: column; }
     .materi-list-actions { justify-content: flex-start; }
     .materi-reading-item { grid-template-columns: 1fr; gap: 16px; }
+    .materi-reading-actions { justify-content: flex-start; }
     .materi-read-link { justify-self: start; }
     .materi-library h2 { font-size: 23px; }
 }
@@ -6948,6 +7112,8 @@ body:has(.cv-builder-page) .custom-navbar {
 .reading-header h1 { font-size: clamp(28px, 3.4vw, 40px); font-weight: 600; letter-spacing: -.7px; line-height: 1.2; margin: 0 0 16px; }
 .reading-header > p:not(.learning-eyebrow) { font-size: 18px; line-height: 1.7; color: #526174; }
 .reading-meta { display: flex; flex-wrap: wrap; gap: 12px 24px; color: #627083; font-size: 14px; }
+.reading-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px; }
+.reading-actions button { background: #ffffff; }
 .reading-layout { display: grid; grid-template-columns: 230px minmax(0, 850px); gap: 40px; align-items: start; }
 .reading-layout:has(.reading-sidebar[hidden]) { grid-template-columns: minmax(0, 850px); }
 .reading-sidebar { position: sticky; top: 125px; font-size: 14px; padding: 12px 0; }

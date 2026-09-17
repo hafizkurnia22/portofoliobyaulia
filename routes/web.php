@@ -11,6 +11,7 @@ use App\Http\Controllers\TentangSayaController;
 use App\Http\Controllers\TryoutAuthController;
 use App\Http\Controllers\TryoutKategoriSoalController;
 use App\Http\Controllers\TryoutMateriController;
+use App\Http\Controllers\TryoutMateriProgressController;
 use App\Http\Controllers\TryoutPengaturanController;
 use App\Http\Controllers\TryoutPesertaController;
 use App\Http\Controllers\TryoutRiwayatController;
@@ -30,6 +31,8 @@ Route::post('/tryout/login', [TryoutAuthController::class, 'login'])->name('tryo
 Route::post('/tryout/logout', [TryoutAuthController::class, 'logout'])->name('tryout.logout');
 Route::get('/tryout', [TryoutSoalController::class, 'index'])->name('tryout.index');
 Route::get('/tryout/materi/{materi}', [TryoutSoalController::class, 'materiDetail'])->name('tryout.materi.show');
+Route::post('/tryout/materi/{materi}/bookmark', [TryoutMateriProgressController::class, 'toggleBookmark'])->name('tryout.materi.bookmark');
+Route::post('/tryout/materi/{materi}/read', [TryoutMateriProgressController::class, 'markRead'])->name('tryout.materi.read');
 Route::post('/tryout/riwayat', [TryoutRiwayatController::class, 'store'])->name('tryout.riwayat.store');
 
 Route::get('/sertifikasi', function () {
