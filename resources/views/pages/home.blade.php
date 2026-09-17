@@ -9,7 +9,7 @@
 
     <section id="home" class="portfolio-intro" aria-label="Perkenalan dan portofolio">
         <div class="container">
-            <div id="portfolioCarousel" class="carousel slide" data-bs-interval="false" role="region" aria-roledescription="carousel" aria-label="Kenali Hafiz" tabindex="0">
+            <div id="portfolioCarousel" class="carousel slide" data-bs-interval="5000" role="region" aria-roledescription="carousel" aria-label="Kenali Hafiz" tabindex="0">
                 <div class="carousel-inner">
                     <div class="carousel-item active" role="group" aria-roledescription="slide" aria-label="1 dari 3: Perkenalan">
                         <div class="portfolio-intro-grid">
@@ -74,6 +74,7 @@
                         <button type="button" data-bs-target="#portfolioCarousel" data-bs-slide-to="2" aria-label="Slide 3: Pengalaman"><span>03</span> Pengalaman</button>
                     </div>
                     <div class="intro-slide-arrows">
+                        <button type="button" id="introAutoplayToggle" aria-label="Jeda pergantian otomatis" aria-pressed="false"><i class="bi bi-pause-fill" aria-hidden="true"></i></button>
                         <button type="button" data-bs-target="#portfolioCarousel" data-bs-slide="prev" aria-label="Slide sebelumnya"><i class="bi bi-arrow-left" aria-hidden="true"></i></button>
                         <button type="button" data-bs-target="#portfolioCarousel" data-bs-slide="next" aria-label="Slide berikutnya"><i class="bi bi-arrow-right" aria-hidden="true"></i></button>
                     </div>
