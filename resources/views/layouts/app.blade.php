@@ -146,6 +146,9 @@
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    @if (request()->is('/'))
+        <script src="{{ asset('js/portfolio-carousel.js') }}?v={{ filemtime(public_path('js/portfolio-carousel.js')) }}"></script>
+    @endif
 
     <!-- SweetAlert -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

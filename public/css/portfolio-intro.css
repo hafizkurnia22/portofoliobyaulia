@@ -2,7 +2,7 @@
 .portfolio-intro {
     background: linear-gradient(115deg, #0b1f3a 0%, #102e4c 100%);
     color: #f8fafc;
-    padding: 172px 0 76px;
+    padding: 152px 0 36px;
     border-bottom: 1px solid #29445d;
 }
 .portfolio-intro-grid {
@@ -10,6 +10,7 @@
     grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
     align-items: center;
     gap: 64px;
+    min-height: 430px;
 }
 .portfolio-intro-copy { max-width: 660px; }
 .intro-status {
@@ -28,7 +29,7 @@
 }
 .intro-status i { color: #79d2bb; font-size: 15px; }
 .intro-greeting { font-size: 19px; color: #c2cfdd; margin: 0 0 10px; }
-.portfolio-intro h1 {
+.portfolio-intro h1, .intro-slide-title {
     color: #fff;
     font-size: clamp(36px, 4vw, 56px);
     font-weight: 600;
@@ -76,8 +77,24 @@
     box-shadow: 0 0 0 1px #bfa36c, 0 20px 48px #06142640;
 }
 .intro-portrait img { display: block; width: 100%; height: auto; aspect-ratio: 1; object-fit: cover; object-position: center 20%; }
-.intro-portrait-caption { display: flex; justify-content: center; align-items: center; gap: 10px; padding: 22px 0 0; color: #bccbd9; font-size: 12px; }
-.intro-portrait-caption i { color: #d2b16c; }
+.intro-eyebrow { color: #e1c382; font-size: 12px; font-weight: 600; letter-spacing: 2px; margin-bottom: 20px; }
+.intro-slide-title span { color: #e1c382; }
+.intro-slide-description { color: #c2cfdd; font-size: 17px; line-height: 1.8; max-width: 490px; margin: 22px 0 26px; text-align: left; }
+.intro-skills { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 26px; }
+.intro-skills span { border: 1px solid #3e586e; border-radius: 6px; padding: 5px 10px; color: #c2cfdd; font-size: 12px; }
+.intro-art { width: 100%; max-width: 440px; justify-self: center; }
+.intro-art img { display: block; width: 100%; height: auto; aspect-ratio: 1; object-fit: contain; border-radius: 28px; }
+.intro-carousel-toolbar { display: flex; justify-content: flex-start; align-items: center; gap: 32px; border-top: 1px solid #ffffff24; padding-top: 22px; margin-top: 32px; }
+#portfolioCarousel .intro-slide-picker { position: static; margin: 0; display: flex; gap: 24px; justify-content: flex-start; }
+#portfolioCarousel .intro-slide-picker button { width: auto; height: auto; min-height: 44px; flex: initial; margin: 0; padding: 8px 0; border: 0; border-bottom: 2px solid transparent; background: transparent; text-indent: 0; opacity: 1; color: #b6c7d9; font: inherit; font-size: 13px; }
+#portfolioCarousel .intro-slide-picker button span { font-size: 11px; margin-right: 7px; color: #8ea5bb; }
+#portfolioCarousel .intro-slide-picker button.active { color: #f0d18e; border-bottom-color: #d2b16c; }
+#portfolioCarousel .intro-slide-picker button:hover { color: #fff; }
+.intro-slide-arrows { display: flex; gap: 10px; order: -1; }
+.intro-slide-arrows button { display: inline-flex; align-items: center; justify-content: center; width: 48px; height: 48px; border-radius: 50%; border: 1px solid #61778e; color: white; background: #ffffff08; font-size: 20px; }
+.intro-slide-arrows button:last-child { background: #e1c382; border-color: #e1c382; color: #0b1f3a; }
+.intro-slide-arrows button:hover { background: #0f766e; color: white; border-color: #5fcbbd; }
+#portfolioCarousel:focus-visible { outline: 2px solid #e1c382; outline-offset: 8px; }
 .portfolio-intro :is(a, button):focus-visible { outline: 3px solid #e1c382; outline-offset: 5px; }
 @media (max-width: 991px) {
     .portfolio-intro-grid { gap: 36px; }
@@ -86,9 +103,17 @@
 }
 @media (max-width: 767px) {
     .portfolio-intro { padding: 124px 0 48px; }
-    .portfolio-intro-grid { grid-template-columns: 1fr; gap: 36px; }
+    .portfolio-intro-grid { grid-template-columns: 1fr; gap: 24px; min-height: 640px; align-content: start; }
+    .portfolio-intro-copy { min-height: 330px; }
     .intro-status { margin-bottom: 24px; }
     .intro-portrait { max-width: 280px; }
+    .intro-art { max-width: 280px; }
     .intro-description { font-size: 16px; }
+    .intro-slide-description { font-size: 16px; margin: 18px 0; }
+    .intro-carousel-toolbar { gap: 12px; flex-wrap: wrap; }
+    #portfolioCarousel .intro-slide-picker { gap: 16px; }
+    #portfolioCarousel .intro-slide-picker button { font-size: 12px; }
+    #portfolioCarousel .intro-slide-picker button span { display: none; }
+    .intro-slide-arrows button { width: 44px; height: 44px; }
 }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto !important; } }

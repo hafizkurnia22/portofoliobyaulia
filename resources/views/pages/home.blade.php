@@ -7,35 +7,78 @@
         $availabilityText = trim($tentangSaya->status ?? 'Open for Collaboration');
     @endphp
 
-    <section id="home" class="portfolio-intro" aria-labelledby="intro-title">
-        <div class="container portfolio-intro-grid">
-            <div class="portfolio-intro-copy">
-                @if ($availabilityText !== '')
-                    @php
-                        $friendlyAvailability = match (strtolower($availabilityText)) {
-                            'open to freelance', 'open for freelance' => 'Terbuka untuk project freelance',
-                            'open for collaboration' => 'Terbuka untuk kerja sama',
-                            'open to work' => 'Terbuka untuk peluang kerja',
-                            default => $availabilityText,
-                        };
-                    @endphp
-                    <div class="intro-status"><i class="bi bi-briefcase" aria-hidden="true"></i><span>{{ $friendlyAvailability }}</span></div>
-                @endif
-                <p class="intro-greeting">Halo, saya</p>
-                <h1 id="intro-title">{{ $tentangSaya->nama ?? 'Hafiz' }}</h1>
-                <p class="intro-role">{{ $tentangSaya->bidang ?? 'Pengembang website' }}</p>
-                <p class="intro-description">Membangun solusi digital yang praktis, mudah digunakan, dan membantu pekerjaan sehari-hari.</p>
-                <div class="intro-actions">
-                    <button type="button" class="intro-primary" data-bs-toggle="modal" data-bs-target="#smartContactModal">Mari berdiskusi <i class="bi bi-arrow-up-right" aria-hidden="true"></i></button>
-                    <a href="#my-project" class="intro-secondary">Lihat karya saya <i class="bi bi-arrow-right" aria-hidden="true"></i></a>
+    <section id="home" class="portfolio-intro" aria-label="Perkenalan dan portofolio">
+        <div class="container">
+            <div id="portfolioCarousel" class="carousel slide" data-bs-interval="false" role="region" aria-roledescription="carousel" aria-label="Kenali Hafiz" tabindex="0">
+                <div class="carousel-inner">
+                    <div class="carousel-item active" role="group" aria-roledescription="slide" aria-label="1 dari 3: Perkenalan">
+                        <div class="portfolio-intro-grid">
+                            <div class="portfolio-intro-copy">
+                                @if ($availabilityText !== '')
+                                    @php
+                                        $friendlyAvailability = match (strtolower($availabilityText)) {
+                                            'open to freelance', 'open for freelance' => 'Terbuka untuk project freelance',
+                                            'open for collaboration' => 'Terbuka untuk kerja sama',
+                                            'open to work' => 'Terbuka untuk peluang kerja',
+                                            default => $availabilityText,
+                                        };
+                                    @endphp
+                                    <div class="intro-status"><i class="bi bi-briefcase" aria-hidden="true"></i><span>{{ $friendlyAvailability }}</span></div>
+                                @endif
+                                <p class="intro-greeting">Halo, saya</p>
+                                <h1 id="intro-title">{{ $tentangSaya->nama ?? 'Hafiz' }}</h1>
+                                <p class="intro-role">{{ $tentangSaya->bidang ?? 'Pengembang website' }}</p>
+                                <div class="intro-actions">
+                                    <button type="button" class="intro-primary" data-bs-toggle="modal" data-bs-target="#smartContactModal">Mari berdiskusi <i class="bi bi-arrow-up-right" aria-hidden="true"></i></button>
+                                    <a href="#tentang" class="intro-secondary">Tentang saya <i class="bi bi-arrow-right" aria-hidden="true"></i></a>
+                                </div>
+                            </div>
+                            <div class="intro-portrait">
+                                <div class="intro-portrait-frame">
+                                    <img src="{{ asset('images/' . ($tentangSaya->foto ?? 'profile.jpeg')) }}" alt="Potret {{ $tentangSaya->nama ?? 'Hafiz' }}" fetchpriority="high" width="440" height="440">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="carousel-item" role="group" aria-roledescription="slide" aria-label="2 dari 3: Karya digital">
+                        <div class="portfolio-intro-grid">
+                            <div class="portfolio-intro-copy">
+                                <p class="intro-eyebrow">KARYA DIGITAL</p>
+                                <h2 class="intro-slide-title">Dari ide menjadi<br><span>aplikasi nyata.</span></h2>
+                                <p class="intro-slide-description">Jelajahi website dan sistem informasi yang saya kembangkan, beserta fitur dan teknologi di baliknya.</p>
+                                <div class="intro-skills" aria-label="Teknologi"><span>Laravel</span><span>PHP</span><span>MySQL</span></div>
+                                <a href="#my-project" class="intro-primary">Jelajahi project <i class="bi bi-arrow-up-right" aria-hidden="true"></i></a>
+                            </div>
+                            <div class="intro-art"><img src="{{ asset('images/hero-developer-3d.webp') }}" alt="Ilustrasi 3D Hafiz mengembangkan website di laptop" width="1254" height="1254" decoding="async"></div>
+                        </div>
+                    </div>
+                    <div class="carousel-item" role="group" aria-roledescription="slide" aria-label="3 dari 3: Pengalaman dan keahlian">
+                        <div class="portfolio-intro-grid">
+                            <div class="portfolio-intro-copy">
+                                <p class="intro-eyebrow">PENGALAMAN & KEAHLIAN</p>
+                                <h2 class="intro-slide-title">Terus belajar.<br><span>Terus berkarya.</span></h2>
+                                <p class="intro-slide-description">Kenali perjalanan saya dalam teknologi informasi, analisis data, dan pengelolaan aplikasi.</p>
+                                <div class="intro-actions">
+                                    <a href="#pengalaman" class="intro-primary">Lihat pengalaman <i class="bi bi-arrow-up-right" aria-hidden="true"></i></a>
+                                    <a href="#skill" class="intro-secondary">Lihat keahlian <i class="bi bi-arrow-right" aria-hidden="true"></i></a>
+                                </div>
+                            </div>
+                            <div class="intro-art"><img src="{{ asset('images/hero-analyst-3d.webp') }}" alt="Ilustrasi 3D Hafiz menjelaskan analisis data dan sistem" width="1254" height="1254" decoding="async"></div>
+                        </div>
+                    </div>
                 </div>
-                <a href="#tentang" class="intro-about">Kenali saya lebih dekat <i class="bi bi-arrow-down" aria-hidden="true"></i></a>
-            </div>
-            <div class="intro-portrait">
-                <div class="intro-portrait-frame">
-                    <img src="{{ asset('images/' . ($tentangSaya->foto ?? 'profile.jpeg')) }}" alt="Potret {{ $tentangSaya->nama ?? 'Hafiz' }}" fetchpriority="high" width="440" height="500">
+                <div class="intro-carousel-toolbar">
+                    <div class="carousel-indicators intro-slide-picker">
+                        <button type="button" data-bs-target="#portfolioCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1: Perkenalan"><span>01</span> Perkenalan</button>
+                        <button type="button" data-bs-target="#portfolioCarousel" data-bs-slide-to="1" aria-label="Slide 2: Karya digital"><span>02</span> Karya</button>
+                        <button type="button" data-bs-target="#portfolioCarousel" data-bs-slide-to="2" aria-label="Slide 3: Pengalaman"><span>03</span> Pengalaman</button>
+                    </div>
+                    <div class="intro-slide-arrows">
+                        <button type="button" data-bs-target="#portfolioCarousel" data-bs-slide="prev" aria-label="Slide sebelumnya"><i class="bi bi-arrow-left" aria-hidden="true"></i></button>
+                        <button type="button" data-bs-target="#portfolioCarousel" data-bs-slide="next" aria-label="Slide berikutnya"><i class="bi bi-arrow-right" aria-hidden="true"></i></button>
+                    </div>
                 </div>
-                <div class="intro-portrait-caption"><i class="bi bi-code-slash" aria-hidden="true"></i><span>Teknologi yang memudahkan pekerjaan.</span></div>
+                <span class="visually-hidden" id="introSlideAnnouncement" aria-live="polite" aria-atomic="true">Slide 1 dari 3: Perkenalan</span>
             </div>
         </div>
     </section>
