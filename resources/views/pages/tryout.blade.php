@@ -8,6 +8,8 @@
         $tryoutMode = $tryoutMode === 'ujian' ? 'ujian' : 'menu';
         $showExam = $tryoutMode === 'ujian';
         $practiceCategory = $practiceCategory ?? null;
+        $latihanKategori = $latihanKategori ?? collect();
+        $examDurationMinutes = $examDurationMinutes ?? (int) ($tryoutPengaturan->durasi_menit ?? 45);
         $practiceLabels = [
             'TWK' => 'Tes Wawasan Kebangsaan',
             'TIU' => 'Tes Intelegensia Umum',
@@ -88,7 +90,7 @@
                     <div>
                         <h2>Panduan belajar CPNS</h2>
                         <p>{{ $tryoutKisiKisi }}</p>
-                        @if ($tryoutPengaturan->permenpan_file)
+                        @if ($tryoutPengaturan->permenpan_file ?? null)
                             <div class="tryout-reference-meta">
                                 <a href="{{ asset('storage/' . $tryoutPengaturan->permenpan_file) }}" target="_blank" rel="noopener">
                                     <i class="bi bi-file-earmark-pdf" aria-hidden="true"></i>
