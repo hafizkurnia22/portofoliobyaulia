@@ -163,6 +163,8 @@
                             @forelse ($latihanKategori as $kategoriLatihan)
                                 @php
                                     $kodeLatihan = $kategoriLatihan->kode;
+                                    $jumlahLatihan = $tryoutPengaturan->jumlahSoalKategori($kodeLatihan);
+                                    $durasiLatihan = $tryoutPengaturan->durasiMenitKategori($kodeLatihan);
                                 @endphp
                                 <article class="practice-category-card">
                                     <div class="practice-category-icon">
@@ -175,14 +177,15 @@
                                     </div>
                                     <dl class="practice-category-meta">
                                         <div>
-                                            <dt>Soal</dt>
-                                            <dd>{{ $kategoriLatihan->soal_aktif_count }}</dd>
+                                            <dt>Ditampilkan</dt>
+                                            <dd>{{ min($jumlahLatihan, $kategoriLatihan->soal_aktif_count) }}</dd>
                                         </div>
                                         <div>
-                                            <dt>Materi</dt>
-                                            <dd>{{ $kategoriLatihan->materi_aktif_count }}</dd>
+                                            <dt>Durasi</dt>
+                                            <dd>{{ $durasiLatihan }}<small> mnt</small></dd>
                                         </div>
                                     </dl>
+                                    <p class="practice-category-availability">{{ $kategoriLatihan->soal_aktif_count }} soal aktif · {{ $kategoriLatihan->materi_aktif_count }} materi tersedia</p>
                                     <a href="{{ route('tryout.index', ['mode' => 'ujian', 'latihan' => $kodeLatihan]) }}"
                                         class="practice-category-action {{ $kategoriLatihan->soal_aktif_count < 1 ? 'disabled' : '' }}"
                                         @if ($kategoriLatihan->soal_aktif_count < 1) aria-disabled="true" tabindex="-1" @endif>

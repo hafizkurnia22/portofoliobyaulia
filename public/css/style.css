@@ -804,6 +804,71 @@ body {
     gap: 14px;
 }
 
+.tryout-category-settings {
+    grid-column: 1 / -1;
+    padding: 16px;
+    border: 1px solid #dbeafe;
+    border-radius: 12px;
+    background: #ffffff;
+}
+
+.tryout-category-settings-heading {
+    margin-bottom: 14px;
+}
+
+.tryout-category-settings-heading h6 {
+    margin-bottom: 4px;
+}
+
+.tryout-category-setting-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.tryout-category-setting-item {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 82px 82px;
+    gap: 10px;
+    align-items: end;
+    padding: 14px;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    background: #f8fbff;
+}
+
+.tryout-category-setting-item strong,
+.tryout-category-setting-item span,
+.tryout-category-setting-item label {
+    display: block;
+}
+
+.tryout-category-setting-item strong {
+    color: #0b1f3a;
+    font-size: 17px;
+    font-weight: 900;
+}
+
+.tryout-category-setting-item span {
+    color: #64748b;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1.4;
+}
+
+.tryout-category-setting-item label {
+    color: #0b1f3a;
+    font-size: 11px;
+    font-weight: 900;
+    text-transform: uppercase;
+}
+
+.tryout-category-setting-item .form-control {
+    min-height: 40px;
+    margin-top: 5px;
+    font-weight: 900;
+}
+
 .tryout-duration-control {
     min-width: 0;
 }
@@ -2518,6 +2583,11 @@ html:has(.tryout-exam-page) {
         grid-template-columns: 1fr;
     }
 
+    .tryout-category-setting-grid,
+    .tryout-category-setting-item {
+        grid-template-columns: 1fr;
+    }
+
     .tryout-setting-action {
         grid-column: 1;
         justify-content: stretch;
@@ -3722,6 +3792,8 @@ html:has(.tryout-exam-page) {
 .dark-mode .admin-sidebar-section,
 .dark-mode .tryout-import-card,
 .dark-mode .tryout-setting-card,
+.dark-mode .tryout-category-settings,
+.dark-mode .tryout-category-setting-item,
 .dark-mode .tryout-login-card,
 .dark-mode .tryout-login-form,
 .dark-mode .tryout-participant-bar,
@@ -3766,6 +3838,8 @@ html:has(.tryout-exam-page) {
 .dark-mode .tryout-materi-table-empty,
 .dark-mode .tryout-materi-empty-detail strong,
 .dark-mode .tryout-duration-control label,
+.dark-mode .tryout-category-setting-item strong,
+.dark-mode .tryout-category-setting-item label,
 .dark-mode .tryout-materi-content h2,
 .dark-mode .tryout-materi-content h3,
 .dark-mode .rich-editor-area,
@@ -3790,6 +3864,7 @@ html:has(.tryout-exam-page) {
 
 .dark-mode .tryout-import-card p,
 .dark-mode .tryout-setting-card p,
+.dark-mode .tryout-category-setting-item span,
 .dark-mode .tryout-login-copy p,
 .dark-mode .tryout-choice-card small,
 .dark-mode .tryout-history-item small,
@@ -6596,6 +6671,19 @@ body:has(.cv-builder-page) .custom-navbar {
     font-size: 22px;
     font-weight: 800;
     line-height: 1;
+}
+
+.practice-category-meta dd small {
+    color: #64748b;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.practice-category-availability {
+    margin: -4px 0 0;
+    color: #64748b;
+    font-size: 12px;
+    font-weight: 700;
 }
 
 .practice-category-action {

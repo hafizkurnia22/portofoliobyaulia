@@ -510,7 +510,9 @@ class TryoutSoalController extends Controller
 
     private function selectedSoals(TryoutPengaturan $pengaturan, ?string $practiceCategory = null)
     {
-        $jumlahSoal = max((int) ($pengaturan->jumlah_soal ?? 30), 1);
+        $jumlahSoal = $practiceCategory
+            ? $pengaturan->jumlahSoalKategori($practiceCategory)
+            : max((int) ($pengaturan->jumlah_soal ?? 30), 1);
         $soals = TryoutSoal::aktif()
             ->with('kategoriSoal')
             ->when($practiceCategory, function ($query) use ($practiceCategory) {
@@ -554,20 +556,7 @@ class TryoutSoalController extends Controller
             return $configuredMinutes;
         }
 
-        $activeQuestionCount = TryoutSoal::aktif()
-            ->where(function ($query) use ($practiceCategory) {
-                $query->where('kategori', $practiceCategory)
-                    ->orWhereHas('kategoriSoal', function ($relationQuery) use ($practiceCategory) {
-                        $relationQuery->where('kode', $practiceCategory);
-                    });
-            })
-            ->count();
-
-        if ($activeQuestionCount === 0) {
-            return $configuredMinutes;
-        }
-
-        return min($configuredMinutes, max(10, (int) ceil($activeQuestionCount * 1.2)));
+        return $pengaturan->durasiMenitKategori($practiceCategory);
     }
 
     private function balancedRandomSoals($soals, int $jumlahSoal)

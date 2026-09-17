@@ -13,6 +13,14 @@ class TryoutPengaturanController extends Controller
         $validated = $request->validate([
             'durasi_menit' => 'required|integer|min:1|max:300',
             'jumlah_soal' => 'required|integer|min:1|max:500',
+            'jumlah_soal_kategori' => 'required|array',
+            'jumlah_soal_kategori.TWK' => 'required|integer|min:1|max:500',
+            'jumlah_soal_kategori.TIU' => 'required|integer|min:1|max:500',
+            'jumlah_soal_kategori.TKP' => 'required|integer|min:1|max:500',
+            'durasi_menit_kategori' => 'required|array',
+            'durasi_menit_kategori.TWK' => 'required|integer|min:1|max:300',
+            'durasi_menit_kategori.TIU' => 'required|integer|min:1|max:300',
+            'durasi_menit_kategori.TKP' => 'required|integer|min:1|max:300',
             'kisi_kisi_deskripsi' => 'nullable|string|max:2000',
             'permenpan_file' => 'nullable|file|mimes:pdf|max:5120',
         ]);
@@ -24,6 +32,8 @@ class TryoutPengaturanController extends Controller
             'acak_jawaban' => $request->boolean('acak_jawaban'),
             'durasi_menit' => $validated['durasi_menit'],
             'jumlah_soal' => $validated['jumlah_soal'],
+            'jumlah_soal_kategori' => $this->categorySettings($validated['jumlah_soal_kategori']),
+            'durasi_menit_kategori' => $this->categorySettings($validated['durasi_menit_kategori']),
             'kisi_kisi_deskripsi' => ($validated['kisi_kisi_deskripsi'] ?? null) ?: null,
         ];
 
@@ -42,5 +52,12 @@ class TryoutPengaturanController extends Controller
         return redirect('/admin/dashboard')
             ->with('success', 'Pengaturan tryout berhasil disimpan')
             ->with('active_tab', 'master-soal');
+    }
+
+    private function categorySettings(array $values): array
+    {
+        return collect(['TWK', 'TIU', 'TKP'])
+            ->mapWithKeys(fn ($kode) => [$kode => max((int) ($values[$kode] ?? 1), 1)])
+            ->all();
     }
 }

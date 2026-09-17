@@ -1353,6 +1353,40 @@
                                 </div>
                             </div>
 
+                            <div class="tryout-category-settings">
+                                <div class="tryout-category-settings-heading">
+                                    <h6>Latihan Per Kategori</h6>
+                                    <p>Atur jumlah soal dan durasi yang tampil saat peserta memilih latihan TWK, TIU, atau TKP.</p>
+                                </div>
+
+                                <div class="tryout-category-setting-grid">
+                                    @foreach (['TWK' => 'Wawasan Kebangsaan', 'TIU' => 'Intelegensia Umum', 'TKP' => 'Karakteristik Pribadi'] as $kodeKategori => $namaKategori)
+                                        <div class="tryout-category-setting-item">
+                                            <div>
+                                                <strong>{{ $kodeKategori }}</strong>
+                                                <span>{{ $namaKategori }}</span>
+                                            </div>
+
+                                            <label for="jumlah_soal_kategori_{{ strtolower($kodeKategori) }}">
+                                                Soal
+                                                <input type="number" id="jumlah_soal_kategori_{{ strtolower($kodeKategori) }}"
+                                                    name="jumlah_soal_kategori[{{ $kodeKategori }}]" class="form-control"
+                                                    min="1" max="500"
+                                                    value="{{ old('jumlah_soal_kategori.' . $kodeKategori, $tryoutPengaturan->jumlahSoalKategori($kodeKategori)) }}" required>
+                                            </label>
+
+                                            <label for="durasi_menit_kategori_{{ strtolower($kodeKategori) }}">
+                                                Menit
+                                                <input type="number" id="durasi_menit_kategori_{{ strtolower($kodeKategori) }}"
+                                                    name="durasi_menit_kategori[{{ $kodeKategori }}]" class="form-control"
+                                                    min="1" max="300"
+                                                    value="{{ old('durasi_menit_kategori.' . $kodeKategori, $tryoutPengaturan->durasiMenitKategori($kodeKategori)) }}" required>
+                                            </label>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            </div>
+
                             <div class="tryout-setting-toggles">
                                 <label class="cat-toggle">
                                     <input type="hidden" name="acak_soal" value="0">
