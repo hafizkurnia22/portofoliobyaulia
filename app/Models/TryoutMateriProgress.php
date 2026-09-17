@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class TryoutMateriProgress extends Model
 {
+    protected $table = 'tryout_materi_progresses';
     protected $fillable = [
         'tryout_peserta_id',
         'tryout_materi_id',
