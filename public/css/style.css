@@ -357,7 +357,8 @@ body {
 }
 
 .btn-admin-logout,
-.btn-admin-add {
+.btn-admin-add,
+.btn-admin-setting {
     border: none;
     border-radius: 30px;
     padding: 12px 22px;
@@ -377,6 +378,28 @@ body {
 .btn-admin-add {
     background: #0b1f3a;
     color: white;
+}
+
+.btn-admin-setting {
+    border: 1px solid rgba(15, 118, 110, .18);
+    background: linear-gradient(135deg, #0f766e, #0b1f3a);
+    color: #ffffff;
+    box-shadow: 0 12px 24px rgba(15, 118, 110, .16);
+}
+
+.btn-admin-setting:hover,
+.btn-admin-add:hover,
+.btn-admin-logout:hover {
+    transform: translateY(-1px);
+}
+
+.btn-admin-setting:hover {
+    color: #ffffff;
+    box-shadow: 0 16px 32px rgba(15, 118, 110, .22);
+}
+
+.btn-admin-back {
+    background: rgba(255, 255, 255, .92);
 }
 
 .admin-stat-card {
@@ -489,6 +512,18 @@ body {
     align-items: center;
     margin-bottom: 22px;
     gap: 16px;
+}
+
+.admin-table-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.tryout-settings-page-card .tryout-setting-card {
+    margin-bottom: 0 !important;
 }
 
 .admin-table thead th {
@@ -2463,8 +2498,10 @@ html:has(.tryout-exam-page) {
         font-size: 28px;
     }
 
+    .admin-table-actions,
     .btn-admin-logout,
-    .btn-admin-add {
+    .btn-admin-add,
+    .btn-admin-setting {
         width: 100%;
         justify-content: center;
     }

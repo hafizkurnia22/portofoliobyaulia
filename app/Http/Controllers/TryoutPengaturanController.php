@@ -49,7 +49,7 @@ class TryoutPengaturanController extends Controller
 
         $pengaturan->update($payload);
 
-        return redirect('/admin/dashboard')
+        return redirect()->route('admin.tryout.settings')
             ->with('success', 'Pengaturan tryout berhasil disimpan')
             ->with('active_tab', 'master-soal');
     }

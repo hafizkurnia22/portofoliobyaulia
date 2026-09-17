@@ -199,6 +199,16 @@ Route::get('/admin/dashboard', function () {
         'projectTerbaru'
     ));
 });
+
+Route::get('/admin/tryout/pengaturan', function () {
+    if (!session('admin_login')) {
+        return redirect('/admin/login');
+    }
+
+    $tryoutPengaturan = \App\Models\TryoutPengaturan::current();
+
+    return view('admin.tryout-settings', compact('tryoutPengaturan'));
+})->name('admin.tryout.settings');
 /*
 |--------------------------------------------------------------------------
 | PENGALAMAN
