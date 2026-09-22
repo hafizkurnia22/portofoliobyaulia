@@ -478,12 +478,23 @@
                         <p class="cat-preparation-note">Timer baru berjalan setelah kamu menekan Mulai Sekarang.</p>
                     </div>
                     <div class="cat-shell d-none" id="examShell">
-                        <aside class="cat-sidebar">
-                            <div class="cat-timer">
-                                <span>Sisa Waktu</span>
-                                <strong id="catTimer">00:00:00</strong>
+                        <section class="cat-question-navigation" aria-labelledby="questionNavigationTitle">
+                            <div class="cat-question-navigation-header">
+                                <div>
+                                    <h3 class="cat-nav-title" id="questionNavigationTitle">Navigasi soal</h3>
+                                    <p>Pilih nomor untuk berpindah ke soal mana pun.</p>
+                                </div>
+                                <div class="cat-nav-legend">
+                                    <span><i class="legend-unanswered"></i> Belum dijawab</span>
+                                    <span><i class="legend-answered"></i> Terjawab</span>
+                                    <span><i class="legend-marked"></i> Ragu-ragu</span>
+                                </div>
                             </div>
+                            <div class="cat-number-grid" id="questionNav" aria-label="Navigasi soal"></div>
+                        </section>
 
+                        <div class="cat-exam-content">
+                        <aside class="cat-sidebar">
                             <section class="cat-session-status" aria-label="Status koneksi dan penyimpanan progres">
                                 <div class="cat-connection-status" id="connectionStatus" role="status" aria-live="polite">
                                     <i class="bi bi-arrow-repeat" aria-hidden="true"></i>
@@ -514,13 +525,6 @@
 
                             <label class="cat-progress-label" for="examProgress" id="examProgressLabel">0 dari {{ $soals->count() }} soal dijawab</label>
                             <progress class="cat-progress" id="examProgress" max="{{ $soals->count() }}" value="0"></progress>
-                            <h3 class="cat-nav-title">Navigasi soal</h3>
-                            <div class="cat-number-grid" id="questionNav" aria-label="Navigasi soal"></div>
-                            <div class="cat-nav-legend">
-                                <span><i class="legend-unanswered"></i> Belum dijawab</span>
-                                <span><i class="legend-answered"></i> Terjawab</span>
-                                <span><i class="legend-marked"></i> Ragu-ragu</span>
-                            </div>
                         </aside>
 
                         <div class="cat-main">
@@ -530,10 +534,16 @@
                                     <h2 id="questionTitle" tabindex="-1">Soal 1</h2>
                                 </div>
 
-                                <button type="button" class="cat-mark-btn" id="markButton">
-                                    <i class="bi bi-bookmark"></i>
-                                    Ragu-ragu
-                                </button>
+                                <div class="cat-question-actions">
+                                    <div class="cat-timer cat-timer-inline" aria-label="Sisa waktu ujian">
+                                        <span>Sisa waktu</span>
+                                        <strong id="catTimer">00:00:00</strong>
+                                    </div>
+                                    <button type="button" class="cat-mark-btn" id="markButton">
+                                        <i class="bi bi-bookmark"></i>
+                                        Ragu-ragu
+                                    </button>
+                                </div>
                             </div>
 
                             <p class="cat-save-status" id="answerSaveStatus" role="status">Pilih jawaban untuk menyimpan dan lanjut otomatis.</p>
@@ -562,6 +572,7 @@
                                     Lihat Hasil
                                 </button>
                             </div>
+                        </div>
                         </div>
                     </div>
                 @endif
