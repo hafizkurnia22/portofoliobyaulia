@@ -478,23 +478,22 @@
                         <p class="cat-preparation-note">Timer baru berjalan setelah kamu menekan Mulai Sekarang.</p>
                     </div>
                     <div class="cat-shell d-none" id="examShell">
-                        <section class="cat-question-navigation" aria-labelledby="questionNavigationTitle">
-                            <div class="cat-question-navigation-header">
-                                <div>
-                                    <h3 class="cat-nav-title" id="questionNavigationTitle">Navigasi soal</h3>
-                                    <p>Pilih nomor untuk berpindah ke soal mana pun.</p>
-                                </div>
-                                <div class="cat-nav-legend">
-                                    <span><i class="legend-unanswered"></i> Belum dijawab</span>
-                                    <span><i class="legend-answered"></i> Terjawab</span>
-                                    <span><i class="legend-marked"></i> Ragu-ragu</span>
-                                </div>
-                            </div>
-                            <div class="cat-number-grid" id="questionNav" aria-label="Navigasi soal"></div>
-                        </section>
-
-                        <div class="cat-exam-content">
                         <aside class="cat-sidebar">
+                            <section class="cat-question-navigation" aria-labelledby="questionNavigationTitle">
+                                <div class="cat-question-navigation-header">
+                                    <div>
+                                        <h3 class="cat-nav-title" id="questionNavigationTitle">Navigasi soal</h3>
+                                        <p>Pilih nomor untuk berpindah soal.</p>
+                                    </div>
+                                    <div class="cat-nav-legend">
+                                        <span><i class="legend-unanswered"></i> Belum dijawab</span>
+                                        <span><i class="legend-answered"></i> Terjawab</span>
+                                        <span><i class="legend-marked"></i> Ragu-ragu</span>
+                                    </div>
+                                </div>
+                                <div class="cat-number-grid" id="questionNav" aria-label="Navigasi soal"></div>
+                            </section>
+
                             <section class="cat-session-status" aria-label="Status koneksi dan penyimpanan progres">
                                 <div class="cat-connection-status" id="connectionStatus" role="status" aria-live="polite">
                                     <i class="bi bi-arrow-repeat" aria-hidden="true"></i>
@@ -572,7 +571,6 @@
                                     Lihat Hasil
                                 </button>
                             </div>
-                        </div>
                         </div>
                     </div>
                 @endif
