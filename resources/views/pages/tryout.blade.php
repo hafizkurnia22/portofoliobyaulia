@@ -216,16 +216,50 @@
                             </div>
 
                             @if ($scoreTrend->isNotEmpty())
-                                <div class="tryout-score-chart" aria-label="Grafik perkembangan skor">
-                                    @foreach ($scoreTrend as $point)
-                                        <div class="tryout-score-bar">
-                                            <div style="height: {{ max($point['percentage'], 6) }}%"></div>
-                                            <strong>{{ $point['score'] }}</strong>
-                                            <span>{{ $point['label'] }}</span>
-                                            <small>{{ $point['mode'] }}</small>
-                                        </div>
-                                    @endforeach
+                                @php
+                                    $latestScore = $scoreTrend->last();
+                                    $firstScore = $scoreTrend->first();
+                                    $bestScore = $scoreTrend->sortByDesc('percentage')->first();
+                                    $scoreChange = (int) $latestScore['percentage'] - (int) $firstScore['percentage'];
+                                @endphp
+                                <div class="tryout-score-overview" aria-label="Ringkasan perkembangan skor">
+                                    <div>
+                                        <span>Latihan terakhir</span>
+                                        <strong>{{ $latestScore['percentage'] }}%</strong>
+                                        <small>Skor {{ $latestScore['score'] }} dari {{ $latestScore['max_score'] }}</small>
+                                    </div>
+                                    <div>
+                                        <span>Skor terbaik</span>
+                                        <strong>{{ $bestScore['percentage'] }}%</strong>
+                                        <small>{{ $bestScore['label'] }} · {{ $bestScore['mode'] }}</small>
+                                    </div>
+                                    <div class="{{ $scoreChange >= 0 ? 'is-positive' : 'is-negative' }}">
+                                        <span>Perubahan</span>
+                                        <strong>{{ $scoreChange > 0 ? '+' : '' }}{{ $scoreChange }} poin</strong>
+                                        <small>dibanding latihan pertama</small>
+                                    </div>
                                 </div>
+
+                                <ol class="tryout-score-chart" aria-label="Riwayat perkembangan skor">
+                                    @foreach ($scoreTrend as $point)
+                                        <li class="tryout-score-row">
+                                            <div class="tryout-score-meta">
+                                                <strong>{{ $point['label'] }}</strong>
+                                                <span>{{ $point['mode'] }}</span>
+                                            </div>
+                                            <div class="tryout-score-track" role="progressbar"
+                                                aria-label="{{ $point['mode'] }} {{ $point['label'] }}"
+                                                aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{ $point['percentage'] }}"
+                                                aria-valuetext="Skor {{ $point['score'] }} dari {{ $point['max_score'] }}, {{ $point['percentage'] }} persen">
+                                                <span style="width: {{ max($point['percentage'], 2) }}%"></span>
+                                            </div>
+                                            <div class="tryout-score-value">
+                                                <strong>{{ $point['percentage'] }}%</strong>
+                                                <span>{{ $point['score'] }}/{{ $point['max_score'] }}</span>
+                                            </div>
+                                        </li>
+                                    @endforeach
+                                </ol>
                             @else
                                 <div class="tryout-history-empty">Grafik akan tampil setelah kamu menyelesaikan latihan pertama.</div>
                             @endif

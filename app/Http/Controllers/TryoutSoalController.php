@@ -596,6 +596,7 @@ class TryoutSoalController extends Controller
                 return [
                     'label' => $riwayat->finished_at ? $riwayat->finished_at->format('d M') : 'Latihan ' . ($index + 1),
                     'score' => (int) $riwayat->total_skor,
+                    'max_score' => $maxScore,
                     'percentage' => $percentage,
                     'mode' => $this->historyMode($riwayat->detail_jawaban ?? []),
                 ];
