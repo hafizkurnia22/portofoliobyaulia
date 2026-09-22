@@ -10,7 +10,7 @@
         $practiceCategory = $practiceCategory ?? null;
         $latihanKategori = $latihanKategori ?? collect();
         $materiProgress = $materiProgress ?? collect();
-        $scoreTrend = $scoreTrend ?? collect();
+        $scoreStatistics = $scoreStatistics ?? [];
         $recommendedMateri = $recommendedMateri ?? collect();
         $wrongReviewItems = $wrongReviewItems ?? collect();
         $examDurationMinutes = $examDurationMinutes ?? (int) ($tryoutPengaturan->durasi_menit ?? 45);
@@ -211,57 +211,71 @@
                         <section class="tryout-evaluation-card tryout-score-card" aria-labelledby="scoreTrendHeading">
                             <div class="tryout-evaluation-heading">
                                 <span>Perkembangan</span>
-                                <h2 id="scoreTrendHeading">Grafik skor latihan</h2>
-                                <p>Pantau perubahan skor dari beberapa latihan terakhir.</p>
+                                <h2 id="scoreTrendHeading">Statistik skor latihan</h2>
+                                <p>Bandingkan skor terbaik, terendah, dan rata-rata pada setiap jenis latihan.</p>
                             </div>
 
-                            @if ($scoreTrend->isNotEmpty())
+                            @if (collect($scoreStatistics)->contains(fn ($tab) => $tab['statistics'] ?? null))
                                 @php
-                                    $latestScore = $scoreTrend->last();
-                                    $firstScore = $scoreTrend->first();
-                                    $bestScore = $scoreTrend->sortByDesc('percentage')->first();
-                                    $scoreChange = (int) $latestScore['percentage'] - (int) $firstScore['percentage'];
+                                    $statTabs = ['FULL' => 'Simulasi Penuh', 'TWK' => 'TWK', 'TIU' => 'TIU', 'TKP' => 'TKP'];
                                 @endphp
-                                <div class="tryout-score-overview" aria-label="Ringkasan perkembangan skor">
-                                    <div>
-                                        <span>Latihan terakhir</span>
-                                        <strong>{{ $latestScore['percentage'] }}%</strong>
-                                        <small>Skor {{ $latestScore['score'] }} dari {{ $latestScore['max_score'] }}</small>
-                                    </div>
-                                    <div>
-                                        <span>Skor terbaik</span>
-                                        <strong>{{ $bestScore['percentage'] }}%</strong>
-                                        <small>{{ $bestScore['label'] }} · {{ $bestScore['mode'] }}</small>
-                                    </div>
-                                    <div class="{{ $scoreChange >= 0 ? 'is-positive' : 'is-negative' }}">
-                                        <span>Perubahan</span>
-                                        <strong>{{ $scoreChange > 0 ? '+' : '' }}{{ $scoreChange }} poin</strong>
-                                        <small>dibanding latihan pertama</small>
-                                    </div>
+                                <div class="tryout-score-tabs" role="tablist" aria-label="Jenis statistik latihan">
+                                    @foreach ($statTabs as $key => $label)
+                                        <button type="button" class="tryout-score-tab {{ $key === 'FULL' ? 'active' : '' }}"
+                                            role="tab" aria-selected="{{ $key === 'FULL' ? 'true' : 'false' }}"
+                                            data-score-tab="{{ $key }}">{{ $label }}</button>
+                                    @endforeach
                                 </div>
 
-                                <ol class="tryout-score-chart" aria-label="Riwayat perkembangan skor">
-                                    @foreach ($scoreTrend as $point)
-                                        <li class="tryout-score-row">
-                                            <div class="tryout-score-meta">
-                                                <strong>{{ $point['label'] }}</strong>
-                                                <span>{{ $point['mode'] }}</span>
+                                @foreach ($statTabs as $key => $label)
+                                    @php $statistics = $scoreStatistics[$key]['statistics'] ?? null; @endphp
+                                    <section class="tryout-score-panel {{ $key === 'FULL' ? '' : 'd-none' }}" role="tabpanel" data-score-panel="{{ $key }}">
+                                        @if ($statistics)
+                                            <p class="tryout-score-count">{{ $statistics['count'] }} latihan {{ strtolower($label) }} tercatat.</p>
+                                            <div class="tryout-score-summary-grid">
+                                                <div>
+                                                    <span>Skor terbaik</span>
+                                                    <strong>{{ $statistics['best']['percentage'] }}%</strong>
+                                                    <small>{{ $statistics['best']['score'] }} dari {{ $statistics['best']['max_score'] }}</small>
+                                                </div>
+                                                <div>
+                                                    <span>Skor terendah</span>
+                                                    <strong>{{ $statistics['worst']['percentage'] }}%</strong>
+                                                    <small>{{ $statistics['worst']['score'] }} dari {{ $statistics['worst']['max_score'] }}</small>
+                                                </div>
+                                                <div>
+                                                    <span>Rata-rata skor</span>
+                                                    <strong>{{ $statistics['average_percentage'] }}%</strong>
+                                                    <small>Dari {{ $statistics['count'] }} latihan</small>
+                                                </div>
                                             </div>
-                                            <div class="tryout-score-track" role="progressbar"
-                                                aria-label="{{ $point['mode'] }} {{ $point['label'] }}"
-                                                aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{ $point['percentage'] }}"
-                                                aria-valuetext="Skor {{ $point['score'] }} dari {{ $point['max_score'] }}, {{ $point['percentage'] }} persen">
-                                                <span style="width: {{ max($point['percentage'], 2) }}%"></span>
-                                            </div>
-                                            <div class="tryout-score-value">
-                                                <strong>{{ $point['percentage'] }}%</strong>
-                                                <span>{{ $point['score'] }}/{{ $point['max_score'] }}</span>
-                                            </div>
-                                        </li>
-                                    @endforeach
-                                </ol>
+
+                                            @if ($key === 'FULL')
+                                                <div class="tryout-full-category-stats">
+                                                    <h3>Rincian skor simulasi penuh</h3>
+                                                    <p>Statistik tiap kategori dihitung dari seluruh simulasi penuh yang telah kamu selesaikan.</p>
+                                                    <div>
+                                                        @foreach (['TWK', 'TIU', 'TKP'] as $category)
+                                                            @php $categoryStats = $scoreStatistics['FULL']['categories'][$category] ?? null; @endphp
+                                                            <article>
+                                                                <strong>{{ $category }}</strong>
+                                                                @if ($categoryStats)
+                                                                    <span>Terbaik {{ $categoryStats['best']['percentage'] }}% · Terendah {{ $categoryStats['worst']['percentage'] }}% · Rata-rata {{ $categoryStats['average_percentage'] }}%</span>
+                                                                @else
+                                                                    <span>Belum ada data kategori ini.</span>
+                                                                @endif
+                                                            </article>
+                                                        @endforeach
+                                                    </div>
+                                                </div>
+                                            @endif
+                                        @else
+                                            <div class="tryout-history-empty">Belum ada riwayat {{ strtolower($label) }}. Selesaikan latihan untuk melihat statistiknya.</div>
+                                        @endif
+                                    </section>
+                                @endforeach
                             @else
-                                <div class="tryout-history-empty">Grafik akan tampil setelah kamu menyelesaikan latihan pertama.</div>
+                                <div class="tryout-history-empty">Statistik akan tampil setelah kamu menyelesaikan latihan pertama.</div>
                             @endif
                         </section>
 
@@ -365,6 +379,8 @@
                         const tabs = Array.from(document.querySelectorAll('.tryout-tab'));
                         const panels = Array.from(document.querySelectorAll('[data-tryout-panel]'));
                         const localTabLinks = Array.from(document.querySelectorAll('.tryout-tab-inline-link'));
+                        const scoreTabs = Array.from(document.querySelectorAll('[data-score-tab]'));
+                        const scorePanels = Array.from(document.querySelectorAll('[data-score-panel]'));
                         const validTabs = ['materi', 'simulasi', 'evaluasi'];
 
                         function tabFromUrl(url) {
@@ -408,6 +424,20 @@
                                 document.querySelector('.tryout-tabs')?.scrollIntoView({
                                     behavior: 'auto',
                                     block: 'start'
+                                });
+                            });
+                        });
+
+                        scoreTabs.forEach(function(scoreTab) {
+                            scoreTab.addEventListener('click', function() {
+                                const selectedTab = scoreTab.dataset.scoreTab;
+                                scoreTabs.forEach(function(tab) {
+                                    const isActive = tab.dataset.scoreTab === selectedTab;
+                                    tab.classList.toggle('active', isActive);
+                                    tab.setAttribute('aria-selected', String(isActive));
+                                });
+                                scorePanels.forEach(function(panel) {
+                                    panel.classList.toggle('d-none', panel.dataset.scorePanel !== selectedTab);
                                 });
                             });
                         });

@@ -1462,22 +1462,59 @@ html:has(.tryout-exam-page) {
     line-height: 1.6;
 }
 
-.tryout-score-overview {
+.tryout-score-tabs {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    margin-bottom: 16px;
+    padding-bottom: 2px;
+}
+
+.tryout-score-tab {
+    min-height: 40px;
+    flex: 0 0 auto;
+    padding: 9px 13px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    background: #ffffff;
+    color: #475569;
+    font-size: 13px;
+    font-weight: 800;
+}
+
+.tryout-score-tab.active {
+    border-color: #0f766e;
+    background: #0f766e;
+    color: #ffffff;
+}
+
+.tryout-score-tab:focus-visible {
+    outline: 3px solid #14b8a6;
+    outline-offset: 2px;
+}
+
+.tryout-score-count {
+    margin: 0 0 10px;
+    color: #64748b;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.tryout-score-summary-grid {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 10px;
-    margin-bottom: 18px;
 }
 
-.tryout-score-overview > div {
-    padding: 13px;
+.tryout-score-summary-grid > div {
+    padding: 14px;
     border: 1px solid #dbeafe;
     border-radius: 8px;
     background: #f8fbff;
 }
 
-.tryout-score-overview span,
-.tryout-score-overview small {
+.tryout-score-summary-grid span,
+.tryout-score-summary-grid small {
     display: block;
     color: #64748b;
     font-size: 11px;
@@ -1485,93 +1522,66 @@ html:has(.tryout-exam-page) {
     line-height: 1.45;
 }
 
-.tryout-score-overview span {
-    text-transform: uppercase;
-}
+.tryout-score-summary-grid span { text-transform: uppercase; }
 
-.tryout-score-overview strong {
+.tryout-score-summary-grid strong {
     display: block;
-    margin: 3px 0;
+    margin: 4px 0;
     color: #0b1f3a;
-    font-size: 22px;
+    font-size: 25px;
     font-weight: 900;
 }
 
-.tryout-score-overview .is-positive strong { color: #15803d; }
-.tryout-score-overview .is-negative strong { color: #b91c1c; }
-
-.tryout-score-chart {
-    display: grid;
-    gap: 10px;
-    margin: 0;
-    padding: 0;
-    list-style: none;
+.tryout-full-category-stats {
+    margin-top: 18px;
+    padding-top: 18px;
+    border-top: 1px solid #e2e8f0;
 }
 
-.tryout-score-row {
+.tryout-full-category-stats h3 {
+    margin: 0 0 4px;
+    color: #0b1f3a;
+    font-size: 16px;
+    font-weight: 900;
+}
+
+.tryout-full-category-stats > p {
+    margin: 0 0 10px;
+    color: #64748b;
+    font-size: 13px;
+    line-height: 1.55;
+}
+
+.tryout-full-category-stats > div {
     display: grid;
-    grid-template-columns: minmax(94px, .8fr) minmax(120px, 2fr) auto;
+    gap: 8px;
+}
+
+.tryout-full-category-stats article {
+    display: grid;
+    grid-template-columns: 48px minmax(0, 1fr);
     align-items: center;
-    gap: 12px;
-    padding: 11px 12px;
+    gap: 10px;
+    padding: 10px 12px;
     border: 1px solid #e2e8f0;
     border-radius: 8px;
-    background: #ffffff;
 }
 
-.tryout-score-meta strong,
-.tryout-score-meta span,
-.tryout-score-value strong,
-.tryout-score-value span {
-    display: block;
-}
-
-.tryout-score-meta strong,
-.tryout-score-value strong {
-    color: #0b1f3a;
-    font-size: 14px;
+.tryout-full-category-stats article strong {
+    color: #0f766e;
+    font-size: 13px;
     font-weight: 900;
 }
 
-.tryout-score-meta span,
-.tryout-score-value span {
-    margin-top: 2px;
-    color: #64748b;
-    font-size: 11px;
+.tryout-full-category-stats article span {
+    color: #475569;
+    font-size: 12px;
     font-weight: 700;
-}
-
-.tryout-score-value { text-align: right; }
-
-.tryout-score-track {
-    height: 12px;
-    overflow: hidden;
-    border-radius: 999px;
-    background: #e2e8f0;
-}
-
-.tryout-score-track span {
-    display: block;
-    height: 100%;
-    min-width: 8px;
-    border-radius: inherit;
-    background: linear-gradient(90deg, #0f766e, #14b8a6);
+    line-height: 1.5;
 }
 
 @media (max-width: 575.98px) {
-    .tryout-score-overview {
-        grid-template-columns: 1fr;
-    }
-
-    .tryout-score-row {
-        grid-template-columns: 1fr auto;
-        gap: 8px 12px;
-    }
-
-    .tryout-score-track {
-        grid-column: 1 / -1;
-        grid-row: 2;
-    }
+    .tryout-score-summary-grid { grid-template-columns: 1fr; }
 }
 
 .tryout-recommendation-list,

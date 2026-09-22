@@ -29,7 +29,7 @@ class TryoutSoalController extends Controller
 
         $tryoutPengaturan = TryoutPengaturan::current();
         $riwayatTryout = $peserta->riwayats()->latest()->limit(5)->get();
-        $scoreTrend = $this->scoreTrend($peserta);
+        $scoreStatistics = $this->scoreStatistics($peserta);
         $practiceCategory = $this->practiceCategory(request('latihan'));
         $materiTryout = TryoutMateri::aktif()
             ->with('kategoriSoal')
@@ -93,7 +93,7 @@ class TryoutSoalController extends Controller
             'practiceCategory',
             'examDurationMinutes',
             'materiProgress',
-            'scoreTrend',
+            'scoreStatistics',
             'recommendedMateri',
             'wrongReviewItems'
         ));
@@ -581,26 +581,84 @@ class TryoutSoalController extends Controller
         return $pengaturan->durasiMenitKategori($practiceCategory);
     }
 
-    private function scoreTrend(TryoutPeserta $peserta)
+    private function scoreStatistics(TryoutPeserta $peserta): array
     {
-        return $peserta->riwayats()
-            ->latest('finished_at')
-            ->limit(8)
-            ->get()
-            ->reverse()
-            ->values()
-            ->map(function ($riwayat, $index) {
-                $maxScore = max((int) $riwayat->total_soal * 5, 1);
-                $percentage = min(100, (int) round(((int) $riwayat->total_skor / $maxScore) * 100));
+        $tabs = [
+            'FULL' => ['label' => 'Simulasi Penuh', 'attempts' => collect(), 'categories' => []],
+            'TWK' => ['label' => 'TWK', 'attempts' => collect(), 'categories' => []],
+            'TIU' => ['label' => 'TIU', 'attempts' => collect(), 'categories' => []],
+            'TKP' => ['label' => 'TKP', 'attempts' => collect(), 'categories' => []],
+        ];
 
-                return [
-                    'label' => $riwayat->finished_at ? $riwayat->finished_at->format('d M') : 'Latihan ' . ($index + 1),
+        $fullCategoryAttempts = collect([
+            'TWK' => collect(),
+            'TIU' => collect(),
+            'TKP' => collect(),
+        ]);
+
+        $peserta->riwayats()
+            ->latest('finished_at')
+            ->get()
+            ->each(function ($riwayat) use (&$tabs, $fullCategoryAttempts) {
+                $details = collect($riwayat->detail_jawaban ?? []);
+                $categories = $details->pluck('kategori')->filter()->unique()->values();
+                $tabKey = $categories->count() === 1 && isset($tabs[$categories->first()])
+                    ? $categories->first()
+                    : 'FULL';
+                $maxScore = max((int) $riwayat->total_soal * 5, 1);
+
+                $tabs[$tabKey]['attempts']->push([
                     'score' => (int) $riwayat->total_skor,
                     'max_score' => $maxScore,
-                    'percentage' => $percentage,
-                    'mode' => $this->historyMode($riwayat->detail_jawaban ?? []),
-                ];
+                    'percentage' => min(100, (int) round(((int) $riwayat->total_skor / $maxScore) * 100)),
+                ]);
+
+                if ($tabKey !== 'FULL') {
+                    return;
+                }
+
+                foreach (['TWK', 'TIU', 'TKP'] as $category) {
+                    $categoryDetails = $details->where('kategori', $category);
+                    if ($categoryDetails->isEmpty()) {
+                        continue;
+                    }
+
+                    $categoryMaxScore = $categoryDetails->count() * 5;
+                    $categoryScore = (int) $categoryDetails->sum('skor');
+                    $fullCategoryAttempts->get($category)->push([
+                        'score' => $categoryScore,
+                        'max_score' => $categoryMaxScore,
+                        'percentage' => min(100, (int) round(($categoryScore / $categoryMaxScore) * 100)),
+                    ]);
+                }
             });
+
+        foreach ($tabs as $key => $tab) {
+            $tabs[$key]['statistics'] = $this->attemptStatistics($tab['attempts']);
+        }
+
+        foreach (['TWK', 'TIU', 'TKP'] as $category) {
+            $tabs['FULL']['categories'][$category] = $this->attemptStatistics($fullCategoryAttempts->get($category));
+        }
+
+        return $tabs;
+    }
+
+    private function attemptStatistics($attempts): ?array
+    {
+        if ($attempts->isEmpty()) {
+            return null;
+        }
+
+        $best = $attempts->sortByDesc('percentage')->first();
+        $worst = $attempts->sortBy('percentage')->first();
+
+        return [
+            'count' => $attempts->count(),
+            'best' => $best,
+            'worst' => $worst,
+            'average_percentage' => (int) round($attempts->avg('percentage')),
+        ];
     }
 
     private function recommendedMateri(TryoutPeserta $peserta, $latestRiwayat, $materiProgress)
