@@ -1799,6 +1799,15 @@ html:has(.tryout-exam-page) {
     margin: 0;
 }
 
+.tryout-evaluation-paginated {
+    transition: opacity .18s ease;
+}
+
+.tryout-evaluation-paginated.is-loading {
+    opacity: .58;
+    pointer-events: none;
+}
+
 @media (max-width: 575.98px) {
     .tryout-score-summary-grid { grid-template-columns: 1fr; }
     .tryout-full-history-list { grid-template-columns: 1fr; }

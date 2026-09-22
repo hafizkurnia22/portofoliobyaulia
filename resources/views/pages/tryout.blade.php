@@ -279,7 +279,7 @@
                                                     </div>
                                                 </div>
 
-                                                <section class="tryout-full-history" aria-labelledby="fullHistoryHeading">
+                                                <section class="tryout-full-history tryout-evaluation-paginated" data-evaluation-pagination-target="full-history" aria-labelledby="fullHistoryHeading">
                                                     <div class="tryout-full-history-heading">
                                                         <span>Evaluasi Hasil</span>
                                                         <h3 id="fullHistoryHeading">Riwayat simulasi penuh</h3>
@@ -361,7 +361,7 @@
                         </section>
                     </div>
 
-                    <section class="tryout-evaluation-card tryout-wrong-review" data-aos="fade-up" aria-labelledby="wrongReviewHeading">
+                    <section class="tryout-evaluation-card tryout-wrong-review tryout-evaluation-paginated" data-evaluation-pagination-target="wrong-review" data-aos="fade-up" aria-labelledby="wrongReviewHeading">
                         <div class="tryout-evaluation-heading">
                             <span>Review Cepat</span>
                             <h2 id="wrongReviewHeading">Jawaban salah yang perlu ditinjau</h2>
@@ -460,6 +460,39 @@
                                     panel.classList.toggle('d-none', panel.dataset.scorePanel !== selectedTab);
                                 });
                             });
+                        });
+
+                        document.addEventListener('click', function(event) {
+                            const paginationLink = event.target.closest('.tryout-evaluation-pagination a');
+                            if (!paginationLink || paginationLink.closest('.disabled')) return;
+
+                            const target = paginationLink.closest('[data-evaluation-pagination-target]');
+                            if (!target) return;
+
+                            event.preventDefault();
+                            target.classList.add('is-loading');
+                            target.setAttribute('aria-busy', 'true');
+
+                            fetch(paginationLink.href, {
+                                headers: { 'X-Requested-With': 'XMLHttpRequest' },
+                            })
+                                .then(function(response) {
+                                    if (!response.ok) throw new Error('Gagal memuat halaman evaluasi.');
+                                    return response.text();
+                                })
+                                .then(function(html) {
+                                    const documentFragment = new DOMParser().parseFromString(html, 'text/html');
+                                    const targetName = target.dataset.evaluationPaginationTarget;
+                                    const nextTarget = documentFragment.querySelector(`[data-evaluation-pagination-target="${targetName}"]`);
+
+                                    if (!nextTarget) throw new Error('Data halaman evaluasi tidak ditemukan.');
+
+                                    target.replaceWith(nextTarget);
+                                    window.history.pushState({ tryoutTab: 'evaluasi' }, '', paginationLink.href);
+                                })
+                                .catch(function() {
+                                    window.location.assign(paginationLink.href);
+                                });
                         });
 
                         window.addEventListener('popstate', function() {
