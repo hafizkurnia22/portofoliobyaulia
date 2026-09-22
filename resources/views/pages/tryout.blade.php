@@ -511,17 +511,6 @@
                                 </div>
                             </section>
 
-                            <div class="cat-summary-grid">
-                                <div>
-                                    <strong id="answeredCount">0</strong>
-                                    <span>Terjawab</span>
-                                </div>
-                                <div>
-                                    <strong id="markedCount">0</strong>
-                                    <span>Ragu</span>
-                                </div>
-                            </div>
-
                             <label class="cat-progress-label" for="examProgress" id="examProgressLabel">0 dari {{ $soals->count() }} soal dijawab</label>
                             <progress class="cat-progress" id="examProgress" max="{{ $soals->count() }}" value="0"></progress>
                         </aside>
@@ -537,6 +526,10 @@
                                     <div class="cat-timer cat-timer-inline" aria-label="Sisa waktu ujian">
                                         <span>Sisa waktu</span>
                                         <strong id="catTimer">00:00:00</strong>
+                                    </div>
+                                    <div class="cat-mini-summary" aria-label="Ringkasan jawaban">
+                                        <span><strong id="answeredCount">0</strong> Terjawab</span>
+                                        <span><strong id="markedCount">0</strong> Ragu</span>
                                     </div>
                                     <button type="button" class="cat-mark-btn" id="markButton">
                                         <i class="bi bi-bookmark"></i>

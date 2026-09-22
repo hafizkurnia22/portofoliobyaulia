@@ -2092,6 +2092,15 @@ html:has(.tryout-exam-page) {
     font-weight: 600;
 }
 
+.cat-question-navigation .cat-number-grid {
+    max-height: min(520px, 84vh);
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding-right: 4px;
+    scrollbar-gutter: stable;
+}
+
 .tryout-steps {
     display: flex;
     flex-wrap: wrap;
@@ -2479,6 +2488,36 @@ html:has(.tryout-exam-page) {
 .cat-timer-inline strong {
     margin: 0;
     font-size: 18px;
+}
+
+.cat-mini-summary {
+    display: inline-flex;
+    overflow: hidden;
+    min-height: 44px;
+    border: 1px solid #dbeafe;
+    border-radius: 8px;
+    background: #f8fbff;
+}
+
+.cat-mini-summary span {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 7px 9px;
+    color: #475569;
+    font-size: 11px;
+    font-weight: 800;
+    white-space: nowrap;
+}
+
+.cat-mini-summary span + span {
+    border-left: 1px solid #dbeafe;
+}
+
+.cat-mini-summary strong {
+    color: #0b1f3a;
+    font-size: 17px;
+    font-weight: 900;
 }
 
 .cat-kategori {
@@ -3084,6 +3123,7 @@ html:has(.tryout-exam-page) {
 
     .cat-question-actions {
         width: 100%;
+        flex-wrap: wrap;
     }
 
     .cat-question-actions .cat-mark-btn {
