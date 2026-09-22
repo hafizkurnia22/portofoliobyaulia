@@ -420,6 +420,23 @@
                                 <strong id="catTimer">00:00:00</strong>
                             </div>
 
+                            <section class="cat-session-status" aria-label="Status koneksi dan penyimpanan progres">
+                                <div class="cat-connection-status" id="connectionStatus" role="status" aria-live="polite">
+                                    <i class="bi bi-arrow-repeat" aria-hidden="true"></i>
+                                    <div>
+                                        <span>Koneksi perangkat</span>
+                                        <strong id="connectionStatusText">Memeriksa koneksi...</strong>
+                                    </div>
+                                </div>
+                                <div class="cat-draft-status" id="draftStatus" role="status" aria-live="polite">
+                                    <i class="bi bi-save2" aria-hidden="true"></i>
+                                    <div>
+                                        <span>Status simpan</span>
+                                        <strong id="draftStatusText">Belum ada jawaban disimpan</strong>
+                                    </div>
+                                </div>
+                            </section>
+
                             <div class="cat-summary-grid">
                                 <div>
                                     <strong id="answeredCount">0</strong>
@@ -577,10 +594,38 @@
                 const reviewButton = document.getElementById('reviewButton');
                 const wrongReviewButton = document.getElementById('wrongReviewButton');
                 const answerSaveStatus = document.getElementById('answerSaveStatus');
+                const connectionStatus = document.getElementById('connectionStatus');
+                const connectionStatusText = document.getElementById('connectionStatusText');
+                const draftStatus = document.getElementById('draftStatus');
+                const draftStatusText = document.getElementById('draftStatusText');
                 const resultModal = new bootstrap.Modal(document.getElementById('catResultModal'));
                 const finishModalEl = document.getElementById('catFinishModal');
                 const finishModal = new bootstrap.Modal(finishModalEl);
                 let pendingResultModal = false;
+
+                function updateConnectionStatus() {
+                    const isOnline = navigator.onLine;
+                    connectionStatus.classList.toggle('is-online', isOnline);
+                    connectionStatus.classList.toggle('is-offline', !isOnline);
+                    connectionStatusText.textContent = isOnline
+                        ? 'Terhubung ke internet'
+                        : 'Tidak ada koneksi internet';
+                }
+
+                function updateDraftStatus(state, message) {
+                    draftStatus.classList.remove('is-saved', 'is-error');
+                    if (state === 'saved') draftStatus.classList.add('is-saved');
+                    if (state === 'error') draftStatus.classList.add('is-error');
+                    draftStatusText.textContent = message;
+                }
+
+                function savedAtLabel() {
+                    return new Intl.DateTimeFormat('id-ID', {
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        second: '2-digit',
+                    }).format(new Date());
+                }
 
                 function saveDraft() {
                     if (!hasStarted || isReview) return false;
@@ -588,10 +633,12 @@
                         localStorage.setItem(draftKey, JSON.stringify({
                             soals, answers, marked, currentIndex, deadline, initialSeconds, startedAt,
                         }));
+                        updateDraftStatus('saved', `Tersimpan di perangkat · ${savedAtLabel()}`);
                         return true;
                     } catch (error) {
                         answerSaveStatus.textContent = 'Penyimpanan perangkat tidak tersedia. Tetap di halaman ini dan gunakan tombol Selanjutnya; jawaban masih tersimpan selama halaman terbuka.';
                         answerSaveStatus.classList.add('text-danger');
+                        updateDraftStatus('error', 'Progres belum dapat disimpan');
                         return false;
                     }
                 }
@@ -619,6 +666,7 @@
                         renderQuestion();
                         timerEl.textContent = formatTime(remainingSeconds);
                         answerSaveStatus.textContent = 'Progres terakhir dipulihkan. Silakan lanjutkan ujian.';
+                        updateDraftStatus('saved', 'Progres terakhir dipulihkan');
                         if (remainingSeconds === 0) finishTryout();
                         return true;
                     } catch (error) {
@@ -859,9 +907,11 @@
                             resultScore.textContent = data.total_skor;
                             resultMeta.textContent = `${data.total_dijawab} dari ${data.total_soal} soal dijawab. Jawaban benar: ${data.total_benar}. Ragu-ragu: ${data.total_ragu}.`;
                             resultSaveStatus.textContent = 'Hasil tersimpan. Riwayat dapat dilihat di Beranda Tryout.';
+                            updateDraftStatus('saved', 'Hasil tersimpan ke riwayat');
                         })
                         .catch(function() {
                             resultSaveStatus.textContent = 'Riwayat belum tersimpan. Silakan hubungi admin jika diperlukan.';
+                            updateDraftStatus('error', 'Hasil belum tersimpan ke riwayat');
                         });
                 }
 
@@ -892,6 +942,7 @@
                     try { localStorage.removeItem(draftKey); } catch (error) { /* Storage may be unavailable. */ }
                     answerSaveStatus.textContent = 'Ujian selesai. Kamu dapat meninjau jawaban dan pembahasan.';
                     answerSaveStatus.classList.remove('text-danger');
+                    updateDraftStatus('saved', 'Ujian selesai · menyiapkan hasil');
                     renderQuestion();
                     timerEl.textContent = formatTime(remainingSeconds);
                     document.getElementById('examSessionStatus').textContent = 'Review jawaban';
@@ -982,6 +1033,10 @@
                         block: 'start'
                     });
                 });
+
+                window.addEventListener('online', updateConnectionStatus);
+                window.addEventListener('offline', updateConnectionStatus);
+                updateConnectionStatus();
 
                 wrongReviewButton.addEventListener('click', function() {
                     const firstWrongIndex = soals.findIndex(function(soal) {
