@@ -1671,8 +1671,127 @@ html:has(.tryout-exam-page) {
     line-height: 1.5;
 }
 
+.tryout-full-history {
+    margin-top: 22px;
+    padding-top: 20px;
+    border-top: 1px solid #e2e8f0;
+}
+
+.tryout-full-history-heading > span {
+    color: #0f766e;
+    font-size: 11px;
+    font-weight: 900;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+}
+
+.tryout-full-history-heading h3 {
+    margin: 4px 0;
+    color: #0b1f3a;
+    font-size: 18px;
+    font-weight: 900;
+}
+
+.tryout-full-history-heading p {
+    margin: 0 0 14px;
+    color: #64748b;
+    font-size: 13px;
+    line-height: 1.55;
+}
+
+.tryout-full-history-list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+}
+
+.tryout-full-history-item {
+    padding: 14px;
+    border: 1px solid #dbeafe;
+    border-radius: 10px;
+    background: #f8fbff;
+}
+
+.tryout-full-history-item header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.tryout-full-history-item header > div > strong,
+.tryout-full-history-item header > div > small {
+    display: block;
+}
+
+.tryout-full-history-item header > div > strong {
+    color: #0b1f3a;
+    font-size: 13px;
+    font-weight: 900;
+}
+
+.tryout-full-history-item header > div > small {
+    margin-top: 5px;
+    color: #64748b;
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 1.45;
+}
+
+.tryout-full-total-score {
+    min-width: 52px;
+    display: inline-flex;
+    flex: 0 0 auto;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 7px;
+    border-radius: 8px;
+    background: #0b1f3a;
+    color: #ffffff;
+    font-size: 20px;
+    font-weight: 900;
+    line-height: 1.1;
+}
+
+.tryout-full-total-score small {
+    margin-bottom: 3px;
+    color: rgba(255, 255, 255, .78);
+    font-size: 9px;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+.tryout-full-category-scores {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 6px;
+    margin: 12px 0 0;
+}
+
+.tryout-full-category-scores div {
+    padding: 8px 5px;
+    border-radius: 7px;
+    background: #ffffff;
+    text-align: center;
+}
+
+.tryout-full-category-scores dt {
+    color: #64748b;
+    font-size: 10px;
+    font-weight: 900;
+}
+
+.tryout-full-category-scores dd {
+    margin: 2px 0 0;
+    color: #0f766e;
+    font-size: 18px;
+    font-weight: 900;
+}
+
 @media (max-width: 575.98px) {
     .tryout-score-summary-grid { grid-template-columns: 1fr; }
+    .tryout-full-history-list { grid-template-columns: 1fr; }
 }
 
 .tryout-recommendation-list,

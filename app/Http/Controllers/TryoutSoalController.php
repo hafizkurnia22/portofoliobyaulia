@@ -29,6 +29,18 @@ class TryoutSoalController extends Controller
 
         $tryoutPengaturan = TryoutPengaturan::current();
         $riwayatTryout = $peserta->riwayats()->latest()->limit(5)->get();
+        $fullSimulationHistory = $peserta->riwayats()
+            ->latest('finished_at')
+            ->get()
+            ->filter(function ($riwayat) {
+                return collect($riwayat->detail_jawaban ?? [])
+                    ->pluck('kategori')
+                    ->filter()
+                    ->unique()
+                    ->count() > 1;
+            })
+            ->take(10)
+            ->values();
         $scoreStatistics = $this->scoreStatistics($peserta);
         $practiceCategory = $this->practiceCategory(request('latihan'));
         $materiTryout = TryoutMateri::aktif()
@@ -88,6 +100,7 @@ class TryoutSoalController extends Controller
             'tryoutPengaturan',
             'peserta',
             'riwayatTryout',
+            'fullSimulationHistory',
             'materiTryout',
             'latihanKategori',
             'practiceCategory',

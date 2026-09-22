@@ -278,6 +278,45 @@
                                                         @endforeach
                                                     </div>
                                                 </div>
+
+                                                <section class="tryout-full-history" aria-labelledby="fullHistoryHeading">
+                                                    <div class="tryout-full-history-heading">
+                                                        <span>Evaluasi Hasil</span>
+                                                        <h3 id="fullHistoryHeading">Riwayat simulasi penuh</h3>
+                                                        <p>Lihat hasil tes dan rincian skor TWK, TIU, serta TKP pada setiap simulasi.</p>
+                                                    </div>
+
+                                                    <div class="tryout-full-history-list">
+                                                        @forelse ($fullSimulationHistory as $riwayat)
+                                                            @php
+                                                                $categoryScores = collect($riwayat->detail_jawaban ?? [])
+                                                                    ->groupBy('kategori')
+                                                                    ->map(fn ($items) => (int) $items->sum('skor'));
+                                                            @endphp
+                                                            <article class="tryout-full-history-item">
+                                                                <header>
+                                                                    <div>
+                                                                        <strong>{{ $riwayat->finished_at ? $riwayat->finished_at->format('d M Y H:i') : '-' }}</strong>
+                                                                        <small>{{ $riwayat->total_dijawab }}/{{ $riwayat->total_soal }} dijawab · {{ $riwayat->total_benar }} benar · {{ $riwayat->total_ragu }} ragu</small>
+                                                                    </div>
+                                                                    <span class="tryout-full-total-score"><small>Skor total</small>{{ $riwayat->total_skor }}</span>
+                                                                </header>
+                                                                <dl class="tryout-full-category-scores">
+                                                                    @foreach (['TWK', 'TIU', 'TKP'] as $category)
+                                                                        <div>
+                                                                            <dt>{{ $category }}</dt>
+                                                                            <dd>{{ $categoryScores->has($category) ? $categoryScores->get($category) : '-' }}</dd>
+                                                                        </div>
+                                                                    @endforeach
+                                                                </dl>
+                                                            </article>
+                                                        @empty
+                                                            <div class="tryout-history-empty">
+                                                                Belum ada simulasi penuh yang selesai. Hasil dan rincian skor per kategori akan muncul di sini.
+                                                            </div>
+                                                        @endforelse
+                                                    </div>
+                                                </section>
                                             @endif
                                         @else
                                             <div class="tryout-history-empty">Belum ada riwayat {{ strtolower($label) }}. Selesaikan latihan untuk melihat statistiknya.</div>
@@ -340,45 +379,6 @@
                         </div>
                     </section>
 
-                    <div class="tryout-history-card" id="tryoutHistoryCard" data-aos="fade-up">
-                        <div class="tryout-history-header">
-                            <div>
-                                <span>Evaluasi Hasil</span>
-                                <h2>Riwayat mengikuti tryout</h2>
-                                <p>Lihat skor terakhir, jumlah soal terjawab, dan jawaban benar sebagai bahan evaluasi latihan berikutnya.</p>
-                            </div>
-                        </div>
-
-                        <div class="tryout-history-list" id="tryoutHistoryList">
-                            @forelse ($riwayatTryout as $riwayat)
-                                @php
-                                    $riwayatKategori = collect($riwayat->detail_jawaban ?? [])
-                                        ->pluck('kategori')
-                                        ->filter()
-                                        ->unique()
-                                        ->values();
-                                    $riwayatMode = $riwayatKategori->count() === 1
-                                        ? 'Latihan ' . $riwayatKategori->first()
-                                        : 'Simulasi penuh';
-                                @endphp
-                                <div class="tryout-history-item">
-                                    <div>
-                                        <strong>{{ $riwayat->finished_at ? $riwayat->finished_at->format('d M Y H:i') : '-' }}</strong>
-                                        <small>{{ $riwayatMode }} · {{ $riwayat->total_dijawab }}/{{ $riwayat->total_soal }} dijawab, {{ $riwayat->total_benar }} benar, {{ $riwayat->total_ragu }} ragu</small>
-                                    </div>
-
-                                    <span>
-                                        <small>Skor</small>
-                                        {{ $riwayat->total_skor }}
-                                    </span>
-                                </div>
-                            @empty
-                                <div class="tryout-history-empty" id="tryoutHistoryEmpty">
-                                    Belum ada riwayat. Ikuti simulasi pertamamu; hasilnya akan tampil di sini setelah selesai.
-                                </div>
-                            @endforelse
-                        </div>
-                    </div>
                 </div>
             @endif
 
