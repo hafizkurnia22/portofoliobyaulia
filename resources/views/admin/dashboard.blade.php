@@ -212,6 +212,13 @@
                                 </li>
 
                                 <li class="nav-item">
+                                    <a class="nav-link {{ $activeTab == 'master-kelulusan' ? 'active' : '' }}"
+                                        href="{{ url('/admin/dashboard?active_tab=master-kelulusan') }}">
+                                        <i class="bi bi-patch-check"></i> Master Kelulusan
+                                    </a>
+                                </li>
+
+                                <li class="nav-item">
                                     <a class="nav-link {{ $activeTab == 'riwayat-tryout' ? 'active' : '' }}"
                                         href="{{ url('/admin/dashboard?active_tab=riwayat-tryout') }}">
                                         <i class="bi bi-clock-history"></i> Riwayat Tryout
@@ -1420,6 +1427,59 @@
                             <div class="mt-4">
                                 {{ $tryoutSoal->appends(array_merge(request()->query(), ['active_tab' => 'master-soal']))->links() }}
                             </div>
+                        </div>
+                    </div>
+
+                    {{-- TAB MASTER KELULUSAN --}}
+                    <div class="tab-pane fade {{ $activeTab == 'master-kelulusan' ? 'show active' : '' }}"
+                        id="master-kelulusan-panel" role="tabpanel">
+                        <div class="admin-table-header" data-aos="fade-right">
+                            <div>
+                                <h5>Master Kelulusan</h5>
+                                <p>Tentukan batas minimal skor untuk setiap kategori ujian.</p>
+                            </div>
+                        </div>
+
+                        <div class="tryout-import-card">
+                            <form action="/simpan-tryout-kelulusan" method="POST">
+                                @csrf
+                                <input type="hidden" name="active_tab" value="master-kelulusan">
+                                <div>
+                                    <h6>Standar kelulusan peserta</h6>
+                                    <p>Peserta dinyatakan lulus hanya jika setiap kategori yang diujikan mencapai skor minimalnya. Isi 0 jika suatu kategori tidak perlu dibatasi.</p>
+                                </div>
+
+                                <div class="row g-3 w-100">
+                                    @foreach (['TWK' => 'Tes Wawasan Kebangsaan', 'TIU' => 'Tes Intelegensia Umum', 'TKP' => 'Tes Karakteristik Pribadi'] as $kode => $nama)
+                                        <div class="col-md-4">
+                                            <label for="minimalSkor{{ $kode }}" class="form-label fw-bold mb-1">Minimal skor {{ $kode }}</label>
+                                            <input type="number" id="minimalSkor{{ $kode }}"
+                                                name="minimal_skor_kelulusan[{{ $kode }}]" class="form-control"
+                                                min="0" max="2500" inputmode="numeric"
+                                                value="{{ old('minimal_skor_kelulusan.' . $kode, $tryoutPengaturan->minimalSkorKelulusan($kode)) }}"
+                                                required aria-describedby="minimalSkor{{ $kode }}Help">
+                                            <small id="minimalSkor{{ $kode }}Help" class="text-muted">{{ $nama }}</small>
+                                        </div>
+                                    @endforeach
+                                </div>
+
+                                @if ($activeTab == 'master-kelulusan' && $errors->any())
+                                    <div class="alert alert-danger rounded-4 mb-0 w-100">
+                                        <strong>Standar kelulusan belum tersimpan.</strong>
+                                        <ul class="mb-0 mt-2">
+                                            @foreach ($errors->all() as $error)
+                                                <li>{{ $error }}</li>
+                                            @endforeach
+                                        </ul>
+                                    </div>
+                                @endif
+
+                                <div class="w-100 d-flex justify-content-end">
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="bi bi-check2-circle"></i> Simpan Standar Kelulusan
+                                    </button>
+                                </div>
+                            </form>
                         </div>
                     </div>
 

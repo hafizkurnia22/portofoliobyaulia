@@ -598,6 +598,15 @@
                         <h2 id="resultScore">0</h2>
                         <p id="resultMeta"></p>
                         <small id="resultSaveStatus" role="status">Menyimpan riwayat...</small>
+                        <div class="cat-result-qualification is-pending" id="resultQualification" role="status" aria-live="polite">
+                            <i class="bi bi-hourglass-split" aria-hidden="true"></i>
+                            <div>
+                                <span>Status kelulusan</span>
+                                <strong id="resultQualificationTitle">Memeriksa syarat kelulusan...</strong>
+                                <p id="resultQualificationText">Status akan ditampilkan setelah hasil tersimpan.</p>
+                            </div>
+                        </div>
+                        <div class="cat-result-category-scores" id="resultCategoryScores" hidden></div>
 
                         <div class="cat-result-modal-actions">
                             <button type="button" class="cat-action-btn" id="reviewButton" data-bs-dismiss="modal">
@@ -655,6 +664,10 @@
                 const resultScore = document.getElementById('resultScore');
                 const resultMeta = document.getElementById('resultMeta');
                 const resultSaveStatus = document.getElementById('resultSaveStatus');
+                const resultQualification = document.getElementById('resultQualification');
+                const resultQualificationTitle = document.getElementById('resultQualificationTitle');
+                const resultQualificationText = document.getElementById('resultQualificationText');
+                const resultCategoryScores = document.getElementById('resultCategoryScores');
                 const reviewButton = document.getElementById('reviewButton');
                 const wrongReviewButton = document.getElementById('wrongReviewButton');
                 const answerSaveStatus = document.getElementById('answerSaveStatus');
@@ -950,6 +963,7 @@
 
                 function saveResult(payload) {
                     resultSaveStatus.textContent = 'Menyimpan riwayat...';
+                    setQualificationPending();
 
                     fetch(@json(route('tryout.riwayat.store', [], false)), {
                         method: 'POST',
@@ -971,12 +985,59 @@
                             resultScore.textContent = data.total_skor;
                             resultMeta.textContent = `${data.total_dijawab} dari ${data.total_soal} soal dijawab. Jawaban benar: ${data.total_benar}. Ragu-ragu: ${data.total_ragu}.`;
                             resultSaveStatus.textContent = 'Hasil tersimpan. Riwayat dapat dilihat di Beranda Tryout.';
+                            renderQualification(data.hasil_kelulusan);
                             updateDraftStatus('saved', 'Hasil tersimpan ke riwayat');
                         })
                         .catch(function() {
                             resultSaveStatus.textContent = 'Riwayat belum tersimpan. Silakan hubungi admin jika diperlukan.';
+                            resultQualification.className = 'cat-result-qualification is-pending';
+                            resultQualification.querySelector('i').className = 'bi bi-exclamation-triangle';
+                            resultQualificationTitle.textContent = 'Status kelulusan belum dapat diverifikasi';
+                            resultQualificationText.textContent = 'Sambungkan internet lalu hubungi admin bila hasil belum tersimpan.';
+                            resultCategoryScores.hidden = true;
+                            resultCategoryScores.innerHTML = '';
                             updateDraftStatus('error', 'Hasil belum tersimpan ke riwayat');
                         });
+                }
+
+                function setQualificationPending() {
+                    resultQualification.className = 'cat-result-qualification is-pending';
+                    resultQualification.querySelector('i').className = 'bi bi-hourglass-split';
+                    resultQualificationTitle.textContent = 'Memeriksa syarat kelulusan...';
+                    resultQualificationText.textContent = 'Status akan ditampilkan setelah hasil tersimpan.';
+                    resultCategoryScores.hidden = true;
+                    resultCategoryScores.innerHTML = '';
+                }
+
+                function renderQualification(qualification) {
+                    if (!qualification || !qualification.kategori) {
+                        return;
+                    }
+
+                    const passed = Boolean(qualification.lulus);
+                    const failedCategories = Array.isArray(qualification.kategori_gagal)
+                        ? qualification.kategori_gagal : [];
+                    resultQualification.className = `cat-result-qualification ${passed ? 'is-passed' : 'is-failed'}`;
+                    resultQualification.querySelector('i').className = passed
+                        ? 'bi bi-patch-check-fill' : 'bi bi-x-circle-fill';
+                    resultQualificationTitle.textContent = passed
+                        ? 'Selamat, Anda lulus!'
+                        : 'Mohon maaf, skor belum memenuhi syarat';
+                    resultQualificationText.textContent = passed
+                        ? 'Semua kategori yang diujikan telah mencapai skor minimal.'
+                        : `Perbaiki skor ${failedCategories.join(' dan ')} agar mencapai batas minimal.`;
+
+                    resultCategoryScores.innerHTML = Object.entries(qualification.kategori)
+                        .map(function([kode, result]) {
+                            const passedClass = result.lulus ? 'is-passed' : 'is-failed';
+                            const status = result.lulus ? 'Memenuhi syarat' : 'Belum memenuhi';
+                            return `<article class="cat-result-category-score ${passedClass}">
+                                <span>${kode}</span>
+                                <strong>${result.skor}</strong>
+                                <small>Minimal ${result.minimal} · ${status}</small>
+                            </article>`;
+                        }).join('');
+                    resultCategoryScores.hidden = false;
                 }
 
                 function finishTryout() {

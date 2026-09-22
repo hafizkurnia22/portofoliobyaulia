@@ -2673,6 +2673,114 @@ html:has(.tryout-exam-page) {
     font-weight: 800;
 }
 
+.cat-result-qualification {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    margin-top: 18px;
+    padding: 14px;
+    border: 1px solid transparent;
+    border-radius: 12px;
+    text-align: left;
+}
+
+.cat-result-qualification > i {
+    font-size: 24px;
+    line-height: 1;
+}
+
+.cat-result-qualification span,
+.cat-result-qualification strong,
+.cat-result-qualification p {
+    display: block;
+}
+
+.cat-result-qualification span {
+    margin-bottom: 2px;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+}
+
+.cat-result-qualification strong {
+    color: #0b1f3a;
+    font-size: 16px;
+}
+
+.cat-result-qualification p {
+    margin: 3px 0 0;
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1.45;
+}
+
+.cat-result-qualification.is-pending {
+    color: #475569;
+    background: #f1f5f9;
+    border-color: #e2e8f0;
+}
+
+.cat-result-qualification.is-passed {
+    color: #047857;
+    background: #ecfdf5;
+    border-color: #a7f3d0;
+}
+
+.cat-result-qualification.is-failed {
+    color: #b42318;
+    background: #fff1f2;
+    border-color: #fecdd3;
+}
+
+.cat-result-category-scores {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.cat-result-category-score {
+    padding: 10px 8px;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.cat-result-category-score span,
+.cat-result-category-score strong,
+.cat-result-category-score small {
+    display: block;
+}
+
+.cat-result-category-score span {
+    color: #64748b;
+    font-size: 12px;
+    font-weight: 800;
+}
+
+.cat-result-category-score strong {
+    margin: 2px 0;
+    color: #0b1f3a;
+    font-size: 23px;
+}
+
+.cat-result-category-score small {
+    color: #64748b;
+    font-size: 10px;
+    font-weight: 700;
+    line-height: 1.35;
+}
+
+.cat-result-category-score.is-passed { border-color: #86efac; }
+.cat-result-category-score.is-failed { border-color: #fda4af; }
+
+@media (max-width: 460px) {
+    .cat-result-category-scores {
+        grid-template-columns: 1fr;
+    }
+}
+
 .cat-result-modal-actions {
     display: grid;
     grid-template-columns: 1fr 1fr;

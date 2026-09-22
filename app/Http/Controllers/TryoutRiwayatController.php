@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\TryoutPeserta;
+use App\Models\TryoutPengaturan;
 use App\Models\TryoutRiwayat;
 use App\Models\TryoutSoal;
 use Illuminate\Http\Request;
@@ -104,6 +105,31 @@ class TryoutRiwayatController extends Controller
             'finished_at' => now(),
         ]);
 
+        $pengaturan = TryoutPengaturan::current();
+        $minimumScores = collect(['TWK', 'TIU', 'TKP'])
+            ->mapWithKeys(fn ($kode) => [$kode => $pengaturan->minimalSkorKelulusan($kode)]);
+        $categoryScores = collect($detail)
+            ->groupBy('kategori')
+            ->map(fn ($items) => (int) $items->sum('skor'));
+        $examCategories = $categoryScores->keys()
+            ->filter(fn ($kode) => in_array($kode, ['TWK', 'TIU', 'TKP'], true))
+            ->values();
+        $categoryResults = $examCategories
+            ->mapWithKeys(function ($kode) use ($categoryScores, $minimumScores) {
+                $score = (int) $categoryScores->get($kode, 0);
+                $minimum = (int) $minimumScores->get($kode, 0);
+
+                return [$kode => [
+                    'skor' => $score,
+                    'minimal' => $minimum,
+                    'lulus' => $score >= $minimum,
+                ]];
+            });
+        $failedCategories = $categoryResults
+            ->filter(fn ($result) => ! $result['lulus'])
+            ->keys()
+            ->values();
+
         return response()->json([
             'message' => 'Riwayat tryout berhasil disimpan.',
             'riwayat_id' => $riwayat->id,
@@ -114,6 +140,11 @@ class TryoutRiwayatController extends Controller
             'total_ragu' => $riwayat->total_ragu,
             'durasi_detik' => $riwayat->durasi_detik,
             'finished_at' => $riwayat->finished_at?->format('d M Y H:i'),
+            'hasil_kelulusan' => [
+                'lulus' => $failedCategories->isEmpty(),
+                'kategori_gagal' => $failedCategories,
+                'kategori' => $categoryResults,
+            ],
         ]);
     }
 

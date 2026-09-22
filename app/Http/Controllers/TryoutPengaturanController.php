@@ -53,10 +53,34 @@ class TryoutPengaturanController extends Controller
             ->with('active_tab', 'master-soal');
     }
 
+    public function updateKelulusan(Request $request)
+    {
+        $validated = $request->validate([
+            'minimal_skor_kelulusan' => 'required|array',
+            'minimal_skor_kelulusan.TWK' => 'required|integer|min:0|max:2500',
+            'minimal_skor_kelulusan.TIU' => 'required|integer|min:0|max:2500',
+            'minimal_skor_kelulusan.TKP' => 'required|integer|min:0|max:2500',
+        ]);
+
+        TryoutPengaturan::current()->update([
+            'minimal_skor_kelulusan' => $this->passingScoreSettings($validated['minimal_skor_kelulusan']),
+        ]);
+
+        return redirect('/admin/dashboard?active_tab=master-kelulusan')
+            ->with('success', 'Batas minimal skor kelulusan berhasil disimpan.');
+    }
+
     private function categorySettings(array $values): array
     {
         return collect(['TWK', 'TIU', 'TKP'])
             ->mapWithKeys(fn ($kode) => [$kode => max((int) ($values[$kode] ?? 1), 1)])
+            ->all();
+    }
+
+    private function passingScoreSettings(array $values): array
+    {
+        return collect(['TWK', 'TIU', 'TKP'])
+            ->mapWithKeys(fn ($kode) => [$kode => max((int) ($values[$kode] ?? 0), 0)])
             ->all();
     }
 }

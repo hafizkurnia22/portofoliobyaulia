@@ -14,6 +14,7 @@ class TryoutPengaturan extends Model
         'jumlah_soal',
         'jumlah_soal_kategori',
         'durasi_menit_kategori',
+        'minimal_skor_kelulusan',
         'kisi_kisi_deskripsi',
         'permenpan_file',
         'permenpan_nama',
@@ -27,6 +28,7 @@ class TryoutPengaturan extends Model
         'jumlah_soal' => 'integer',
         'jumlah_soal_kategori' => 'array',
         'durasi_menit_kategori' => 'array',
+        'minimal_skor_kelulusan' => 'array',
     ];
 
     public static function current(): self
@@ -36,6 +38,7 @@ class TryoutPengaturan extends Model
             'jumlah_soal' => 30,
             'jumlah_soal_kategori' => ['TWK' => 10, 'TIU' => 10, 'TKP' => 10],
             'durasi_menit_kategori' => ['TWK' => 15, 'TIU' => 15, 'TKP' => 15],
+            'minimal_skor_kelulusan' => ['TWK' => 0, 'TIU' => 0, 'TKP' => 0],
             'kisi_kisi_deskripsi' => 'Materi dan simulasi Tryout CPNS disusun berdasarkan kisi-kisi seleksi kompetensi dasar yang berlaku. Admin dapat memperbarui keterangan ini dan mengunggah surat PermenPAN terbaru sebagai acuan belajar peserta.',
         ]);
     }
@@ -48,5 +51,10 @@ class TryoutPengaturan extends Model
     public function durasiMenitKategori(string $kode): int
     {
         return max((int) ($this->durasi_menit_kategori[strtoupper($kode)] ?? 15), 1);
+    }
+
+    public function minimalSkorKelulusan(string $kode): int
+    {
+        return max((int) ($this->minimal_skor_kelulusan[strtoupper($kode)] ?? 0), 0);
     }
 }

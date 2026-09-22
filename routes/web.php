@@ -80,6 +80,7 @@ Route::get('/admin/dashboard', function () {
         'master-peserta-tryout',
         'riwayat-tryout',
         'master-soal',
+        'master-kelulusan',
     ];
 
     if (!in_array($activeTab, $allowedTabs, true)) {
@@ -255,6 +256,7 @@ Route::get('/template-import-tryout-soal', [TryoutSoalController::class, 'templa
 Route::put('/update-tryout-soal/{id}', [TryoutSoalController::class, 'update']);
 Route::delete('/hapus-tryout-soal/{id}', [TryoutSoalController::class, 'destroy']);
 Route::post('/simpan-tryout-pengaturan', [TryoutPengaturanController::class, 'update']);
+Route::post('/simpan-tryout-kelulusan', [TryoutPengaturanController::class, 'updateKelulusan']);
 Route::post('/simpan-tryout-peserta', [TryoutPesertaController::class, 'store']);
 Route::put('/update-tryout-peserta/{id}', [TryoutPesertaController::class, 'update']);
 Route::delete('/hapus-tryout-peserta/{id}', [TryoutPesertaController::class, 'destroy']);
