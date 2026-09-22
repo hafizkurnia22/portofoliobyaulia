@@ -1123,13 +1123,67 @@ body {
     font-weight: 800;
 }
 
-.cat-exam-identity > span {
-    padding: 5px 10px;
+.cat-exam-statuses {
+    display: inline-flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 7px;
+}
+
+.cat-exam-session-badge,
+.cat-inline-connection,
+.cat-inline-draft {
+    display: inline-flex;
+    align-items: center;
+    min-height: 30px;
     border-radius: 6px;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.cat-exam-session-badge {
+    padding: 5px 10px;
     background: #ccfbf1;
     color: #115e59;
-    font-size: 12px;
-    font-weight: 600;
+}
+
+.cat-inline-connection,
+.cat-inline-draft {
+    gap: 7px;
+    padding: 5px 9px;
+    border: 1px solid #dbeafe;
+    background: #f8fbff;
+    color: #475569;
+}
+
+.cat-signal-bars {
+    display: inline-flex;
+    align-items: flex-end;
+    gap: 2px;
+    height: 16px;
+}
+
+.cat-signal-bars i {
+    display: block;
+    width: 3px;
+    border-radius: 999px;
+    background: #cbd5e1;
+}
+
+.cat-signal-bars i:nth-child(1) { height: 5px; }
+.cat-signal-bars i:nth-child(2) { height: 8px; }
+.cat-signal-bars i:nth-child(3) { height: 11px; }
+.cat-signal-bars i:nth-child(4) { height: 14px; }
+
+.cat-inline-connection.signal-good { color: #047857; border-color: #86efac; background: #ecfdf5; }
+.cat-inline-connection.signal-good .cat-signal-bars i { background: #10b981; }
+.cat-inline-connection.signal-warning { color: #a16207; border-color: #fde68a; background: #fffbeb; }
+.cat-inline-connection.signal-warning .cat-signal-bars i:nth-child(-n+3) { background: #f59e0b; }
+.cat-inline-connection.signal-poor { color: #b42318; border-color: #fecaca; background: #fef2f2; }
+.cat-inline-connection.signal-poor .cat-signal-bars i:first-child { background: #ef4444; }
+
+.cat-inline-draft.is-saved { color: #047857; border-color: #86efac; background: #ecfdf5; }
+.cat-inline-draft.is-error { color: #b42318; border-color: #fecaca; background: #fef2f2; }
 }
 
 .cat-exam-participant {

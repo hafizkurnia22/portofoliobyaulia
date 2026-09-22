@@ -58,7 +58,17 @@
                 <div class="cat-exam-toolbar">
                     <div class="cat-exam-identity">
                         <h1>{{ $examTitle }}</h1>
-                        <span id="examSessionStatus" role="status">Persiapan ujian</span>
+                        <div class="cat-exam-statuses" aria-label="Status ujian">
+                            <span class="cat-exam-session-badge" id="examSessionStatus" role="status">Persiapan ujian</span>
+                            <div class="cat-inline-connection is-checking" id="connectionStatus" role="status" aria-live="polite">
+                                <span class="cat-signal-bars" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+                                <span id="connectionStatusText">Memeriksa koneksi</span>
+                            </div>
+                            <div class="cat-inline-draft" id="draftStatus" role="status" aria-live="polite">
+                                <i class="bi bi-save2" aria-hidden="true"></i>
+                                <span id="draftStatusText">Belum disimpan</span>
+                            </div>
+                        </div>
                     </div>
                     <div class="cat-exam-tools">
                         <span class="cat-exam-participant"><i class="bi bi-person-check" aria-hidden="true"></i> {{ $peserta->nama ?: $peserta->username }}</span>
@@ -494,23 +504,6 @@
                                 <div class="cat-number-grid" id="questionNav" aria-label="Navigasi soal"></div>
                             </section>
 
-                            <section class="cat-session-status" aria-label="Status koneksi dan penyimpanan progres">
-                                <div class="cat-connection-status" id="connectionStatus" role="status" aria-live="polite">
-                                    <i class="bi bi-arrow-repeat" aria-hidden="true"></i>
-                                    <div>
-                                        <span>Koneksi perangkat</span>
-                                        <strong id="connectionStatusText">Memeriksa koneksi...</strong>
-                                    </div>
-                                </div>
-                                <div class="cat-draft-status" id="draftStatus" role="status" aria-live="polite">
-                                    <i class="bi bi-save2" aria-hidden="true"></i>
-                                    <div>
-                                        <span>Status simpan</span>
-                                        <strong id="draftStatusText">Belum ada jawaban disimpan</strong>
-                                    </div>
-                                </div>
-                            </section>
-
                             <label class="cat-progress-label" for="examProgress" id="examProgressLabel">0 dari {{ $soals->count() }} soal dijawab</label>
                             <progress class="cat-progress" id="examProgress" max="{{ $soals->count() }}" value="0"></progress>
                         </aside>
@@ -683,21 +676,57 @@
                 const finishModalEl = document.getElementById('catFinishModal');
                 const finishModal = new bootstrap.Modal(finishModalEl);
                 let pendingResultModal = false;
+                let connectionCheckInFlight = false;
 
-                function updateConnectionStatus() {
-                    const isOnline = navigator.onLine;
-                    connectionStatus.classList.toggle('is-online', isOnline);
-                    connectionStatus.classList.toggle('is-offline', !isOnline);
-                    connectionStatusText.textContent = isOnline
-                        ? 'Terhubung ke internet'
-                        : 'Tidak ada koneksi internet';
+                function setConnectionQuality(quality, message) {
+                    connectionStatus.classList.remove('is-checking', 'signal-good', 'signal-warning', 'signal-poor');
+                    connectionStatus.classList.add(`signal-${quality}`);
+                    connectionStatusText.textContent = message;
+                }
+
+                async function updateConnectionStatus() {
+                    if (connectionCheckInFlight) return;
+
+                    if (!navigator.onLine) {
+                        setConnectionQuality('poor', 'Sinyal jelek');
+                        return;
+                    }
+
+                    connectionCheckInFlight = true;
+                    const startedAt = performance.now();
+
+                    try {
+                        const response = await fetch(window.location.href, {
+                            method: 'HEAD',
+                            cache: 'no-store',
+                            headers: { 'X-Requested-With': 'XMLHttpRequest' },
+                        });
+
+                        if (!response.ok) throw new Error('Koneksi ke server gagal.');
+
+                        const latency = performance.now() - startedAt;
+                        if (latency < 450) {
+                            setConnectionQuality('good', 'Sinyal bagus');
+                        } else if (latency < 1400) {
+                            setConnectionQuality('warning', 'Sinyal kurang bagus');
+                        } else {
+                            setConnectionQuality('poor', 'Sinyal jelek');
+                        }
+                    } catch (error) {
+                        setConnectionQuality('poor', 'Sinyal jelek');
+                    } finally {
+                        connectionCheckInFlight = false;
+                    }
                 }
 
                 function updateDraftStatus(state, message) {
                     draftStatus.classList.remove('is-saved', 'is-error');
                     if (state === 'saved') draftStatus.classList.add('is-saved');
                     if (state === 'error') draftStatus.classList.add('is-error');
-                    draftStatusText.textContent = message;
+                    draftStatusText.textContent = state === 'saved'
+                        ? 'Tersimpan'
+                        : state === 'error' ? 'Simpan gagal' : 'Belum disimpan';
+                    draftStatus.title = message;
                 }
 
                 function savedAtLabel() {
@@ -1166,6 +1195,7 @@
                 window.addEventListener('online', updateConnectionStatus);
                 window.addEventListener('offline', updateConnectionStatus);
                 updateConnectionStatus();
+                setInterval(updateConnectionStatus, 30000);
 
                 wrongReviewButton.addEventListener('click', function() {
                     const firstWrongIndex = soals.findIndex(function(soal) {
