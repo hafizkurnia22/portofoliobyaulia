@@ -235,17 +235,17 @@
                                             <div class="tryout-score-summary-grid">
                                                 <div>
                                                     <span>Skor terbaik</span>
-                                                    <strong>{{ $statistics['best']['percentage'] }}%</strong>
-                                                    <small>{{ $statistics['best']['score'] }} dari {{ $statistics['best']['max_score'] }}</small>
+                                                    <strong>{{ $statistics['best']['score'] }}</strong>
+                                                    <small>Maksimum {{ $statistics['best']['max_score'] }}</small>
                                                 </div>
                                                 <div>
                                                     <span>Skor terendah</span>
-                                                    <strong>{{ $statistics['worst']['percentage'] }}%</strong>
-                                                    <small>{{ $statistics['worst']['score'] }} dari {{ $statistics['worst']['max_score'] }}</small>
+                                                    <strong>{{ $statistics['worst']['score'] }}</strong>
+                                                    <small>Maksimum {{ $statistics['worst']['max_score'] }}</small>
                                                 </div>
                                                 <div>
                                                     <span>Rata-rata skor</span>
-                                                    <strong>{{ $statistics['average_percentage'] }}%</strong>
+                                                    <strong>{{ $statistics['average_score'] }}</strong>
                                                     <small>Dari {{ $statistics['count'] }} latihan</small>
                                                 </div>
                                             </div>
@@ -260,7 +260,7 @@
                                                             <article>
                                                                 <strong>{{ $category }}</strong>
                                                                 @if ($categoryStats)
-                                                                    <span>Terbaik {{ $categoryStats['best']['percentage'] }}% · Terendah {{ $categoryStats['worst']['percentage'] }}% · Rata-rata {{ $categoryStats['average_percentage'] }}%</span>
+                                                                    <span>Terbaik {{ $categoryStats['best']['score'] }} · Terendah {{ $categoryStats['worst']['score'] }} · Rata-rata {{ $categoryStats['average_score'] }}</span>
                                                                 @else
                                                                     <span>Belum ada data kategori ini.</span>
                                                                 @endif

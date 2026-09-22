@@ -610,7 +610,6 @@ class TryoutSoalController extends Controller
                 $tabs[$tabKey]['attempts']->push([
                     'score' => (int) $riwayat->total_skor,
                     'max_score' => $maxScore,
-                    'percentage' => min(100, (int) round(((int) $riwayat->total_skor / $maxScore) * 100)),
                 ]);
 
                 if ($tabKey !== 'FULL') {
@@ -628,7 +627,6 @@ class TryoutSoalController extends Controller
                     $fullCategoryAttempts->get($category)->push([
                         'score' => $categoryScore,
                         'max_score' => $categoryMaxScore,
-                        'percentage' => min(100, (int) round(($categoryScore / $categoryMaxScore) * 100)),
                     ]);
                 }
             });
@@ -650,14 +648,14 @@ class TryoutSoalController extends Controller
             return null;
         }
 
-        $best = $attempts->sortByDesc('percentage')->first();
-        $worst = $attempts->sortBy('percentage')->first();
+        $best = $attempts->sortByDesc('score')->first();
+        $worst = $attempts->sortBy('score')->first();
 
         return [
             'count' => $attempts->count(),
             'best' => $best,
             'worst' => $worst,
-            'average_percentage' => (int) round($attempts->avg('percentage')),
+            'average_score' => (int) round($attempts->avg('score')),
         ];
     }
 
