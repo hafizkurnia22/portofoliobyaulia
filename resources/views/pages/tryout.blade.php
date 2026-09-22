@@ -516,6 +516,7 @@
                         </aside>
 
                         <div class="cat-main">
+                            <div class="cat-question-content">
                             <div class="cat-question-top">
                                 <div>
                                     <span class="cat-kategori" id="questionCategory">TWK</span>
@@ -563,6 +564,7 @@
                                     <i class="bi bi-clipboard2-check"></i>
                                     Lihat Hasil
                                 </button>
+                            </div>
                             </div>
                         </div>
                     </div>
