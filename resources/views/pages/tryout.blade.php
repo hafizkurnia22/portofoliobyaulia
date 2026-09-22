@@ -316,6 +316,11 @@
                                                             </div>
                                                         @endforelse
                                                     </div>
+                                                    @if ($fullSimulationHistory->hasPages())
+                                                        <nav class="tryout-evaluation-pagination" aria-label="Halaman riwayat simulasi penuh">
+                                                            {{ $fullSimulationHistory->appends(request()->except('full_history_page'))->links() }}
+                                                        </nav>
+                                                    @endif
                                                 </section>
                                             @endif
                                         @else
@@ -377,6 +382,11 @@
                                 <div class="tryout-history-empty">Belum ada jawaban salah dari latihan terakhir. Kalau sudah latihan, bagian ini akan berisi soal yang perlu ditinjau.</div>
                             @endforelse
                         </div>
+                        @if ($wrongReviewItems->hasPages())
+                            <nav class="tryout-evaluation-pagination" aria-label="Halaman review cepat">
+                                {{ $wrongReviewItems->appends(request()->except('wrong_review_page'))->links() }}
+                            </nav>
+                        @endif
                     </section>
 
                 </div>

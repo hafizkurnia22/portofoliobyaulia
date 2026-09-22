@@ -9,6 +9,7 @@ use App\Models\TryoutPengaturan;
 use App\Models\TryoutPeserta;
 use App\Models\TryoutSoal;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 use PhpOffice\PhpSpreadsheet\IOFactory;
@@ -39,8 +40,8 @@ class TryoutSoalController extends Controller
                     ->unique()
                     ->count() > 1;
             })
-            ->take(10)
             ->values();
+        $fullSimulationHistory = $this->paginateCollection($fullSimulationHistory, 2, 'full_history_page');
         $scoreStatistics = $this->scoreStatistics($peserta);
         $practiceCategory = $this->practiceCategory(request('latihan'));
         $materiTryout = TryoutMateri::aktif()
@@ -66,7 +67,11 @@ class TryoutSoalController extends Controller
             ->keyBy('tryout_materi_id');
         $latestRiwayat = $riwayatTryout->first();
         $recommendedMateri = $this->recommendedMateri($peserta, $latestRiwayat, $materiProgress);
-        $wrongReviewItems = $this->wrongReviewItems($latestRiwayat);
+        $wrongReviewItems = $this->paginateCollection(
+            $this->wrongReviewItems($latestRiwayat),
+            4,
+            'wrong_review_page'
+        );
         $examDurationMinutes = $this->examDurationMinutes($tryoutPengaturan, $practiceCategory);
         $soals = $this->selectedSoals($tryoutPengaturan, $practiceCategory)
             ->map(function (TryoutSoal $soal) {
@@ -734,7 +739,6 @@ class TryoutSoalController extends Controller
     {
         $details = collect($latestRiwayat?->detail_jawaban ?? [])
             ->filter(fn ($item) => ($item['jawaban'] ?? null) && !($item['benar'] ?? false))
-            ->take(6)
             ->values();
 
         $soals = TryoutSoal::with('kategoriSoal')
@@ -753,6 +757,21 @@ class TryoutSoalController extends Controller
                 'pembahasan' => $soal?->pembahasan ?? ($item['pembahasan'] ?? null),
             ];
         });
+    }
+
+    private function paginateCollection($items, int $perPage, string $pageName): LengthAwarePaginator
+    {
+        $items = collect($items)->values();
+        $lastPage = max((int) ceil($items->count() / $perPage), 1);
+        $currentPage = min(max((int) request($pageName, 1), 1), $lastPage);
+
+        return new LengthAwarePaginator(
+            $items->forPage($currentPage, $perPage)->values(),
+            $items->count(),
+            $perPage,
+            $currentPage,
+            ['path' => request()->url(), 'pageName' => $pageName]
+        );
     }
 
     private function historyMode(array $detailJawaban): string

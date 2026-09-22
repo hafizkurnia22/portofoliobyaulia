@@ -1789,6 +1789,16 @@ html:has(.tryout-exam-page) {
     font-weight: 900;
 }
 
+.tryout-evaluation-pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 16px;
+}
+
+.tryout-evaluation-pagination .pagination {
+    margin: 0;
+}
+
 @media (max-width: 575.98px) {
     .tryout-score-summary-grid { grid-template-columns: 1fr; }
     .tryout-full-history-list { grid-template-columns: 1fr; }
