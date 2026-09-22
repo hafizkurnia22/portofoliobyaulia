@@ -863,7 +863,7 @@ body {
 
 .tryout-category-setting-item {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) 82px 82px;
+    grid-template-columns: minmax(0, 1fr) 82px;
     gap: 10px;
     align-items: end;
     padding: 14px;
@@ -932,6 +932,60 @@ body {
 .tryout-duration-control span {
     color: #64748b;
     font-weight: 800;
+}
+
+.tryout-full-simulation-settings {
+    min-width: 0;
+    margin: 0;
+    padding: 14px;
+    border: 1px solid #dbeafe;
+    border-radius: 8px;
+    background: #f8fbff;
+}
+
+.tryout-full-simulation-settings legend {
+    float: none;
+    width: auto;
+    margin: 0;
+    padding: 0;
+    color: #0b1f3a;
+    font-size: 12px;
+    font-weight: 900;
+    text-transform: uppercase;
+}
+
+.tryout-full-simulation-settings > p {
+    margin: 4px 0 10px;
+    color: #64748b;
+    font-size: 12px;
+    line-height: 1.45;
+}
+
+.tryout-full-simulation-settings > div {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+}
+
+.tryout-full-simulation-settings label {
+    color: #0b1f3a;
+    font-size: 11px;
+    font-weight: 900;
+    text-transform: uppercase;
+}
+
+.tryout-full-simulation-settings .form-control {
+    min-height: 42px;
+    margin-top: 5px;
+    font-weight: 900;
+}
+
+.tryout-toggle-help {
+    grid-column: 1 / -1;
+    margin: -4px 0 0;
+    color: #64748b;
+    font-size: 12px;
+    line-height: 1.5;
 }
 
 .tryout-setting-action {
@@ -2914,6 +2968,10 @@ html:has(.tryout-exam-page) {
 
     .tryout-category-setting-grid,
     .tryout-category-setting-item {
+        grid-template-columns: 1fr;
+    }
+
+    .tryout-full-simulation-settings > div {
         grid-template-columns: 1fr;
     }
 

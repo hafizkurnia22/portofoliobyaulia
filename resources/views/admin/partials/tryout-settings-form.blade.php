@@ -37,20 +37,27 @@
             </div>
         </div>
 
-        <div class="tryout-duration-control">
-            <label for="jumlah_soal">Jumlah Soal</label>
+        <fieldset class="tryout-full-simulation-settings">
+            <legend>Komposisi Simulasi Penuh</legend>
+            <p>Soal setiap kategori diambil secara acak dari bank soal.</p>
             <div>
-                <input type="number" id="jumlah_soal" name="jumlah_soal" class="form-control"
-                    min="1" max="500" value="{{ old('jumlah_soal', $tryoutPengaturan->jumlah_soal ?? 30) }}" required>
-                <span>soal</span>
+                @foreach (['TWK', 'TIU', 'TKP'] as $kodeKategori)
+                    <label for="jumlah_soal_kategori_{{ strtolower($kodeKategori) }}">
+                        {{ $kodeKategori }}
+                        <input type="number" id="jumlah_soal_kategori_{{ strtolower($kodeKategori) }}"
+                            name="jumlah_soal_kategori[{{ $kodeKategori }}]" class="form-control"
+                            min="1" max="500"
+                            value="{{ old('jumlah_soal_kategori.' . $kodeKategori, $tryoutPengaturan->jumlahSoalKategori($kodeKategori)) }}" required>
+                    </label>
+                @endforeach
             </div>
-        </div>
+        </fieldset>
     </div>
 
     <div class="tryout-category-settings">
         <div class="tryout-category-settings-heading">
-            <h6>Latihan Per Kategori</h6>
-            <p>Atur jumlah soal dan durasi yang tampil saat peserta memilih latihan TWK, TIU, atau TKP.</p>
+            <h6>Durasi Latihan Per Kategori</h6>
+            <p>Atur durasi yang tampil saat peserta memilih latihan TWK, TIU, atau TKP.</p>
         </div>
 
         <div class="tryout-category-setting-grid">
@@ -60,14 +67,6 @@
                         <strong>{{ $kodeKategori }}</strong>
                         <span>{{ $namaKategori }}</span>
                     </div>
-
-                    <label for="jumlah_soal_kategori_{{ strtolower($kodeKategori) }}">
-                        Soal
-                        <input type="number" id="jumlah_soal_kategori_{{ strtolower($kodeKategori) }}"
-                            name="jumlah_soal_kategori[{{ $kodeKategori }}]" class="form-control"
-                            min="1" max="500"
-                            value="{{ old('jumlah_soal_kategori.' . $kodeKategori, $tryoutPengaturan->jumlahSoalKategori($kodeKategori)) }}" required>
-                    </label>
 
                     <label for="durasi_menit_kategori_{{ strtolower($kodeKategori) }}">
                         Menit
@@ -86,15 +85,10 @@
             <input type="hidden" name="acak_soal" value="0">
             <input type="checkbox" name="acak_soal" value="1" {{ $tryoutPengaturan->acak_soal ? 'checked' : '' }}>
             <span></span>
-            Acak Soal
+            Acak Urutan Jenis Soal
         </label>
 
-        <label class="cat-toggle">
-            <input type="hidden" name="acak_seimbang_kategori" value="0">
-            <input type="checkbox" name="acak_seimbang_kategori" value="1" {{ $tryoutPengaturan->acak_seimbang_kategori ? 'checked' : '' }}>
-            <span></span>
-            Seimbang Kategori
-        </label>
+        <p class="tryout-toggle-help">Saat nonaktif, soal tetap dipilih acak dari bank soal, lalu ditampilkan berurutan: TWK, TIU, dan TKP.</p>
 
         <label class="cat-toggle">
             <input type="hidden" name="acak_jawaban" value="0">

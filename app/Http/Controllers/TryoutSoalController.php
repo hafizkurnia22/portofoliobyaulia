@@ -532,35 +532,45 @@ class TryoutSoalController extends Controller
 
     private function selectedSoals(TryoutPengaturan $pengaturan, ?string $practiceCategory = null)
     {
-        $jumlahSoal = $practiceCategory
-            ? $pengaturan->jumlahSoalKategori($practiceCategory)
-            : max((int) ($pengaturan->jumlah_soal ?? 30), 1);
+        if (!$practiceCategory) {
+            return $this->selectedFullSimulationSoals($pengaturan);
+        }
+
+        $jumlahSoal = $pengaturan->jumlahSoalKategori($practiceCategory);
         $soals = TryoutSoal::aktif()
             ->with('kategoriSoal')
-            ->when($practiceCategory, function ($query) use ($practiceCategory) {
-                $query->where(function ($categoryQuery) use ($practiceCategory) {
-                    $categoryQuery->where('kategori', $practiceCategory)
-                        ->orWhereHas('kategoriSoal', function ($relationQuery) use ($practiceCategory) {
-                            $relationQuery->where('kode', $practiceCategory);
-                        });
-                });
+            ->where(function ($categoryQuery) use ($practiceCategory) {
+                $categoryQuery->where('kategori', $practiceCategory)
+                    ->orWhereHas('kategoriSoal', function ($relationQuery) use ($practiceCategory) {
+                        $relationQuery->where('kode', $practiceCategory);
+                    });
             })
             ->latest()
             ->get();
 
-        if (!$pengaturan->acak_soal) {
-            return $soals->take($jumlahSoal)->values();
+        return $soals->shuffle()->take($jumlahSoal)->values();
+    }
+
+    private function selectedFullSimulationSoals(TryoutPengaturan $pengaturan)
+    {
+        $questionsByCategory = TryoutSoal::aktif()
+            ->with('kategoriSoal')
+            ->latest()
+            ->get()
+            ->groupBy(function (TryoutSoal $soal) {
+                return strtoupper($soal->kategoriSoal->kode ?? $soal->kategori ?? 'LAIN');
+            });
+
+        $selected = collect();
+        foreach (['TWK', 'TIU', 'TKP'] as $category) {
+            $selected = $selected->merge(
+                ($questionsByCategory->get($category, collect()))
+                    ->shuffle()
+                    ->take($pengaturan->jumlahSoalKategori($category))
+            );
         }
 
-        if ($soals->count() <= $jumlahSoal) {
-            return $soals->shuffle()->values();
-        }
-
-        if (!$pengaturan->acak_seimbang_kategori) {
-            return $soals->shuffle()->take($jumlahSoal)->values();
-        }
-
-        return $this->balancedRandomSoals($soals, $jumlahSoal);
+        return $pengaturan->acak_soal ? $selected->shuffle()->values() : $selected->values();
     }
 
     private function practiceCategory(?string $category): ?string
