@@ -320,7 +320,7 @@ body {
 
 /* ADMIN DASHBOARD */
 .admin-dashboard {
-    padding: 76px 0 80px;
+    padding: 56px 0 80px;
     background: linear-gradient(135deg, #f8fbff, #eaf4ff);
     min-height: 100vh;
 }
