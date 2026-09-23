@@ -544,64 +544,87 @@ body {
 
 .admin-experience-table,
 .admin-certificate-table {
-    min-width: 1120px;
+    width: 100%;
+    min-width: 0;
     table-layout: fixed;
 }
 
 .admin-certificate-table {
-    min-width: 1180px;
+    min-width: 0;
 }
 
 .admin-experience-table th:nth-child(1),
 .admin-experience-table td:nth-child(1),
 .admin-certificate-table th:nth-child(1),
 .admin-certificate-table td:nth-child(1) {
-    width: 64px;
+    width: 5%;
 }
 
 .admin-experience-table th:nth-child(2),
 .admin-experience-table td:nth-child(2) {
-    width: 96px;
+    width: 9%;
 }
 
 .admin-experience-table th:nth-child(3),
-.admin-experience-table td:nth-child(3),
-.admin-certificate-table th:nth-child(2),
-.admin-certificate-table td:nth-child(2) {
-    width: 250px;
+.admin-experience-table td:nth-child(3) {
+    width: 20%;
 }
 
 .admin-experience-table th:nth-child(4),
-.admin-experience-table td:nth-child(4),
-.admin-certificate-table th:nth-child(3),
-.admin-certificate-table td:nth-child(3) {
-    width: 210px;
+.admin-experience-table td:nth-child(4) {
+    width: 18%;
 }
 
 .admin-experience-table th:nth-child(5),
-.admin-experience-table td:nth-child(5),
-.admin-certificate-table th:nth-child(4),
-.admin-certificate-table td:nth-child(4) {
-    width: 130px;
+.admin-experience-table td:nth-child(5) {
+    width: 12%;
 }
 
 .admin-experience-table th:nth-child(6),
-.admin-experience-table td:nth-child(6),
-.admin-certificate-table th:nth-child(5),
-.admin-certificate-table td:nth-child(5) {
-    width: 280px;
-}
-
-.admin-certificate-table th:nth-child(6),
-.admin-certificate-table td:nth-child(6) {
-    width: 120px;
+.admin-experience-table td:nth-child(6) {
+    width: 25%;
 }
 
 .admin-experience-table th:nth-child(7),
-.admin-experience-table td:nth-child(7),
+.admin-experience-table td:nth-child(7) {
+    width: 11%;
+}
+
+.admin-certificate-table th:nth-child(2),
+.admin-certificate-table td:nth-child(2) {
+    width: 25%;
+}
+
+.admin-certificate-table th:nth-child(3),
+.admin-certificate-table td:nth-child(3) {
+    width: 18%;
+}
+
+.admin-certificate-table th:nth-child(4),
+.admin-certificate-table td:nth-child(4) {
+    width: 9%;
+}
+
+.admin-certificate-table th:nth-child(5),
+.admin-certificate-table td:nth-child(5) {
+    width: 23%;
+}
+
+.admin-certificate-table th:nth-child(6),
+.admin-certificate-table td:nth-child(6),
 .admin-certificate-table th:nth-child(7),
 .admin-certificate-table td:nth-child(7) {
-    width: 118px;
+    width: 10%;
+}
+
+.admin-experience-table td,
+.admin-certificate-table td {
+    overflow-wrap: anywhere;
+}
+
+.admin-experience-table td:last-child .d-flex,
+.admin-certificate-table td:last-child .d-flex {
+    flex-wrap: nowrap;
 }
 
 .admin-project-table th:nth-child(1),
