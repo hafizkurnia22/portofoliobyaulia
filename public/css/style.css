@@ -577,12 +577,12 @@ body {
 
 .admin-experience-table th:nth-child(5),
 .admin-experience-table td:nth-child(5) {
-    width: 12%;
+    width: 15%;
 }
 
 .admin-experience-table th:nth-child(6),
 .admin-experience-table td:nth-child(6) {
-    width: 25%;
+    width: 22%;
 }
 
 .admin-experience-table th:nth-child(7),
@@ -625,6 +625,18 @@ body {
 .admin-experience-table td:last-child .d-flex,
 .admin-certificate-table td:last-child .d-flex {
     flex-wrap: nowrap;
+}
+
+.admin-no-horizontal-scroll {
+    overflow-x: hidden;
+}
+
+.admin-period-badge {
+    display: inline-block;
+    max-width: 100%;
+    line-height: 1.3;
+    text-align: center;
+    white-space: normal;
 }
 
 .admin-project-table th:nth-child(1),

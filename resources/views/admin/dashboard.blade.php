@@ -362,7 +362,7 @@
                                 placeholder="Cari pengalaman, perusahaan, jabatan...">
                         </div>
 
-                        <div class="table-responsive" data-aos="fade-up">
+                        <div class="table-responsive admin-no-horizontal-scroll" data-aos="fade-up">
                             <table class="table admin-table align-middle admin-experience-table" id="pengalaman-table">
                                 <thead>
                                     <tr>
@@ -394,7 +394,7 @@
                                             <td class="fw-semibold">{{ $item->nama_perusahaan }}</td>
                                             <td>{{ $item->jabatan }}</td>
                                             <td>
-                                                <span class="admin-badge">{{ $item->periode }}</span>
+                                                <span class="admin-badge admin-period-badge">{{ $item->periode }}</span>
                                             </td>
                                             <td>
                                                 <p class="admin-desc admin-table-summary mb-0">
@@ -461,7 +461,7 @@
                                 placeholder="Cari sertifikasi, penyelenggara, tahun...">
                         </div>
 
-                        <div class="table-responsive" data-aos="fade-up">
+                        <div class="table-responsive admin-no-horizontal-scroll" data-aos="fade-up">
                             <table class="table admin-table align-middle admin-certificate-table"
                                 id="sertifikasi-table">
                                 <thead>
