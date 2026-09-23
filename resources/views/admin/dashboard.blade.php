@@ -1176,14 +1176,14 @@
                         <div class="admin-table-header" data-aos="fade-right">
                             <div>
                                 <h5>Riwayat Tryout</h5>
-                                <p>Pantau hasil pengerjaan tryout dari setiap peserta.</p>
+                                <p>Pilih peserta untuk melihat seluruh riwayat tryoutnya.</p>
                             </div>
                         </div>
 
                         <div class="admin-search-box mb-3">
                             <i class="bi bi-search"></i>
                             <input type="text" class="form-control admin-live-search" data-target="tryout-riwayat-table"
-                                placeholder="Cari peserta, username, skor, atau waktu...">
+                                placeholder="Cari nama atau username peserta...">
                         </div>
 
                         <div class="table-responsive" data-aos="fade-up">
@@ -1191,38 +1191,41 @@
                                 <thead>
                                     <tr>
                                         <th>No</th>
-                                        <th>Peserta</th>
-                                        <th>Skor</th>
-                                        <th>Dijawab</th>
-                                        <th>Benar</th>
-                                        <th>Ragu</th>
-                                        <th>Durasi</th>
-                                        <th>Selesai</th>
+                                        <th>Nama Peserta</th>
+                                        <th>Aksi</th>
                                     </tr>
                                 </thead>
 
                                 <tbody>
-                                    @forelse($tryoutRiwayat as $item)
+                                    @forelse($tryoutRiwayatPeserta as $peserta)
                                         <tr>
-                                            <td>{{ $tryoutRiwayat->firstItem() + $loop->index }}</td>
+                                            <td>{{ $tryoutRiwayatPeserta->firstItem() + $loop->index }}</td>
                                             <td>
-                                                <strong>{{ $item->peserta->nama ?? '-' }}</strong>
+                                                <strong>{{ $peserta->nama }}</strong>
                                                 <small class="d-block text-muted mt-1">
-                                                    {{ $item->peserta->username ?? 'Peserta terhapus' }}
+                                                    {{ $peserta->username }} · {{ $peserta->riwayats_count }} riwayat
                                                 </small>
                                             </td>
                                             <td>
-                                                <span class="admin-badge">{{ $item->total_skor }}</span>
+                                                <div class="d-flex gap-2">
+                                                    <a href="{{ route('admin.tryout.riwayat.show', $peserta) }}"
+                                                        class="btn-admin-edit text-decoration-none" title="Lihat detail riwayat">
+                                                        <i class="bi bi-eye"></i>
+                                                    </a>
+                                                    <form action="{{ route('admin.tryout.riwayat.destroy', $peserta) }}" method="POST"
+                                                        class="delete-form" title="Hapus seluruh riwayat peserta">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="button" class="btn-admin-delete btn-delete" aria-label="Hapus riwayat">
+                                                            <i class="bi bi-trash"></i>
+                                                        </button>
+                                                    </form>
+                                                </div>
                                             </td>
-                                            <td>{{ $item->total_dijawab }}/{{ $item->total_soal }}</td>
-                                            <td>{{ $item->total_benar }}</td>
-                                            <td>{{ $item->total_ragu }}</td>
-                                            <td>{{ gmdate('H:i:s', $item->durasi_detik) }}</td>
-                                            <td>{{ $item->finished_at ? $item->finished_at->format('d M Y H:i') : '-' }}</td>
                                         </tr>
                                     @empty
                                         <tr>
-                                            <td colspan="8" class="text-center text-muted py-4">
+                                            <td colspan="3" class="text-center text-muted py-4">
                                                 Belum ada riwayat tryout
                                             </td>
                                         </tr>
@@ -1231,7 +1234,7 @@
                             </table>
 
                             <div class="mt-4">
-                                {{ $tryoutRiwayat->appends(array_merge(request()->query(), ['active_tab' => 'riwayat-tryout']))->links() }}
+                                {{ $tryoutRiwayatPeserta->appends(array_merge(request()->query(), ['active_tab' => 'riwayat-tryout']))->links() }}
                             </div>
                         </div>
                     </div>

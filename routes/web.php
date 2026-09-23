@@ -127,8 +127,12 @@ Route::get('/admin/dashboard', function () {
         ? \App\Models\TryoutPeserta::latest()->paginate(8, ['*'], 'tryout_peserta_page')
         : $emptyPaginator('tryout_peserta_page', 8);
 
-    $tryoutRiwayat = $activeTab === 'riwayat-tryout'
-        ? \App\Models\TryoutRiwayat::with('peserta')->latest()->paginate(10, ['*'], 'tryout_riwayat_page')
+    $tryoutRiwayatPeserta = $activeTab === 'riwayat-tryout'
+        ? \App\Models\TryoutPeserta::has('riwayats')
+            ->withCount('riwayats')
+            ->withMax('riwayats', 'finished_at')
+            ->orderByDesc('riwayats_max_finished_at')
+            ->paginate(10, ['*'], 'tryout_riwayat_page')
         : $emptyPaginator('tryout_riwayat_page', 10);
 
     $tryoutMateri = $activeTab === 'master-materi-tryout'
@@ -182,7 +186,7 @@ Route::get('/admin/dashboard', function () {
         'tryoutKategoriOptions',
         'tryoutPengaturan',
         'tryoutPeserta',
-        'tryoutRiwayat',
+        'tryoutRiwayatPeserta',
         'tryoutMateri',
         'tryoutSoal',
         'tentangSaya',
@@ -203,6 +207,11 @@ Route::get('/admin/dashboard', function () {
         'projectTerbaru'
     ));
 });
+
+Route::get('/admin/tryout/riwayat/{peserta}', [TryoutRiwayatController::class, 'adminShow'])
+    ->name('admin.tryout.riwayat.show');
+Route::delete('/admin/tryout/riwayat/{peserta}', [TryoutRiwayatController::class, 'destroyForPeserta'])
+    ->name('admin.tryout.riwayat.destroy');
 
 Route::get('/admin/tryout/pengaturan', function () {
     if (!session('admin_login')) {

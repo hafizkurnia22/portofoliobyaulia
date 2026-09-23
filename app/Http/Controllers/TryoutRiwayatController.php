@@ -11,6 +11,31 @@ use Illuminate\Support\Carbon;
 
 class TryoutRiwayatController extends Controller
 {
+    public function adminShow(TryoutPeserta $peserta)
+    {
+        if (!session('admin_login')) {
+            return redirect('/admin/login');
+        }
+
+        $riwayat = $peserta->riwayats()
+            ->latest('finished_at')
+            ->paginate(10);
+
+        return view('admin.tryout-history-detail', compact('peserta', 'riwayat'));
+    }
+
+    public function destroyForPeserta(TryoutPeserta $peserta)
+    {
+        if (!session('admin_login')) {
+            return redirect('/admin/login');
+        }
+
+        $peserta->riwayats()->delete();
+
+        return redirect('/admin/dashboard?active_tab=riwayat-tryout')
+            ->with('success', 'Seluruh riwayat tryout peserta berhasil dihapus.');
+    }
+
     public function store(Request $request)
     {
         $peserta = TryoutPeserta::aktif()->find(session('tryout_peserta_id'));
