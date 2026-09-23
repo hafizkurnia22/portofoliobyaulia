@@ -539,6 +539,8 @@ body {
 }
 
 .admin-project-table {
+    width: 100%;
+    min-width: 0;
     table-layout: fixed;
 }
 
@@ -696,43 +698,46 @@ body {
 
 .admin-project-table th:nth-child(1),
 .admin-project-table td:nth-child(1) {
-    width: 64px;
+    width: 5%;
 }
 
 .admin-project-table th:nth-child(2),
 .admin-project-table td:nth-child(2) {
-    width: 120px;
+    width: 9%;
 }
 
 .admin-project-table th:nth-child(3),
 .admin-project-table td:nth-child(3) {
-    width: 330px;
+    width: 22%;
 }
 
 .admin-project-table th:nth-child(4),
-.admin-project-table td:nth-child(4),
+.admin-project-table td:nth-child(4) {
+    width: 10%;
+}
+
 .admin-project-table th:nth-child(5),
 .admin-project-table td:nth-child(5) {
-    width: 130px;
+    width: 9%;
 }
 
 .admin-project-table th:nth-child(6),
 .admin-project-table td:nth-child(6) {
-    width: 210px;
+    width: 15%;
 }
 
 .admin-project-table th:nth-child(7),
 .admin-project-table td:nth-child(7) {
-    width: 120px;
+    width: 17%;
 }
 
 .admin-project-table th:nth-child(8),
 .admin-project-table td:nth-child(8) {
-    width: 118px;
+    width: 13%;
 }
 
 .admin-project-summary {
-    max-width: 310px;
+    max-width: 100%;
 }
 
 .admin-project-summary strong {
