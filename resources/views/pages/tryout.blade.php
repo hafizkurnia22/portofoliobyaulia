@@ -318,12 +318,12 @@
                                                     </div>
                                                     @if ($fullSimulationHistory->hasPages())
                                                         <nav class="tryout-evaluation-pagination" aria-label="Halaman riwayat simulasi penuh">
-                                                            <button type="button" class="tryout-pagination-btn"
+                                                            <button type="button" class="tryout-pagination-btn" onclick="window.loadTryoutEvaluationPage(this)"
                                                                 @if ($fullSimulationHistory->onFirstPage()) disabled @else data-evaluation-page-url="{{ $fullSimulationHistory->appends(request()->except('full_history_page'))->previousPageUrl() }}" @endif>
                                                                 <i class="bi bi-arrow-left" aria-hidden="true"></i> Sebelumnya
                                                             </button>
                                                             <span>Halaman {{ $fullSimulationHistory->currentPage() }} dari {{ $fullSimulationHistory->lastPage() }}</span>
-                                                            <button type="button" class="tryout-pagination-btn"
+                                                            <button type="button" class="tryout-pagination-btn" onclick="window.loadTryoutEvaluationPage(this)"
                                                                 @if (!$fullSimulationHistory->hasMorePages()) disabled @else data-evaluation-page-url="{{ $fullSimulationHistory->appends(request()->except('full_history_page'))->nextPageUrl() }}" @endif>
                                                                 Selanjutnya <i class="bi bi-arrow-right" aria-hidden="true"></i>
                                                             </button>
@@ -392,12 +392,12 @@
                         </div>
                         @if ($wrongReviewItems->hasPages())
                             <nav class="tryout-evaluation-pagination" aria-label="Halaman review cepat">
-                                <button type="button" class="tryout-pagination-btn"
+                                <button type="button" class="tryout-pagination-btn" onclick="window.loadTryoutEvaluationPage(this)"
                                     @if ($wrongReviewItems->onFirstPage()) disabled @else data-evaluation-page-url="{{ $wrongReviewItems->appends(request()->except('wrong_review_page'))->previousPageUrl() }}" @endif>
                                     <i class="bi bi-arrow-left" aria-hidden="true"></i> Sebelumnya
                                 </button>
                                 <span>Halaman {{ $wrongReviewItems->currentPage() }} dari {{ $wrongReviewItems->lastPage() }}</span>
-                                <button type="button" class="tryout-pagination-btn"
+                                <button type="button" class="tryout-pagination-btn" onclick="window.loadTryoutEvaluationPage(this)"
                                     @if (!$wrongReviewItems->hasMorePages()) disabled @else data-evaluation-page-url="{{ $wrongReviewItems->appends(request()->except('wrong_review_page'))->nextPageUrl() }}" @endif>
                                     Selanjutnya <i class="bi bi-arrow-right" aria-hidden="true"></i>
                                 </button>
@@ -478,47 +478,48 @@
                             });
                         });
 
-                        document.addEventListener('click', function(event) {
-                            const paginationButton = event.target.closest('[data-evaluation-page-url]');
-                            if (!paginationButton || paginationButton.disabled) return;
-
-                            const target = paginationButton.closest('[data-evaluation-pagination-target]');
-                            if (!target) return;
-
-                            event.preventDefault();
-                            target.classList.add('is-loading');
-                            target.setAttribute('aria-busy', 'true');
-
-                            fetch(paginationButton.dataset.evaluationPageUrl, {
-                                credentials: 'same-origin',
-                                headers: { 'X-Requested-With': 'XMLHttpRequest' },
-                            })
-                                .then(function(response) {
-                                    if (!response.ok) throw new Error('Gagal memuat halaman evaluasi.');
-                                    return response.text();
-                                })
-                                .then(function(html) {
-                                    const documentFragment = new DOMParser().parseFromString(html, 'text/html');
-                                    const targetName = target.dataset.evaluationPaginationTarget;
-                                    const nextTarget = documentFragment.querySelector(`[data-evaluation-pagination-target="${targetName}"]`);
-
-                                    if (!nextTarget) throw new Error('Data halaman evaluasi tidak ditemukan.');
-
-                                    target.replaceWith(nextTarget);
-                                    window.history.pushState({ tryoutTab: 'evaluasi' }, '', paginationButton.dataset.evaluationPageUrl);
-                                })
-                                .catch(function() {
-                                    target.classList.remove('is-loading');
-                                    target.removeAttribute('aria-busy');
-                                });
-                        });
-
                         window.addEventListener('popstate', function() {
                             setActiveTab(tabFromUrl(window.location.href), false);
                         });
                     });
                 </script>
             @endif
+
+            <script>
+                window.loadTryoutEvaluationPage = async function(button) {
+                    const pageUrl = button?.dataset?.evaluationPageUrl;
+                    const target = button?.closest('[data-evaluation-pagination-target]');
+
+                    if (!pageUrl || !target || button.disabled || target.dataset.loading === 'true') return;
+
+                    target.dataset.loading = 'true';
+                    target.classList.add('is-loading');
+                    target.setAttribute('aria-busy', 'true');
+
+                    try {
+                        const response = await fetch(pageUrl, {
+                            credentials: 'same-origin',
+                            headers: { 'X-Requested-With': 'XMLHttpRequest' },
+                        });
+
+                        if (!response.ok) throw new Error('Gagal memuat halaman evaluasi.');
+
+                        const html = await response.text();
+                        const documentFragment = new DOMParser().parseFromString(html, 'text/html');
+                        const targetName = target.dataset.evaluationPaginationTarget;
+                        const nextTarget = documentFragment.querySelector(`[data-evaluation-pagination-target="${targetName}"]`);
+
+                        if (!nextTarget) throw new Error('Data halaman evaluasi tidak ditemukan.');
+
+                        target.replaceWith(nextTarget);
+                        window.history.pushState({ tryoutTab: 'evaluasi' }, '', pageUrl);
+                    } catch (error) {
+                        target.classList.remove('is-loading');
+                        target.removeAttribute('aria-busy');
+                        delete target.dataset.loading;
+                    }
+                };
+            </script>
             @if ($showExam)
                 @if ($soals->isEmpty())
                     <div class="tryout-empty-state" data-aos="fade-up">
