@@ -639,6 +639,61 @@ body {
     white-space: normal;
 }
 
+/* Seluruh tabel admin mengikuti lebar panel dan tidak memerlukan scroll horizontal. */
+.admin-dashboard .table-responsive {
+    overflow-x: hidden;
+}
+
+.admin-dashboard .admin-table {
+    width: 100%;
+    min-width: 0;
+    table-layout: fixed;
+}
+
+.admin-dashboard .admin-table thead th {
+    white-space: normal;
+    overflow-wrap: anywhere;
+}
+
+.admin-dashboard .admin-table tbody td {
+    overflow-wrap: anywhere;
+    word-break: normal;
+}
+
+.admin-dashboard .admin-table .admin-badge,
+.admin-dashboard .admin-table .btn {
+    max-width: 100%;
+    white-space: normal;
+    text-align: center;
+}
+
+.admin-dashboard .admin-table td:last-child {
+    width: 118px;
+}
+
+.admin-dashboard .admin-table td:last-child .d-flex {
+    flex-wrap: wrap;
+}
+
+@media (max-width: 768px) {
+    .admin-dashboard .admin-table thead th,
+    .admin-dashboard .admin-table tbody td {
+        padding: 10px 8px;
+        font-size: 12px;
+    }
+
+    .admin-dashboard .admin-table td:last-child {
+        width: 86px;
+    }
+
+    .admin-dashboard .admin-table .btn-admin-edit,
+    .admin-dashboard .admin-table .btn-admin-delete {
+        width: 32px;
+        height: 32px;
+        border-radius: 10px;
+    }
+}
+
 .admin-project-table th:nth-child(1),
 .admin-project-table td:nth-child(1) {
     width: 64px;
