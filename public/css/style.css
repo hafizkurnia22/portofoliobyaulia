@@ -7662,6 +7662,14 @@ body:has(.cv-builder-page) .custom-navbar {
     line-height: 1;
 }
 
+.tryout-simulation-panel .cat-instructions {
+    margin-top: 18px;
+}
+
+.tryout-simulation-panel .cat-actions {
+    margin-top: 28px;
+}
+
 .practice-category-section {
     margin-top: 22px;
     padding: 28px;
