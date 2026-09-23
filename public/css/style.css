@@ -1791,12 +1791,43 @@ html:has(.tryout-exam-page) {
 
 .tryout-evaluation-pagination {
     display: flex;
+    align-items: center;
     justify-content: center;
+    gap: 12px;
     margin-top: 16px;
 }
 
-.tryout-evaluation-pagination .pagination {
-    margin: 0;
+.tryout-evaluation-pagination > span {
+    color: #64748b;
+    font-size: 12px;
+    font-weight: 800;
+}
+
+.tryout-pagination-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    min-height: 38px;
+    padding: 8px 12px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    background: #ffffff;
+    color: #0b1f3a;
+    font-size: 12px;
+    font-weight: 900;
+    transition: .18s ease;
+}
+
+.tryout-pagination-btn:hover:not(:disabled) {
+    border-color: #0f766e;
+    background: #f0fdfa;
+    color: #0f766e;
+}
+
+.tryout-pagination-btn:disabled {
+    opacity: .48;
+    cursor: not-allowed;
 }
 
 .tryout-evaluation-paginated {

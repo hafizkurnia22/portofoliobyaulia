@@ -318,7 +318,15 @@
                                                     </div>
                                                     @if ($fullSimulationHistory->hasPages())
                                                         <nav class="tryout-evaluation-pagination" aria-label="Halaman riwayat simulasi penuh">
-                                                            {{ $fullSimulationHistory->appends(request()->except('full_history_page'))->links() }}
+                                                            <button type="button" class="tryout-pagination-btn"
+                                                                @if ($fullSimulationHistory->onFirstPage()) disabled @else data-evaluation-page-url="{{ $fullSimulationHistory->appends(request()->except('full_history_page'))->previousPageUrl() }}" @endif>
+                                                                <i class="bi bi-arrow-left" aria-hidden="true"></i> Sebelumnya
+                                                            </button>
+                                                            <span>Halaman {{ $fullSimulationHistory->currentPage() }} dari {{ $fullSimulationHistory->lastPage() }}</span>
+                                                            <button type="button" class="tryout-pagination-btn"
+                                                                @if (!$fullSimulationHistory->hasMorePages()) disabled @else data-evaluation-page-url="{{ $fullSimulationHistory->appends(request()->except('full_history_page'))->nextPageUrl() }}" @endif>
+                                                                Selanjutnya <i class="bi bi-arrow-right" aria-hidden="true"></i>
+                                                            </button>
                                                         </nav>
                                                     @endif
                                                 </section>
@@ -384,7 +392,15 @@
                         </div>
                         @if ($wrongReviewItems->hasPages())
                             <nav class="tryout-evaluation-pagination" aria-label="Halaman review cepat">
-                                {{ $wrongReviewItems->appends(request()->except('wrong_review_page'))->links() }}
+                                <button type="button" class="tryout-pagination-btn"
+                                    @if ($wrongReviewItems->onFirstPage()) disabled @else data-evaluation-page-url="{{ $wrongReviewItems->appends(request()->except('wrong_review_page'))->previousPageUrl() }}" @endif>
+                                    <i class="bi bi-arrow-left" aria-hidden="true"></i> Sebelumnya
+                                </button>
+                                <span>Halaman {{ $wrongReviewItems->currentPage() }} dari {{ $wrongReviewItems->lastPage() }}</span>
+                                <button type="button" class="tryout-pagination-btn"
+                                    @if (!$wrongReviewItems->hasMorePages()) disabled @else data-evaluation-page-url="{{ $wrongReviewItems->appends(request()->except('wrong_review_page'))->nextPageUrl() }}" @endif>
+                                    Selanjutnya <i class="bi bi-arrow-right" aria-hidden="true"></i>
+                                </button>
                             </nav>
                         @endif
                     </section>
@@ -463,17 +479,18 @@
                         });
 
                         document.addEventListener('click', function(event) {
-                            const paginationLink = event.target.closest('.tryout-evaluation-pagination a');
-                            if (!paginationLink || paginationLink.closest('.disabled')) return;
+                            const paginationButton = event.target.closest('[data-evaluation-page-url]');
+                            if (!paginationButton || paginationButton.disabled) return;
 
-                            const target = paginationLink.closest('[data-evaluation-pagination-target]');
+                            const target = paginationButton.closest('[data-evaluation-pagination-target]');
                             if (!target) return;
 
                             event.preventDefault();
                             target.classList.add('is-loading');
                             target.setAttribute('aria-busy', 'true');
 
-                            fetch(paginationLink.href, {
+                            fetch(paginationButton.dataset.evaluationPageUrl, {
+                                credentials: 'same-origin',
                                 headers: { 'X-Requested-With': 'XMLHttpRequest' },
                             })
                                 .then(function(response) {
@@ -488,10 +505,11 @@
                                     if (!nextTarget) throw new Error('Data halaman evaluasi tidak ditemukan.');
 
                                     target.replaceWith(nextTarget);
-                                    window.history.pushState({ tryoutTab: 'evaluasi' }, '', paginationLink.href);
+                                    window.history.pushState({ tryoutTab: 'evaluasi' }, '', paginationButton.dataset.evaluationPageUrl);
                                 })
                                 .catch(function() {
-                                    window.location.assign(paginationLink.href);
+                                    target.classList.remove('is-loading');
+                                    target.removeAttribute('aria-busy');
                                 });
                         });
 
