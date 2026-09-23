@@ -168,6 +168,18 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     document.addEventListener('click', function (event) {
+        const sidebarToggle = event.target.closest('.admin-sidebar-toggle');
+
+        if (sidebarToggle) {
+            const section = sidebarToggle.closest('.admin-sidebar-section');
+
+            if (!section) return;
+
+            const isCollapsed = section.classList.toggle('is-collapsed');
+            sidebarToggle.setAttribute('aria-expanded', String(!isCollapsed));
+            return;
+        }
+
         const deleteButton = event.target.closest('.btn-delete');
 
         if (deleteButton) {

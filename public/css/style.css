@@ -463,6 +463,38 @@ body {
     text-transform: uppercase;
 }
 
+.admin-sidebar-toggle {
+    width: 100%;
+    justify-content: space-between;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    text-align: left;
+    cursor: pointer;
+}
+
+.admin-sidebar-toggle span {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+}
+
+.admin-sidebar-chevron {
+    transition: transform 0.2s ease;
+}
+
+.admin-sidebar-section.is-collapsed .admin-sidebar-chevron {
+    transform: rotate(-90deg);
+}
+
+.admin-sidebar-section.is-collapsed .admin-sidebar-nav {
+    display: none;
+}
+
+.admin-sidebar-section.is-collapsed .admin-sidebar-title {
+    margin-bottom: 0;
+}
+
 .admin-sidebar-title i {
     color: #0f766e;
     font-size: 17px;

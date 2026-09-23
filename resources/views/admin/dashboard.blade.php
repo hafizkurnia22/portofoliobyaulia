@@ -39,14 +39,19 @@
 
             <div class="admin-table-card" data-aos="fade-up" data-aos-delay="400">
                 <div class="admin-management-layout">
+                    @php
+                        $profileMenuActive = in_array($activeTab, ['dashboard', 'pengalaman', 'sertifikasi', 'skill', 'project', 'tentang'], true);
+                        $tryoutMenuActive = in_array($activeTab, ['master-kategori-soal', 'master-materi-tryout', 'master-peserta-tryout', 'master-soal', 'master-kelulusan', 'riwayat-tryout'], true);
+                    @endphp
                     <aside class="admin-sidebar" data-aos="zoom-in">
-                        <div class="admin-sidebar-section">
-                            <div class="admin-sidebar-title">
-                                <i class="bi bi-person-badge"></i>
-                                Profil
-                            </div>
+                        <div class="admin-sidebar-section {{ $profileMenuActive ? '' : 'is-collapsed' }}">
+                            <button type="button" class="admin-sidebar-title admin-sidebar-toggle"
+                                aria-expanded="{{ $profileMenuActive ? 'true' : 'false' }}" aria-controls="adminProfileMenu">
+                                <span><i class="bi bi-person-badge"></i> Profil</span>
+                                <i class="bi bi-chevron-down admin-sidebar-chevron" aria-hidden="true"></i>
+                            </button>
 
-                            <ul class="nav nav-pills admin-tabs admin-sidebar-nav" id="adminTabs">
+                            <ul class="nav nav-pills admin-tabs admin-sidebar-nav" id="adminProfileMenu">
                                 <li class="nav-item">
                                     <a class="nav-link {{ $activeTab == 'dashboard' ? 'active' : '' }}"
                                         href="{{ url('/admin/dashboard?active_tab=dashboard') }}">
@@ -91,13 +96,14 @@
                             </ul>
                         </div>
 
-                        <div class="admin-sidebar-section">
-                            <div class="admin-sidebar-title">
-                                <i class="bi bi-ui-checks-grid"></i>
-                                Tryout
-                            </div>
+                        <div class="admin-sidebar-section {{ $tryoutMenuActive ? '' : 'is-collapsed' }}">
+                            <button type="button" class="admin-sidebar-title admin-sidebar-toggle"
+                                aria-expanded="{{ $tryoutMenuActive ? 'true' : 'false' }}" aria-controls="adminTryoutMenu">
+                                <span><i class="bi bi-ui-checks-grid"></i> Tryout</span>
+                                <i class="bi bi-chevron-down admin-sidebar-chevron" aria-hidden="true"></i>
+                            </button>
 
-                            <ul class="nav nav-pills admin-tabs admin-sidebar-nav">
+                            <ul class="nav nav-pills admin-tabs admin-sidebar-nav" id="adminTryoutMenu">
                                 <li class="nav-item">
                                     <a class="nav-link {{ $activeTab == 'master-kategori-soal' ? 'active' : '' }}"
                                         href="{{ url('/admin/dashboard?active_tab=master-kategori-soal') }}">
