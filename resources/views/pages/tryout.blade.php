@@ -495,25 +495,41 @@
                     </div>
                 @else
                     <div class="cat-preparation cat-main" id="examPreparation">
-                        <span class="cat-kategori">Sebelum mulai</span>
-                        <h2>{{ $practiceCategory ? 'Siap latihan ' . $practiceCategory . '?' : 'Siap berlatih?' }}</h2>
-                        <p>{{ $practiceCategory ? 'Mode ini hanya menampilkan soal ' . $practiceLabel . ' agar kamu bisa fokus pada satu kemampuan.' : 'Luangkan waktu dan pastikan koneksi internetmu stabil.' }}</p>
-                        <div class="cat-preparation-stats">
-                            <span><i class="bi bi-file-earmark-text"></i> <strong>{{ $soals->count() }} soal</strong></span>
-                            <span><i class="bi bi-clock"></i> <strong>{{ $examDurationMinutes ?? ($tryoutPengaturan->durasi_menit ?? 45) }} menit</strong></span>
-                            <span><i class="bi bi-journal-check"></i> {{ $soals->pluck('kategori')->unique()->implode(' · ') }}</span>
+                        <div class="cat-preparation-header">
+                            <span class="cat-kategori">Sebelum mulai</span>
+                            <h2>{{ $practiceCategory ? 'Siap latihan ' . $practiceCategory . '?' : 'Siap berlatih?' }}</h2>
+                            <p>{{ $practiceCategory ? 'Mode ini hanya menampilkan soal ' . $practiceLabel . ' agar kamu bisa fokus pada satu kemampuan.' : 'Luangkan waktu dan pastikan koneksi internetmu stabil.' }}</p>
+                            <div class="cat-preparation-stats">
+                                <span><i class="bi bi-file-earmark-text"></i> <strong>{{ $soals->count() }} soal</strong></span>
+                                <span><i class="bi bi-clock"></i> <strong>{{ $examDurationMinutes ?? ($tryoutPengaturan->durasi_menit ?? 45) }} menit</strong></span>
+                                <span><i class="bi bi-journal-check"></i> {{ $soals->pluck('kategori')->unique()->implode(' · ') }}</span>
+                            </div>
                         </div>
-                        <ul class="cat-instructions">
-                            <li>Pilih satu jawaban untuk menyimpan otomatis di perangkat ini dan lanjut ke soal berikutnya. Kamu tetap bisa kembali untuk mengubah jawaban.</li>
-                            <li>Gunakan nomor soal untuk berpindah dan tandai <strong>Ragu-ragu</strong> untuk ditinjau kembali.</li>
-                            <li>Klik <strong>Selesaikan Ujian</strong> jika sudah siap. Saat waktu habis, ujian selesai otomatis.</li>
-                            <li>Progres dipulihkan saat halaman dimuat ulang pada browser dan akun yang sama. Waktu ujian tetap berjalan; hasil akhir dikirim ke server saat selesai.</li>
-                        </ul>
-                        <div class="cat-actions">
-                            <button type="button" class="cat-action-btn" id="startExamButton"><i class="bi bi-play-circle"></i> Mulai Sekarang</button>
-                            <a href="{{ route('tryout.index', ['tab' => 'materi']) }}" class="cat-action-btn cat-action-secondary"><i class="bi bi-journal-bookmark"></i> Pelajari Materi</a>
+                        <div class="cat-preparation-content">
+                            <div>
+                                <h3>Petunjuk singkat</h3>
+                                <ul class="cat-instructions">
+                                    <li>Pilih satu jawaban untuk menyimpan otomatis di perangkat ini dan lanjut ke soal berikutnya. Kamu tetap bisa kembali untuk mengubah jawaban.</li>
+                                    <li>Gunakan nomor soal untuk berpindah dan tandai <strong>Ragu-ragu</strong> untuk ditinjau kembali.</li>
+                                    <li>Klik <strong>Selesaikan Ujian</strong> jika sudah siap. Saat waktu habis, ujian selesai otomatis.</li>
+                                    <li>Progres dipulihkan saat halaman dimuat ulang pada browser dan akun yang sama. Waktu ujian tetap berjalan; hasil akhir dikirim ke server saat selesai.</li>
+                                </ul>
+                            </div>
+                            <aside class="cat-readiness-card">
+                                <i class="bi bi-shield-check"></i>
+                                <h3>Siapkan perangkatmu</h3>
+                                <p>Pastikan koneksi stabil dan pilih tempat yang tenang sebelum memulai.</p>
+                                <span><i class="bi bi-save2"></i> Jawaban tersimpan otomatis</span>
+                                <span><i class="bi bi-stopwatch"></i> Timer mulai setelah tombol ditekan</span>
+                            </aside>
                         </div>
-                        <p class="cat-preparation-note">Timer baru berjalan setelah kamu menekan Mulai Sekarang.</p>
+                        <div class="cat-preparation-footer">
+                            <div class="cat-actions">
+                                <button type="button" class="cat-action-btn" id="startExamButton"><i class="bi bi-play-circle"></i> Mulai Sekarang</button>
+                                <a href="{{ route('tryout.index', ['tab' => 'materi']) }}" class="cat-action-btn cat-action-secondary"><i class="bi bi-journal-bookmark"></i> Pelajari Materi</a>
+                            </div>
+                            <p class="cat-preparation-note"><i class="bi bi-info-circle"></i> Timer baru berjalan setelah kamu menekan Mulai Sekarang.</p>
+                        </div>
                     </div>
                     <div class="cat-shell d-none" id="examShell">
                         <aside class="cat-sidebar">
