@@ -698,42 +698,62 @@ body {
 
 .admin-project-table th:nth-child(1),
 .admin-project-table td:nth-child(1) {
-    width: 5%;
+    width: 6%;
 }
 
 .admin-project-table th:nth-child(2),
 .admin-project-table td:nth-child(2) {
-    width: 9%;
+    width: 10%;
 }
 
 .admin-project-table th:nth-child(3),
 .admin-project-table td:nth-child(3) {
-    width: 22%;
+    width: 23%;
 }
 
 .admin-project-table th:nth-child(4),
 .admin-project-table td:nth-child(4) {
-    width: 10%;
+    width: 12%;
 }
 
 .admin-project-table th:nth-child(5),
 .admin-project-table td:nth-child(5) {
-    width: 9%;
+    width: 10%;
 }
 
 .admin-project-table th:nth-child(6),
 .admin-project-table td:nth-child(6) {
-    width: 15%;
+    width: 16%;
 }
 
 .admin-project-table th:nth-child(7),
 .admin-project-table td:nth-child(7) {
-    width: 17%;
+    width: 10%;
 }
 
 .admin-project-table th:nth-child(8),
 .admin-project-table td:nth-child(8) {
     width: 13%;
+}
+
+.admin-project-table th:nth-child(1),
+.admin-project-table th:nth-child(2),
+.admin-project-table th:nth-child(4),
+.admin-project-table th:nth-child(5),
+.admin-project-table th:nth-child(6),
+.admin-project-table th:nth-child(7),
+.admin-project-table th:nth-child(8),
+.admin-project-table td:nth-child(1),
+.admin-project-table td:nth-child(2),
+.admin-project-table td:nth-child(4),
+.admin-project-table td:nth-child(5),
+.admin-project-table td:nth-child(7),
+.admin-project-table td:nth-child(8) {
+    white-space: nowrap;
+}
+
+.admin-project-table td:nth-child(4) .admin-badge {
+    white-space: nowrap;
 }
 
 .admin-project-summary {
