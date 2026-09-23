@@ -1830,6 +1830,14 @@ html:has(.tryout-exam-page) {
     cursor: not-allowed;
 }
 
+.tryout-pagination-feedback {
+    margin: 10px 0 0;
+    color: #b42318;
+    font-size: 12px;
+    font-weight: 700;
+    text-align: center;
+}
+
 .tryout-evaluation-paginated {
     transition: opacity .18s ease;
 }
