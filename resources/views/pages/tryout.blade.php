@@ -151,11 +151,7 @@
                             <div class="cat-actions">
                                 <a href="{{ route('tryout.index', ['mode' => 'ujian']) }}" class="cat-action-btn">
                                     <i class="bi bi-play-circle"></i>
-                                    Simulasi Penuh
-                                </a>
-                                <a href="{{ route('tryout.index', ['tab' => 'materi']) }}" class="cat-action-btn cat-action-secondary tryout-tab-inline-link">
-                                    <i class="bi bi-journal-bookmark"></i>
-                                    Pelajari Materi
+                                    Latihan Simulasi Ujian
                                 </a>
                             </div>
                         </div>
