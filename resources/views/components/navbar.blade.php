@@ -29,7 +29,7 @@
                     <button class="nav-link dropdown-toggle nav-more-toggle" type="button" data-bs-toggle="dropdown"
                         aria-expanded="false">
                         <i class="bi bi-person-circle"></i>
-                        Profile
+                        Profil
                     </button>
 
                     <ul class="dropdown-menu dropdown-menu-end premium-dropdown-menu">
@@ -44,7 +44,7 @@
                         <li>
                             <a class="dropdown-item nav-scroll-link" href="{{ url('/#skill') }}" data-section="skill">
                                 <i class="bi bi-lightning-charge"></i>
-                                Skill
+                                Keahlian
                             </a>
                         </li>
 
@@ -52,7 +52,7 @@
                             <a class="dropdown-item nav-scroll-link" href="{{ url('/#my-project') }}"
                                 data-section="my-project">
                                 <i class="bi bi-kanban"></i>
-                                My Project
+                                Proyek
                             </a>
                         </li>
 
@@ -106,7 +106,7 @@
                 <li class="nav-item">
                     <a class="nav-link nav-link-feature" href="{{ route('cv.builder') }}">
                         <i class="bi bi-file-earmark-richtext"></i>
-                        Generate CV saya
+                        Buat CV
                     </a>
                 </li>
 

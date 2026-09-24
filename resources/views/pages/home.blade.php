@@ -28,9 +28,10 @@
                                 <p class="intro-greeting">Halo, saya</p>
                                 <h1 id="intro-title">{{ $tentangSaya->nama ?? 'Hafiz' }}</h1>
                                 <p class="intro-role">{{ $tentangSaya->bidang ?? 'Pengembang website' }}</p>
+                                <p class="intro-description">Membangun aplikasi web dan sistem informasi yang rapi, cepat, dan mudah digunakan.</p>
                                 <div class="intro-actions">
-                                    <button type="button" class="intro-primary" data-bs-toggle="modal" data-bs-target="#smartContactModal">Mari berdiskusi <i class="bi bi-arrow-up-right" aria-hidden="true"></i></button>
-                                    <a href="#tentang" class="intro-secondary">Tentang saya <i class="bi bi-arrow-right" aria-hidden="true"></i></a>
+                                    <button type="button" class="intro-primary" data-bs-toggle="modal" data-bs-target="#smartContactModal">Diskusikan Proyek <i class="bi bi-arrow-up-right" aria-hidden="true"></i></button>
+                                    <a href="#tentang" class="intro-secondary">Lihat Profil <i class="bi bi-arrow-right" aria-hidden="true"></i></a>
                                 </div>
                             </div>
                             <div class="intro-portrait">

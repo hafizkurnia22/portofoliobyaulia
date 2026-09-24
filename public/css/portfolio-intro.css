@@ -1,10 +1,18 @@
 /* Homepage palette follows the navy navigation and teal controls. */
+html:has(.portfolio-intro),
+body:has(.portfolio-intro) {
+    overflow-x: clip;
+}
+
 .portfolio-intro {
     background: linear-gradient(115deg, #0b1f3a 0%, #102e4c 100%);
     color: #f8fafc;
     padding: 152px 0 36px;
     border-bottom: 1px solid #29445d;
+    overflow-x: clip;
 }
+.portfolio-intro .container,
+#portfolioCarousel { min-width: 0; }
 .portfolio-intro-grid {
     display: grid;
     grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
