@@ -1,0 +1,136 @@
+/* Sistem tipografi: Inter dipakai untuk seluruh UI; Cinzel tetap khusus identitas logo. */
+:root {
+    --font-ui: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --font-size-body: 16px;
+    --font-size-caption: 12px;
+    --font-size-label: 13px;
+    --font-size-button: 14px;
+    --line-height-body: 1.6;
+}
+
+html {
+    font-size: 16px;
+}
+
+body,
+button,
+input,
+select,
+textarea {
+    font-family: var(--font-ui);
+}
+
+body {
+    font-size: var(--font-size-body);
+    line-height: var(--line-height-body);
+    text-rendering: optimizeLegibility;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-ui);
+    color: inherit;
+    letter-spacing: -0.025em;
+    line-height: 1.22;
+}
+
+h1 { font-size: clamp(2rem, 3vw, 2.5rem); font-weight: 800; }
+h2 { font-size: clamp(1.5rem, 2.25vw, 2rem); font-weight: 800; }
+h3 { font-size: clamp(1.25rem, 1.7vw, 1.5rem); font-weight: 750; }
+h4 { font-size: 1.125rem; font-weight: 750; }
+h5 { font-size: 1rem; font-weight: 750; }
+h6 { font-size: 0.875rem; font-weight: 750; }
+
+p, li, td, th, .form-control, .form-select {
+    font-size: 0.9375rem;
+}
+
+button,
+.btn,
+.nav-link,
+.dropdown-item,
+.intro-primary,
+.intro-secondary,
+.cat-action-btn,
+.btn-admin-add,
+.btn-admin-setting,
+.btn-login-nav {
+    font-size: var(--font-size-button);
+    font-weight: 700;
+    line-height: 1.35;
+}
+
+.section-label,
+.tryout-panel-label,
+.admin-label,
+.admin-sidebar-title,
+.intro-eyebrow,
+.footer-invitation-label {
+    font-size: var(--font-size-caption);
+    font-weight: 800;
+    letter-spacing: 0.05em;
+}
+
+.admin-table thead th {
+    font-size: var(--font-size-label);
+    font-weight: 800;
+    letter-spacing: 0.01em;
+}
+
+.admin-table tbody td,
+.admin-desc,
+.admin-badge,
+.admin-status-badge,
+.tryout-simulation-panel p,
+.cat-preparation-note {
+    font-size: var(--font-size-label);
+}
+
+.portfolio-intro h1,
+.intro-slide-title {
+    font-weight: 800;
+    letter-spacing: -0.035em;
+}
+
+.intro-role {
+    font-size: 1.125rem;
+    font-weight: 700;
+}
+
+.intro-description,
+.intro-slide-description {
+    font-size: 1rem;
+    line-height: 1.7;
+}
+
+.admin-header h1,
+.tryout-header h1,
+.cv-builder-hero h1 {
+    font-weight: 800;
+    letter-spacing: -0.03em;
+}
+
+.form-label,
+label {
+    font-size: var(--font-size-label);
+    font-weight: 700;
+}
+
+small,
+.text-muted,
+.cat-preparation-note {
+    font-size: var(--font-size-caption);
+    line-height: 1.5;
+}
+
+@media (max-width: 768px) {
+    html { font-size: 15px; }
+
+    p, li, td, th, .form-control, .form-select {
+        font-size: 0.9375rem;
+    }
+
+    .admin-table thead th,
+    .admin-table tbody td {
+        font-size: var(--font-size-caption);
+    }
+}

@@ -28,6 +28,7 @@
     <link rel="stylesheet" href="{{ asset('css/style.css') }}?v={{ filemtime(public_path('css/style.css')) }}">
     <link rel="stylesheet" href="{{ asset('css/portfolio-intro.css') }}?v={{ filemtime(public_path('css/portfolio-intro.css')) }}">
     <link rel="stylesheet" href="{{ asset('css/color-system.css') }}?v={{ filemtime(public_path('css/color-system.css')) }}">
+    <link rel="stylesheet" href="{{ asset('css/type-system.css') }}?v={{ filemtime(public_path('css/type-system.css')) }}">
 </head>
 
 @php
