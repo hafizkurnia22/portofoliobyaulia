@@ -1,0 +1,149 @@
+/*
+ * Sistem warna aplikasi
+ * Navy = struktur, teal = aksi utama, gold = aksen, dan warna lain hanya untuk status.
+ */
+:root {
+    --color-navy-900: #0b1f3a;
+    --color-navy-800: #123c69;
+    --color-primary-700: #0f766e;
+    --color-primary-600: #0d9488;
+    --color-primary-100: #ccfbf1;
+    --color-accent-500: #d2b16c;
+    --color-accent-100: #fef3c7;
+    --color-info-700: #1d4ed8;
+    --color-info-100: #dbeafe;
+    --color-success-700: #15803d;
+    --color-success-100: #dcfce7;
+    --color-warning-700: #b45309;
+    --color-warning-100: #fef3c7;
+    --color-danger-700: #dc2626;
+    --color-danger-100: #fee2e2;
+    --color-surface: #ffffff;
+    --color-surface-muted: #f8fbff;
+    --color-border: #dbeafe;
+    --color-text: #0f172a;
+    --color-text-muted: #526277;
+}
+
+body {
+    color: var(--color-text);
+    background: var(--color-surface-muted);
+}
+
+/* Struktur dan navigasi */
+.custom-navbar,
+.admin-header,
+.admin-table thead th {
+    background-color: var(--color-navy-900);
+}
+
+.admin-tabs .nav-link.active,
+.admin-sidebar-nav .nav-link.active {
+    background: var(--color-navy-900);
+    color: #ffffff;
+}
+
+/* Satu gaya untuk setiap tindakan utama. */
+.intro-primary,
+.btn-login-nav,
+.btn-admin-add,
+.btn-admin-setting,
+.cat-action-btn:not(.cat-action-secondary),
+.practice-category-action,
+.tryout-tab.active {
+    background: var(--color-primary-600);
+    border-color: var(--color-primary-600);
+    color: #ffffff;
+}
+
+.intro-primary:hover,
+.btn-login-nav:hover,
+.btn-admin-add:hover,
+.btn-admin-setting:hover,
+.cat-action-btn:not(.cat-action-secondary):hover,
+.practice-category-action:hover,
+.tryout-tab:hover {
+    background: var(--color-primary-700);
+    border-color: var(--color-primary-700);
+    color: #ffffff;
+}
+
+/* Aksi sekunder selalu netral, agar tidak bersaing dengan aksi utama. */
+.intro-secondary {
+    background: transparent;
+    border-color: #94a3b8;
+    color: #f8fafc;
+}
+
+.cat-action-secondary {
+    background: #e2e8f0;
+    border-color: #e2e8f0;
+}
+
+/* Aksen emas dibatasi untuk sorotan visual, bukan tombol operasional. */
+.intro-role,
+.intro-slide-title span {
+    color: var(--color-accent-500);
+}
+
+.tryout-tab.active span {
+    background: #ffffff;
+    color: var(--color-primary-700);
+}
+
+/* Status selalu menyampaikan arti yang sama di seluruh aplikasi. */
+.admin-badge {
+    background: var(--color-info-100);
+    color: var(--color-info-700);
+}
+
+.admin-status-badge.active,
+.cat-readiness-card,
+.tryout-status-success {
+    background: var(--color-success-100);
+    color: var(--color-success-700);
+}
+
+.admin-status-badge.draft,
+.tryout-status-warning {
+    background: var(--color-warning-100);
+    color: var(--color-warning-700);
+}
+
+.btn-admin-edit {
+    background: #fbbf24;
+    color: var(--color-navy-900);
+}
+
+.btn-admin-delete,
+.tryout-status-danger {
+    background: var(--color-danger-700);
+    color: #ffffff;
+}
+
+.admin-table-card,
+.tryout-simulation-panel,
+.practice-category-section,
+.cat-main,
+.cat-sidebar,
+.cat-result {
+    border-color: var(--color-border);
+}
+
+.admin-desc,
+.intro-description,
+.tryout-simulation-panel p,
+.cat-preparation-note {
+    color: var(--color-text-muted);
+}
+
+/* Fokus keyboard yang konsisten untuk aksesibilitas. */
+:is(a, button, input, select, textarea):focus-visible {
+    outline: 3px solid color-mix(in srgb, var(--color-primary-600) 65%, white);
+    outline-offset: 3px;
+}
+
+.dark-mode {
+    --color-text-muted: #cbd5e1;
+    --color-border: #334155;
+}
