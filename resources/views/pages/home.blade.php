@@ -273,18 +273,6 @@
             </div>
         </div>
     </section>
-
-    <section class="portfolio-contact portfolio-section" aria-labelledby="portfolio-contact-title">
-        <div class="container portfolio-contact-inner">
-            <div>
-                <p class="portfolio-label">Kontak & kerja sama</p>
-                <h2 id="portfolio-contact-title">Punya ide atau peluang?<br>Mari berdiskusi.</h2>
-            </div>
-            <button type="button" class="portfolio-button" data-bs-toggle="modal" data-bs-target="#smartContactModal">
-                Mulai percakapan <i class="bi bi-arrow-up-right" aria-hidden="true"></i>
-            </button>
-        </div>
-    </section>
 @endsection
 
 @push('scripts')

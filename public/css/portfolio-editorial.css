@@ -76,8 +76,7 @@ body.portfolio-page .custom-navbar.scrolled {
 .portfolio-page .custom-navbar .nav-premium .nav-link i,
 .portfolio-page .custom-navbar .btn-login-nav i { display: none; }
 
-.portfolio-page .custom-navbar .btn-login-nav,
-.portfolio-page .site-footer-contact-button {
+.portfolio-page .custom-navbar .btn-login-nav {
     border: 1px solid currentColor;
     border-radius: 0;
     color: inherit;
@@ -500,27 +499,6 @@ body.portfolio-page .custom-navbar.scrolled {
 .portfolio-certificate div p { color: var(--muted); }
 .portfolio-pdf-unavailable { color: var(--muted); font-size: .75rem; }
 .portfolio-empty { margin: 0; }
-
-.portfolio-contact { background: var(--accent); color: var(--paper); }
-
-.portfolio-contact-inner {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: flex-end;
-    justify-content: space-between;
-    gap: 1.8rem;
-}
-
-.portfolio-contact .portfolio-label { margin-bottom: .9rem; color: #d3efe2; }
-.portfolio-contact .portfolio-button { border-color: var(--paper); background: var(--paper); color: var(--dark); }
-.portfolio-contact .portfolio-button:hover { background: var(--sand); }
-
-.portfolio-page .site-footer { background: var(--dark); color: var(--paper); }
-.portfolio-page .site-footer :is(a, p) { color: #d8e3dd; }
-.portfolio-page .site-footer a:hover { color: #d3efe2; }
-.portfolio-page .site-footer-bottom { border-color: #54645c; }
-.portfolio-page .site-footer-contact-button:hover { background: var(--accent); }
-.portfolio-page .site-footer-social a { border-color: #a1b5ac; border-radius: 0; }
 
 .portfolio-page .floating-whatsapp {
     color: var(--paper);

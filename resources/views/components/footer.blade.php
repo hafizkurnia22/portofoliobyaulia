@@ -1,61 +1,39 @@
-<footer class="site-footer" aria-label="Informasi dan navigasi situs">
+@php
+    $socialLinks = [
+        'Facebook' => $tentangSaya->facebook ?? null,
+        'Instagram' => $tentangSaya->instagram ?? null,
+        'TikTok' => $tentangSaya->tiktok ?? null,
+    ];
+@endphp
+
+<footer class="portfolio-footer" aria-labelledby="footer-title">
     <div class="container">
-        <div class="site-footer-main">
+        <div class="portfolio-footer-main">
+            <h2 id="footer-title">Mari terhubung<span>.</span></h2>
 
-            <div class="site-footer-intro">
-                <a class="site-footer-logo" href="{{ url('/') }}" aria-label="Hafiz’s Portofolio — Beranda">
-                    <svg viewBox="525 260 1030 228" aria-hidden="true" focusable="false"><image href="{{ asset('images/logo-mhk-premium.png') }}" width="2073" height="758" /></svg>
-                </a>
-                <p>Kenali pengalaman, karya, dan keahlian saya. Mari terhubung untuk peluang dan kerja sama yang bermanfaat.</p>
-            </div>
-            <nav class="site-footer-links" aria-label="Jelajahi profil">
-                <h2>Jelajahi profil</h2>
-                <a href="{{ url('/#tentang') }}">Tentang saya</a>
-                <a href="{{ url('/#pengalaman') }}">Pengalaman</a>
-                <a href="{{ url('/#my-project') }}">Project</a>
-                <a href="{{ url('/#skill') }}">Keahlian</a>
-                <a href="{{ url('/#sertifikasi') }}">Sertifikasi</a>
-            </nav>
-            <nav class="site-footer-links" aria-label="Belajar dan karier">
-                <h2>Belajar & karier</h2>
-                <a href="{{ route('tryout.index', ['tab' => 'materi']) }}">Materi CPNS</a>
-                <a href="{{ route('tryout.index', ['tab' => 'simulasi']) }}">Simulasi ujian</a>
-                <a href="{{ route('cv.builder') }}">Buat CV saya <i class="bi bi-arrow-up-right" aria-hidden="true"></i></a>
-            </nav>
-            <div class="site-footer-links">
-                <h2>Mari terhubung</h2>
-                <p>Untuk pertanyaan, rekrutmen, atau diskusi project.</p>
-                <button type="button" class="site-footer-contact-button" data-bs-toggle="modal" data-bs-target="#smartContactModal"><i class="bi bi-whatsapp" aria-hidden="true"></i> Hubungi saya</button>
+            <div class="portfolio-footer-contact">
                 @if (!empty($tentangSaya->email_kontak))
-                    <a class="site-footer-email" href="mailto:{{ $tentangSaya->email_kontak }}">{{ $tentangSaya->email_kontak }}</a>
-                @endif
-            <div class="site-footer-social">
-
-                @if (!empty($tentangSaya->facebook))
-                    <a href="{{ $tentangSaya->facebook }}" target="_blank" rel="noopener noreferrer" aria-label="Facebook (tab baru)">
-                        <i class="bi bi-facebook"></i>
+                    <a class="portfolio-footer-email" href="mailto:{{ $tentangSaya->email_kontak }}">
+                        {{ $tentangSaya->email_kontak }}
                     </a>
                 @endif
-
-                @if (!empty($tentangSaya->instagram))
-                    <a href="{{ $tentangSaya->instagram }}" target="_blank" rel="noopener noreferrer" aria-label="Instagram (tab baru)">
-                        <i class="bi bi-instagram"></i>
-                    </a>
-                @endif
-
-                @if (!empty($tentangSaya->tiktok))
-                    <a href="{{ $tentangSaya->tiktok }}" target="_blank" rel="noopener noreferrer" aria-label="TikTok (tab baru)">
-                        <i class="bi bi-tiktok"></i>
-                    </a>
-                @endif
-
+                <button class="portfolio-footer-whatsapp" type="button" data-bs-toggle="modal" data-bs-target="#smartContactModal">
+                    WhatsApp <i class="bi bi-arrow-up-right" aria-hidden="true"></i>
+                </button>
             </div>
+        </div>
 
-        </div>
-        </div>
-        <div class="site-footer-bottom">
-            <span>© {{ date('Y') }} {{ $contactName ?: 'Hafiz' }}. Hak cipta dilindungi.</span>
-            <a href="#page-top">Kembali ke atas <i class="bi bi-arrow-up" aria-hidden="true"></i></a>
+        <div class="portfolio-footer-bottom">
+            <small>© {{ date('Y') }} {{ $contactName ?: 'Hafiz' }}</small>
+
+            <div class="portfolio-footer-links">
+                @foreach ($socialLinks as $label => $url)
+                    @if (!empty($url))
+                        <a href="{{ $url }}" target="_blank" rel="noopener noreferrer">{{ $label }}</a>
+                    @endif
+                @endforeach
+                <a href="#page-top">Kembali ke atas <i class="bi bi-arrow-up" aria-hidden="true"></i></a>
+            </div>
         </div>
     </div>
 </footer>

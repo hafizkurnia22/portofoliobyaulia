@@ -35,6 +35,7 @@
     <link rel="stylesheet" href="{{ asset('css/style.css') }}?v={{ filemtime(public_path('css/style.css')) }}">
     <link rel="stylesheet" href="{{ asset('css/color-system.css') }}?v={{ filemtime(public_path('css/color-system.css')) }}">
     <link rel="stylesheet" href="{{ asset('css/type-system.css') }}?v={{ filemtime(public_path('css/type-system.css')) }}">
+    <link rel="stylesheet" href="{{ asset('css/portfolio-footer.css') }}?v={{ filemtime(public_path('css/portfolio-footer.css')) }}">
     @if ($usesPortfolioTheme)
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap">
         <link rel="stylesheet" href="{{ asset('css/portfolio-editorial.css') }}?v={{ filemtime(public_path('css/portfolio-editorial.css')) }}">
@@ -96,10 +97,12 @@
 
         @include('components.footer')
 
-        <button type="button" class="floating-whatsapp" data-bs-toggle="modal" data-bs-target="#smartContactModal"
-            aria-label="Buka pilihan kontak WhatsApp">
-            <i class="bi bi-whatsapp"></i>
-        </button>
+        @unless (request()->is('/'))
+            <button type="button" class="floating-whatsapp" data-bs-toggle="modal" data-bs-target="#smartContactModal"
+                aria-label="Buka pilihan kontak WhatsApp">
+                <i class="bi bi-whatsapp"></i>
+            </button>
+        @endunless
 
         <div class="modal fade smart-contact-modal" id="smartContactModal" tabindex="-1"
             aria-labelledby="smartContactModalLabel" aria-hidden="true">
