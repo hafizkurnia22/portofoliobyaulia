@@ -186,33 +186,58 @@
     </section>
 
     <section id="pengalaman" class="portfolio-career portfolio-section" aria-labelledby="portfolio-career-title">
-        <div class="container portfolio-section-grid">
-            <header><h2 id="portfolio-career-title">Pengalaman kerja</h2></header>
-            <div>
-                @forelse ($pengalaman as $item)
-                    <article class="portfolio-career-entry">
-                        <p class="portfolio-label">{{ $item->periode }}</p>
-                        <div>
-                            <h3>{{ $item->jabatan }}</h3>
-                            <p class="portfolio-company">
-                                @if ($item->logo)
-                                    <img src="{{ asset('images/' . $item->logo) }}" alt="" width="32" height="32" loading="lazy">
-                                @endif
-                                {{ $item->nama_perusahaan }}
-                            </p>
-                            <p class="portfolio-career-description">{{ $item->deskripsi }}</p>
-                        </div>
-                    </article>
-                @empty
-                    <p class="portfolio-empty">Belum ada data pengalaman.</p>
-                @endforelse
+        <div class="container">
+            <header class="portfolio-career-heading">
+                <h2 id="portfolio-career-title">Pengalaman kerja</h2>
+                @if ($pengalaman->count() > 1)
+                    <p>Pilih logo atau nama perusahaan untuk melihat pengalaman saya.</p>
+                @endif
+            </header>
 
-                @if ($pengalaman->hasPages())
-                    <div class="portfolio-pages">
-                        {{ $pengalaman->appends(request()->query())->fragment('pengalaman')->links() }}
+            @if ($pengalaman->isNotEmpty())
+                <ul class="portfolio-career-logos" aria-label="Tempat bekerja">
+                    @foreach ($pengalaman as $item)
+                        <li>
+                            <a href="#pengalaman-{{ $item->id }}" aria-label="{{ $item->nama_perusahaan }} — {{ $item->jabatan }}">
+                                @if ($item->logo)
+                                    <img src="{{ asset('images/' . $item->logo) }}" alt="" loading="lazy">
+                                @else
+                                    <span>{{ $item->nama_perusahaan }}</span>
+                                @endif
+                            </a>
+                        </li>
+                    @endforeach
+                </ul>
+
+                @if ($pengalaman->count() > 1)
+                    <div class="portfolio-career-dots" hidden aria-label="Pilih pengalaman">
+                        @foreach ($pengalaman as $item)
+                            <button type="button" data-experience="pengalaman-{{ $item->id }}"
+                                aria-controls="pengalaman-{{ $item->id }}"
+                                aria-label="{{ $item->nama_perusahaan }} — {{ $item->jabatan }}"></button>
+                        @endforeach
                     </div>
                 @endif
-            </div>
+
+                <div class="portfolio-career-details" aria-live="polite">
+                    @foreach ($pengalaman as $item)
+                        <article class="portfolio-career-entry" id="pengalaman-{{ $item->id }}">
+                            <p class="portfolio-label">{{ $item->periode }}</p>
+                            <h3>{{ $item->jabatan }}</h3>
+                            <p class="portfolio-company">{{ $item->nama_perusahaan }}</p>
+                            <p class="portfolio-career-description">{{ $item->deskripsi }}</p>
+                        </article>
+                    @endforeach
+                </div>
+            @else
+                <p class="portfolio-empty">Belum ada data pengalaman.</p>
+            @endif
+
+            @if ($pengalaman->hasPages())
+                <div class="portfolio-pages">
+                    {{ $pengalaman->appends(request()->query())->fragment('pengalaman')->links() }}
+                </div>
+            @endif
         </div>
     </section>
 
@@ -279,4 +304,5 @@
 
 @push('scripts')
     <script src="{{ asset('js/portfolio-portrait.js') }}?v={{ filemtime(public_path('js/portfolio-portrait.js')) }}" defer></script>
+    <script src="{{ asset('js/portfolio-career.js') }}?v={{ filemtime(public_path('js/portfolio-career.js')) }}" defer></script>
 @endpush
