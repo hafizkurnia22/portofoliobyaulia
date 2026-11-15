@@ -27,7 +27,9 @@
                 <figure class="portfolio-portrait">
                     <div class="portfolio-portrait-mat">
                         <img src="{{ $photo }}" alt="Foto profil {{ $name }}" fetchpriority="high">
-                        <img class="portfolio-portrait-ink" src="{{ $photo }}" alt="" aria-hidden="true">
+                        <div class="portfolio-portrait-ink" aria-hidden="true">
+                            <img src="{{ $photo }}" alt="">
+                        </div>
                     </div>
                     <figcaption>
                         <h1 id="portfolio-name">{{ $name }}</h1>
@@ -284,3 +286,7 @@
         </div>
     </section>
 @endsection
+
+@push('scripts')
+    <script src="{{ asset('js/portfolio-portrait.js') }}?v={{ filemtime(public_path('js/portfolio-portrait.js')) }}" defer></script>
+@endpush

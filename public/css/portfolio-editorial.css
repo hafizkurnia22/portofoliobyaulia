@@ -121,8 +121,10 @@ body.portfolio-page .custom-navbar.scrolled {
     gap: clamp(1rem, 4vw, 4rem);
 }
 
-.portfolio-hero-grid:has(.portfolio-hero-profile:is(:hover, :focus-visible)) { --portrait-split: 76%; }
-.portfolio-hero-grid:has(.portfolio-hero-code:is(:hover, :focus-visible)) { --portrait-split: 24%; }
+@media (prefers-reduced-motion: no-preference) {
+    .portfolio-hero-grid:has(.portfolio-hero-profile:focus-visible) { --portrait-split: 76%; }
+    .portfolio-hero-grid:has(.portfolio-hero-code:focus-visible) { --portrait-split: 24%; }
+}
 
 .portfolio-label {
     margin: 0;
@@ -273,19 +275,25 @@ body.portfolio-page .custom-navbar.scrolled {
     position: absolute;
     inset: 0;
     clip-path: inset(0 calc(100% - var(--portrait-split)) 0 0);
-    filter: grayscale(1) contrast(1.12);
-    transition: clip-path .4s ease;
+    pointer-events: none;
 }
 
-.portfolio-portrait-mat::after {
+.portfolio-portrait-ink img {
+    filter: grayscale(1) contrast(1.12);
+}
+
+.portfolio-portrait-ink::after {
     position: absolute;
     inset: 0;
     background: repeating-linear-gradient(135deg, transparent 0 3px, #fff5 3px 4px);
-    clip-path: inset(0 calc(100% - var(--portrait-split)) 0 0);
     mix-blend-mode: overlay;
-    transition: clip-path .4s ease;
-    pointer-events: none;
     content: '';
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    .portfolio-hero-grid:not([data-portrait-tracking]) .portfolio-portrait-ink {
+        transition: clip-path .36s ease-out;
+    }
 }
 
 .portfolio-portrait figcaption { padding-top: 1.15rem; }
@@ -570,10 +578,6 @@ body.portfolio-page .custom-navbar.scrolled {
     .portfolio-hero-title { font-size: clamp(2.45rem, 10vw, 4.5rem); }
     .portfolio-hero-code .portfolio-hero-title { font-size: clamp(1.75rem, 8vw, 3.25rem); }
     .portfolio-section-grid, .portfolio-career-entry { grid-template-columns: minmax(0, 1fr); }
-}
-
-@media (prefers-reduced-motion: reduce) {
-    .portfolio-portrait-ink, .portfolio-portrait-mat::after { transition: none; }
 }
 
 @media (max-width: 479.98px) {

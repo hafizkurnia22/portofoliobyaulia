@@ -175,6 +175,7 @@
     <!-- Admin JS -->
     <script src="{{ asset('js/admin-dashboard.js') }}?v={{ filemtime(public_path('js/admin-dashboard.js')) }}"></script>
 
+    @stack('scripts')
 </body>
 
 </html>
