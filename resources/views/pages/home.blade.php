@@ -26,9 +26,11 @@
 
                 <figure class="portfolio-portrait">
                     <div class="portfolio-portrait-mat">
-                        <img src="{{ $photo }}" alt="Foto profil {{ $name }}" fetchpriority="high">
-                        <div class="portfolio-portrait-ink" aria-hidden="true">
-                            <img src="{{ $photo }}" alt="">
+                        <div class="portfolio-portrait-artwork">
+                            <img src="{{ $photo }}" alt="Foto profil {{ $name }}" fetchpriority="high">
+                            <div class="portfolio-portrait-ink" aria-hidden="true">
+                                <img src="{{ $photo }}" alt="">
+                            </div>
                         </div>
                     </div>
                     <figcaption>
@@ -37,8 +39,8 @@
                     </figcaption>
                 </figure>
 
-                <a href="#my-project" class="portfolio-hero-side portfolio-hero-code">
-                    <span class="portfolio-hero-title"><span>&lt;</span>kode<span>&gt;</span></span>
+                <a href="#my-project" class="portfolio-hero-side portfolio-hero-work">
+                    <span class="portfolio-hero-title">karya<span>.</span></span>
                     <span class="portfolio-hero-description">Membangun aplikasi web dan sistem informasi yang rapi, cepat, dan mudah digunakan.</span>
                     <span class="portfolio-hero-link">Lihat karya <i class="bi bi-arrow-up-right" aria-hidden="true"></i></span>
                 </a>

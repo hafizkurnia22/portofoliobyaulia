@@ -122,7 +122,7 @@ body.portfolio-page .custom-navbar.scrolled {
 
 @media (prefers-reduced-motion: no-preference) {
     .portfolio-hero-grid:has(.portfolio-hero-profile:focus-visible) { --portrait-split: 76%; }
-    .portfolio-hero-grid:has(.portfolio-hero-code:focus-visible) { --portrait-split: 24%; }
+    .portfolio-hero-grid:has(.portfolio-hero-work:focus-visible) { --portrait-split: 24%; }
 }
 
 .portfolio-label {
@@ -161,12 +161,6 @@ body.portfolio-page .custom-navbar.scrolled {
 }
 
 .portfolio-hero-title > span { color: var(--accent); }
-.portfolio-hero-code .portfolio-hero-title {
-    font-family: var(--mono);
-    font-size: clamp(2.6rem, 5.65vw, 5.35rem);
-    font-weight: 500;
-    letter-spacing: -.09em;
-}
 
 .portfolio-hero-description {
     max-width: 28ch;
@@ -255,14 +249,19 @@ body.portfolio-page .custom-navbar.scrolled {
 .portfolio-portrait { width: min(100%, 24rem); min-width: 0; margin: 0 auto; text-align: center; }
 .portfolio-portrait-mat {
     position: relative;
-    isolation: isolate;
     aspect-ratio: 1;
+}
+
+.portfolio-portrait-artwork {
+    position: absolute;
+    inset: 0;
+    isolation: isolate;
     overflow: hidden;
     border-radius: 48% 48% 3px 3px;
     background: var(--tint);
 }
 
-.portfolio-portrait-mat img {
+.portfolio-portrait-artwork img {
     display: block;
     width: 100%;
     height: 100%;
@@ -290,6 +289,11 @@ body.portfolio-page .custom-navbar.scrolled {
 }
 
 @media (prefers-reduced-motion: no-preference) {
+    .portfolio-hero-grid[data-portrait-tracking] .portfolio-portrait-artwork {
+        transform: translate(calc(var(--portrait-x, 0) * clamp(10px, 2.5vw, 26px)), calc(var(--portrait-y, 0) * 14px))
+            rotate(calc(var(--portrait-x, 0) * 2deg));
+    }
+
     .portfolio-hero-grid:not([data-portrait-tracking]) .portfolio-portrait-ink {
         transition: clip-path .36s ease-out;
     }
@@ -554,7 +558,6 @@ body.portfolio-page .custom-navbar.scrolled {
 
     .portfolio-hero-side { padding-block: .75rem; gap: .7rem; }
     .portfolio-hero-title { font-size: clamp(2.45rem, 10vw, 4.5rem); }
-    .portfolio-hero-code .portfolio-hero-title { font-size: clamp(1.75rem, 8vw, 3.25rem); }
     .portfolio-section-grid, .portfolio-career-entry { grid-template-columns: minmax(0, 1fr); }
 }
 
