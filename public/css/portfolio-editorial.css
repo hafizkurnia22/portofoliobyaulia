@@ -289,6 +289,8 @@ body.portfolio-page .custom-navbar.scrolled {
 }
 
 @media (prefers-reduced-motion: no-preference) {
+    .portfolio-portrait-mat { touch-action: pan-y pinch-zoom; }
+
     .portfolio-hero-grid[data-portrait-tracking] .portfolio-portrait-artwork {
         transform: translate(calc(var(--portrait-x, 0) * clamp(10px, 2.5vw, 26px)), calc(var(--portrait-y, 0) * 14px))
             rotate(calc(var(--portrait-x, 0) * 2deg));

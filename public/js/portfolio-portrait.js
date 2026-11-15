@@ -1,7 +1,8 @@
 (() => {
     const portrait = document.querySelector('.portfolio-portrait-mat');
     const hero = portrait.closest('.portfolio-hero-grid');
-    const motion = matchMedia('(any-hover: hover) and (any-pointer: fine) and (prefers-reduced-motion: no-preference)');
+    const motion = matchMedia('(prefers-reduced-motion: no-preference)');
+    const hover = matchMedia('(any-hover: hover) and (any-pointer: fine)');
     let targetSplit = 50;
     let split = 50;
     let targetX = 0;
@@ -11,6 +12,7 @@
     let frame = 0;
     let lastFrame = null;
     let tracking = false;
+    let touchPointer = null;
 
     function draw(time) {
         const elapsed = lastFrame === null ? 16 : time - lastFrame;
@@ -50,7 +52,7 @@
     }
 
     function move(event) {
-        if (!motion.matches || event.pointerType === 'touch') return;
+        if (!motion.matches) return;
 
         const { left, top, width, height } = portrait.getBoundingClientRect();
         if (!width || !height) return;
@@ -78,12 +80,39 @@
         if (!frame) frame = requestAnimationFrame(draw);
     }
 
-    hero.addEventListener('pointermove', move, { passive: true });
-    hero.addEventListener('pointerleave', recenter);
-    hero.addEventListener('pointercancel', recenter);
+    function endTouch(event) {
+        if (event.pointerId !== touchPointer) return;
+
+        touchPointer = null;
+        recenter();
+    }
+
+    portrait.addEventListener('pointerdown', (event) => {
+        if (!motion.matches || event.pointerType !== 'touch' || !event.isPrimary) return;
+
+        touchPointer = event.pointerId;
+        move(event);
+    }, { passive: true });
+
+    hero.addEventListener('pointermove', (event) => {
+        const followsPointer = touchPointer === null
+            ? event.pointerType !== 'touch' && hover.matches
+            : event.pointerId === touchPointer;
+        if (followsPointer) move(event);
+    }, { passive: true });
+    hero.addEventListener('pointerleave', () => {
+        if (touchPointer === null) recenter();
+    });
+    hero.addEventListener('pointerup', endTouch);
+    hero.addEventListener('pointercancel', (event) => {
+        if (event.pointerType !== 'touch' && touchPointer === null) recenter();
+        else endTouch(event);
+    });
+    portrait.addEventListener('lostpointercapture', endTouch);
     motion.addEventListener('change', () => {
         cancelAnimationFrame(frame);
         tracking = false;
+        touchPointer = null;
         frame = 0;
         lastFrame = null;
         clearPose();
