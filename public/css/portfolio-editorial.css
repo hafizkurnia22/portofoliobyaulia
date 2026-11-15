@@ -1,4 +1,4 @@
-/* The home page shares the site navigation and contact dialog. */
+/* Shared portfolio theme for the home page and CV builder. */
 .portfolio-page {
     --paper: #fff;
     --sand: #f5f6f5;
@@ -21,8 +21,8 @@
     outline-offset: 5px;
 }
 
-.portfolio-page .custom-navbar,
-.portfolio-page .custom-navbar.scrolled {
+body.portfolio-page .custom-navbar,
+body.portfolio-page .custom-navbar.scrolled {
     color: var(--paper);
     background: var(--dark);
     border-bottom: 1px solid #39443d;
