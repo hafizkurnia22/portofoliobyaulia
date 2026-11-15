@@ -2,10 +2,10 @@
     $availabilityText = trim($tentangSaya->status ?? 'Open for Collaboration');
 @endphp
 
-<nav @class(['navbar custom-navbar fixed-top', 'navbar-expand-lg' => request()->is('/'), 'navbar-expand-xxl' => !request()->is('/')])
-    @unless (request()->is('/')) data-aos="fade-down" @endunless>
+<nav @class(['navbar custom-navbar fixed-top', 'navbar-expand-lg' => $usesPortfolioTheme, 'navbar-expand-xxl' => !$usesPortfolioTheme])
+    @unless ($usesPortfolioTheme) data-aos="fade-down" @endunless>
     <div class="container">
-        @if (request()->is('/'))
+        @if ($usesPortfolioTheme)
             <a class="navbar-brand portfolio-wordmark" href="{{ url('/') }}" aria-label="Portofolio Hafiz, beranda">
                 <strong aria-hidden="true">MHK</strong> Portofolio
             </a>
@@ -25,9 +25,9 @@
         <div class="collapse navbar-collapse" id="navbarMenu">
             <ul class="navbar-nav nav-premium ms-auto align-items-xxl-center">
 
-                @if (request()->is('/'))
-                    <li class="nav-item"><a class="nav-link nav-scroll-link" href="#tentang" data-section="tentang">Tentang</a></li>
-                    <li class="nav-item"><a class="nav-link nav-scroll-link" href="#my-project" data-section="my-project">Karya</a></li>
+                @if ($usesPortfolioTheme)
+                    <li class="nav-item"><a class="nav-link nav-scroll-link" href="{{ url('/#tentang') }}" data-section="tentang">Tentang</a></li>
+                    <li class="nav-item"><a class="nav-link nav-scroll-link" href="{{ url('/#my-project') }}" data-section="my-project">Karya</a></li>
                 @else
                     <li class="nav-item">
                         <a class="nav-link nav-scroll-link" href="{{ url('/#home') }}" data-section="home">
@@ -60,7 +60,7 @@
                             </a>
                         </li>
 
-                        @unless (request()->is('/'))
+                        @unless ($usesPortfolioTheme)
                         <li>
                             <a class="dropdown-item nav-scroll-link" href="{{ url('/#my-project') }}"
                                 data-section="my-project">
@@ -78,7 +78,7 @@
                             </a>
                         </li>
 
-                        @unless (request()->is('/'))
+                        @unless ($usesPortfolioTheme)
                         <li>
                             <a class="dropdown-item nav-scroll-link" href="{{ url('/#tentang') }}" data-section="tentang">
                                 <i class="bi bi-person"></i>
@@ -120,7 +120,8 @@
 
                 {{-- Menu ini menggantikan download langsung agar pengunjung bisa memilih template CV dulu. --}}
                 <li class="nav-item">
-                    <a class="nav-link nav-link-feature" href="{{ route('cv.builder') }}">
+                    <a @class(['nav-link nav-link-feature', 'active' => $isCvBuilder]) href="{{ route('cv.builder') }}"
+                        @if ($isCvBuilder) aria-current="page" @endif>
                         <i class="bi bi-file-earmark-richtext"></i>
                         Buat CV
                     </a>

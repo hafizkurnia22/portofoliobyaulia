@@ -19,24 +19,23 @@
         ];
     @endphp
 
-    <section class="cv-builder-page">
+    <section class="cv-builder-page" aria-labelledby="cv-builder-title">
         <div class="container">
-            <div class="cv-builder-hero" data-aos="fade-up">
+            <header class="cv-builder-hero">
                 <div>
-                    <span class="section-label">Generate CV saya</span>
-                    <h1>Atur dan download CV PDF yang lebih rapi.</h1>
-                    <p>Atur tampilan, pilih warna, dan tentukan bagian yang mau ditampilkan.</p>
+                    <h1 id="cv-builder-title">Buat CV<span>.</span></h1>
+                    <p>Pilih template, warna, dan bagian yang ingin ditampilkan di PDF.</p>
                 </div>
 
-                <a href="{{ route('cv.download') . '?' . http_build_query($downloadQuery) }}" class="btn-builder-download">
-                    <i class="bi bi-file-earmark-arrow-down"></i>
-                    Download PDF
+                <a href="{{ route('cv.download') . '?' . http_build_query($downloadQuery) }}" class="portfolio-button cv-download">
+                    Unduh PDF <i class="bi bi-arrow-down" aria-hidden="true"></i>
                 </a>
-            </div>
+            </header>
 
             <div class="row g-4 align-items-start">
-                <div class="col-lg-4" data-aos="fade-right">
-                    <form action="{{ route('cv.builder') }}" method="GET" class="cv-control-panel">
+                <div class="col-lg-4">
+                    <form action="{{ route('cv.builder') }}" method="GET" class="cv-control-panel" aria-labelledby="cv-settings-title">
+                        <h2 id="cv-settings-title" class="cv-builder-label">Pengaturan</h2>
                         <input type="hidden" name="builder" value="1">
 
                         {{-- Panel pengaturan ini hanya mengubah tampilan, data tetap dari dashboard portfolio. --}}
@@ -48,8 +47,8 @@
                             </select>
                         </div>
 
-                        <div class="cv-control-group">
-                            <span class="cv-control-label">Tema Warna</span>
+                        <fieldset class="cv-control-group">
+                            <legend class="cv-control-label">Tema warna</legend>
 
                             <div class="cv-theme-grid">
                                 @foreach ($cvThemes as $themeKey => $theme)
@@ -57,16 +56,16 @@
                                         <input type="radio" name="theme" value="{{ $themeKey }}"
                                             @checked($cvOptions['theme'] === $themeKey)>
                                         <span>
-                                            <i style="background: {{ $theme['primary'] }}"></i>
+                                            <i style="background: {{ $theme['primary'] }}" aria-hidden="true"></i>
                                             {{ $theme['label'] }}
                                         </span>
                                     </label>
                                 @endforeach
                             </div>
-                        </div>
+                        </fieldset>
 
-                        <div class="cv-control-group">
-                            <span class="cv-control-label">Isi CV</span>
+                        <fieldset class="cv-control-group">
+                            <legend class="cv-control-label">Isi CV</legend>
 
                             <label class="cv-builder-check">
                                 <input type="checkbox" name="show_photo" value="1" @checked($cvOptions['show_photo'])>
@@ -98,18 +97,19 @@
                                     @checked($cvOptions['show_certifications'])>
                                 <span>Sertifikasi</span>
                             </label>
-                        </div>
+                        </fieldset>
 
-                        <button type="submit" class="btn-builder-primary">
-                            <i class="bi bi-eye"></i>
-                            Preview CV
+                        <button type="submit" class="portfolio-button cv-apply">
+                            Perbarui pratinjau <i class="bi bi-arrow-right" aria-hidden="true"></i>
                         </button>
                     </form>
                 </div>
 
-                <div class="col-lg-8" data-aos="fade-left">
+                <div class="col-lg-8">
+                    <h2 class="cv-builder-label" id="cv-preview-title">Pratinjau CV</h2>
                     {{-- Preview memakai opsi yang sama dengan PDF agar hasil download mudah diprediksi. --}}
-                    <div class="cv-preview {{ $cvOptions['template'] === 'compact' ? 'is-compact' : '' }}"
+                    <article class="cv-preview {{ $cvOptions['template'] === 'compact' ? 'is-compact' : '' }}"
+                        aria-labelledby="cv-preview-title"
                         style="--cv-primary: {{ $colors['primary'] }}; --cv-secondary: {{ $colors['secondary'] }}; --cv-soft: {{ $colors['soft'] }}; --cv-muted: {{ $colors['muted'] }};">
                         <div class="cv-preview-header">
                             @if ($cvOptions['show_photo'])
@@ -290,7 +290,7 @@
                                 </div>
                             </div>
                         @endif
-                    </div>
+                    </article>
                 </div>
             </div>
         </div>

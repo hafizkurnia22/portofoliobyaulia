@@ -1,3 +1,8 @@
+@php
+    $isCvBuilder = request()->routeIs('cv.builder');
+    $usesPortfolioTheme = request()->is('/') || $isCvBuilder;
+    $isTryoutExam = request()->is('tryout') && request('mode') === 'ujian';
+@endphp
 <!DOCTYPE html>
 <html lang="id">
 
@@ -30,17 +35,16 @@
     <link rel="stylesheet" href="{{ asset('css/style.css') }}?v={{ filemtime(public_path('css/style.css')) }}">
     <link rel="stylesheet" href="{{ asset('css/color-system.css') }}?v={{ filemtime(public_path('css/color-system.css')) }}">
     <link rel="stylesheet" href="{{ asset('css/type-system.css') }}?v={{ filemtime(public_path('css/type-system.css')) }}">
-    @if (request()->is('/'))
+    @if ($usesPortfolioTheme)
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap">
         <link rel="stylesheet" href="{{ asset('css/portfolio-editorial.css') }}?v={{ filemtime(public_path('css/portfolio-editorial.css')) }}">
     @endif
+    @if ($isCvBuilder)
+        <link rel="stylesheet" href="{{ asset('css/cv-builder.css') }}?v={{ filemtime(public_path('css/cv-builder.css')) }}">
+    @endif
 </head>
 
-@php
-    $isTryoutExam = request()->is('tryout') && request('mode') === 'ujian';
-@endphp
-
-<body id="page-top" @class(['tryout-exam-page' => $isTryoutExam, 'portfolio-page' => request()->is('/')])>
+<body id="page-top" @class(['tryout-exam-page' => $isTryoutExam, 'portfolio-page' => $usesPortfolioTheme])>
 
     @if (!request()->is('admin/*') && !$isTryoutExam)
         @include('components.navbar')

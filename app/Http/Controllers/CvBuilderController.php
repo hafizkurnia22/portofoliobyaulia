@@ -14,13 +14,20 @@ use Illuminate\Support\Str;
 class CvBuilderController extends Controller
 {
     private const DEFAULT_TEMPLATE = 'modern';
-    private const DEFAULT_THEME = 'navy';
+    private const DEFAULT_THEME = 'portfolio';
 
     /**
      * Tema warna dipakai bersama oleh preview web dan file PDF.
      * Kalau mau menambah tema baru, cukup tambahkan data di sini.
      */
     private const THEMES = [
+        'portfolio' => [
+            'label' => 'Portofolio',
+            'primary' => '#202622',
+            'secondary' => '#246456',
+            'soft' => '#e9f0ec',
+            'muted' => '#b2ddcb',
+        ],
         'navy' => [
             'label' => 'Navy Professional',
             'primary' => '#0b1f3a',
