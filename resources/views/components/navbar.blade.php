@@ -25,12 +25,17 @@
         <div class="collapse navbar-collapse" id="navbarMenu">
             <ul class="navbar-nav nav-premium ms-auto align-items-xxl-center">
 
-                <li class="nav-item">
-                    <a class="nav-link nav-scroll-link" href="{{ url('/#home') }}" data-section="home">
-                        <i class="bi bi-house-door"></i>
-                        Beranda
-                    </a>
-                </li>
+                @if (request()->is('/'))
+                    <li class="nav-item"><a class="nav-link nav-scroll-link" href="#tentang" data-section="tentang">Tentang</a></li>
+                    <li class="nav-item"><a class="nav-link nav-scroll-link" href="#my-project" data-section="my-project">Karya</a></li>
+                @else
+                    <li class="nav-item">
+                        <a class="nav-link nav-scroll-link" href="{{ url('/#home') }}" data-section="home">
+                            <i class="bi bi-house-door"></i>
+                            Beranda
+                        </a>
+                    </li>
+                @endif
 
                 <li class="nav-item dropdown">
                     <button class="nav-link dropdown-toggle nav-more-toggle" type="button" data-bs-toggle="dropdown"
@@ -55,6 +60,7 @@
                             </a>
                         </li>
 
+                        @unless (request()->is('/'))
                         <li>
                             <a class="dropdown-item nav-scroll-link" href="{{ url('/#my-project') }}"
                                 data-section="my-project">
@@ -62,6 +68,7 @@
                                 Proyek
                             </a>
                         </li>
+                        @endunless
 
                         <li>
                             <a class="dropdown-item nav-scroll-link" href="{{ url('/#sertifikasi') }}"
@@ -71,12 +78,14 @@
                             </a>
                         </li>
 
+                        @unless (request()->is('/'))
                         <li>
                             <a class="dropdown-item nav-scroll-link" href="{{ url('/#tentang') }}" data-section="tentang">
                                 <i class="bi bi-person"></i>
                                 Tentang Saya
                             </a>
                         </li>
+                        @endunless
 
                         @if ($availabilityText !== '')
                             <li>
@@ -164,7 +173,7 @@
             });
 
             if (moreToggle) {
-                moreToggle.classList.toggle('active', ['pengalaman', 'skill', 'my-project', 'sertifikasi', 'tentang'].includes(currentSection));
+                moreToggle.classList.toggle('active', Boolean(moreToggle.parentElement.querySelector('.dropdown-item.active')));
             }
         }
 

@@ -31,7 +31,7 @@
     <link rel="stylesheet" href="{{ asset('css/color-system.css') }}?v={{ filemtime(public_path('css/color-system.css')) }}">
     <link rel="stylesheet" href="{{ asset('css/type-system.css') }}?v={{ filemtime(public_path('css/type-system.css')) }}">
     @if (request()->is('/'))
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap">
         <link rel="stylesheet" href="{{ asset('css/portfolio-editorial.css') }}?v={{ filemtime(public_path('css/portfolio-editorial.css')) }}">
     @endif
 </head>

@@ -18,27 +18,36 @@
     <section id="home" class="portfolio-hero" aria-labelledby="portfolio-name">
         <div class="container">
             <div class="portfolio-hero-grid">
-                <div class="portfolio-hero-copy">
-                    <p class="portfolio-label">Portofolio pribadi</p>
-                    <h1 id="portfolio-name">{{ $name }}</h1>
-                    <p class="portfolio-role">{{ $tentangSaya->bidang ?? 'Pengembang website' }}</p>
-                    <p class="portfolio-lead">Membangun aplikasi web dan sistem informasi yang rapi, cepat, dan mudah digunakan.</p>
-                    <div class="portfolio-actions">
-                        <a href="#my-project" class="portfolio-button">Lihat karya <i class="bi bi-arrow-down" aria-hidden="true"></i></a>
-                        <button type="button" class="portfolio-text-link" data-bs-toggle="modal" data-bs-target="#smartContactModal">
-                            Diskusikan proyek <i class="bi bi-arrow-up-right" aria-hidden="true"></i>
-                        </button>
-                    </div>
-                </div>
+                <a href="#pengalaman" class="portfolio-hero-side portfolio-hero-profile">
+                    <span class="portfolio-hero-title">profil<span>.</span></span>
+                    <span class="portfolio-hero-description">Kenali pengalaman saya dalam teknologi informasi dan pengelolaan aplikasi.</span>
+                    <span class="portfolio-hero-link">Lihat pengalaman <i class="bi bi-arrow-up-right" aria-hidden="true"></i></span>
+                </a>
 
                 <figure class="portfolio-portrait">
                     <div class="portfolio-portrait-mat">
-                        <img src="{{ $photo }}" alt="Potret {{ $name }}" fetchpriority="high">
+                        <img src="{{ $photo }}" alt="Foto profil {{ $name }}" fetchpriority="high">
+                        <img class="portfolio-portrait-ink" src="{{ $photo }}" alt="" aria-hidden="true">
                     </div>
-                    @if ($availabilityLabel !== '')
-                        <figcaption><span aria-hidden="true"></span>{{ $availabilityLabel }}</figcaption>
-                    @endif
+                    <figcaption>
+                        <h1 id="portfolio-name">{{ $name }}</h1>
+                        <p class="portfolio-role">{{ $tentangSaya->bidang ?? 'Pengembang website' }}</p>
+                    </figcaption>
                 </figure>
+
+                <a href="#my-project" class="portfolio-hero-side portfolio-hero-code">
+                    <span class="portfolio-hero-title"><span>&lt;</span>kode<span>&gt;</span></span>
+                    <span class="portfolio-hero-description">Membangun aplikasi web dan sistem informasi yang rapi, cepat, dan mudah digunakan.</span>
+                    <span class="portfolio-hero-link">Lihat karya <i class="bi bi-arrow-up-right" aria-hidden="true"></i></span>
+                </a>
+            </div>
+            <div class="portfolio-hero-contact">
+                @if ($availabilityLabel !== '')
+                    <span class="portfolio-availability">{{ $availabilityLabel }}</span>
+                @endif
+                <button type="button" class="portfolio-text-link" data-bs-toggle="modal" data-bs-target="#smartContactModal">
+                    Diskusikan proyek <i class="bi bi-arrow-up-right" aria-hidden="true"></i>
+                </button>
             </div>
         </div>
     </section>
@@ -47,92 +56,95 @@
         <div class="container">
             <header class="portfolio-work-heading">
                 <h2 id="portfolio-work-title">Karya pilihan</h2>
-                <span class="portfolio-label">{{ $projects->count() }} proyek</span>
             </header>
 
-            @forelse ($projects as $project)
-                @php
-                    $technologies = collect(explode(',', $project->teknologi ?? ''))
-                        ->map(fn ($technology) => trim($technology))
-                        ->filter();
-                @endphp
-                <article class="portfolio-work-entry">
-                    @if ($project->gambar)
+            <div class="portfolio-work-grid">
+                @forelse ($projects as $project)
+                    @php
+                        $technologies = collect(explode(',', $project->teknologi ?? ''))
+                            ->map(fn ($technology) => trim($technology))
+                            ->filter();
+                    @endphp
+                    <article class="portfolio-work-entry">
                         <div class="portfolio-work-image">
-                            <img src="{{ asset('images/projects/' . $project->gambar) }}"
-                                alt="Pratinjau {{ $project->nama_project }}" loading="lazy" decoding="async">
-                        </div>
-                    @endif
-                    <div class="portfolio-work-copy">
-                        <p class="portfolio-label">{{ $project->kategori ?? 'Proyek' }}</p>
-                        <h3>{{ $project->nama_project }}</h3>
-                        <p>{{ \Illuminate\Support\Str::limit(strip_tags($project->deskripsi), 190) }}</p>
-                        @if ($technologies->isNotEmpty())
-                            <ul class="portfolio-technologies" aria-label="Teknologi">
-                                @foreach ($technologies as $technology)
-                                    <li>{{ $technology }}</li>
-                                @endforeach
-                            </ul>
-                        @endif
-
-                        <div class="portfolio-actions">
-                            <button type="button" class="portfolio-text-link" data-bs-toggle="modal"
-                                data-bs-target="#projectDetailModal{{ $project->id }}">
-                                Detail proyek <i class="bi bi-arrow-up-right" aria-hidden="true"></i>
-                            </button>
-                            @if ($project->link_demo)
-                                <a class="portfolio-text-link" href="{{ $project->link_demo }}" target="_blank" rel="noopener noreferrer">
-                                    Demo <i class="bi bi-arrow-up-right" aria-hidden="true"></i>
-                                </a>
-                            @endif
-                            @if ($project->link_repository)
-                                <a class="portfolio-text-link" href="{{ $project->link_repository }}" target="_blank" rel="noopener noreferrer">
-                                    Repository <i class="bi bi-github" aria-hidden="true"></i>
-                                </a>
-                            @endif
-                        </div>
-                    </div>
-                </article>
-
-                <div class="modal fade project-detail-modal" id="projectDetailModal{{ $project->id }}" tabindex="-1"
-                    aria-labelledby="projectDetailModalLabel{{ $project->id }}" aria-hidden="true">
-                    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
-                        <div class="modal-content">
-                            <button type="button" class="btn-close project-detail-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
                             @if ($project->gambar)
-                                <img src="{{ asset('images/projects/' . $project->gambar) }}" alt="Pratinjau {{ $project->nama_project }}"
-                                    class="project-detail-cover" loading="lazy">
+                                <img src="{{ asset('images/projects/' . $project->gambar) }}"
+                                    alt="Pratinjau {{ $project->nama_project }}" loading="lazy" decoding="async">
+                            @else
+                                <i class="bi bi-window" aria-hidden="true"></i>
                             @endif
-                            <div class="project-detail-body">
-                                <p class="portfolio-label">{{ $project->kategori ?? 'Proyek' }}</p>
-                                <h3 id="projectDetailModalLabel{{ $project->id }}">{{ $project->nama_project }}</h3>
-                                <p>{{ $project->deskripsi }}</p>
-                                @if ($technologies->isNotEmpty())
-                                    <ul class="portfolio-technologies" aria-label="Teknologi">
-                                        @foreach ($technologies as $technology)
-                                            <li>{{ $technology }}</li>
-                                        @endforeach
-                                    </ul>
+                        </div>
+                        <div class="portfolio-work-copy">
+                            <p class="portfolio-label">{{ $project->kategori ?? 'Proyek' }}</p>
+                            <h3>{{ $project->nama_project }}</h3>
+                            <p>{{ \Illuminate\Support\Str::limit(strip_tags($project->deskripsi), 190) }}</p>
+                            @if ($technologies->isNotEmpty())
+                                <ul class="portfolio-technologies" aria-label="Teknologi">
+                                    @foreach ($technologies as $technology)
+                                        <li>{{ $technology }}</li>
+                                    @endforeach
+                                </ul>
+                            @endif
+
+                            <div class="portfolio-actions">
+                                <button type="button" class="portfolio-text-link" data-bs-toggle="modal"
+                                    data-bs-target="#projectDetailModal{{ $project->id }}">
+                                    Detail proyek <i class="bi bi-arrow-up-right" aria-hidden="true"></i>
+                                </button>
+                                @if ($project->link_demo)
+                                    <a class="portfolio-text-link" href="{{ $project->link_demo }}" target="_blank" rel="noopener noreferrer">
+                                        Demo <i class="bi bi-arrow-up-right" aria-hidden="true"></i>
+                                    </a>
                                 @endif
-                                <div class="portfolio-actions">
-                                    @if ($project->link_demo)
-                                        <a class="portfolio-text-link" href="{{ $project->link_demo }}" target="_blank" rel="noopener noreferrer">
-                                            Demo <i class="bi bi-arrow-up-right" aria-hidden="true"></i>
-                                        </a>
+                                @if ($project->link_repository)
+                                    <a class="portfolio-text-link" href="{{ $project->link_repository }}" target="_blank" rel="noopener noreferrer">
+                                        Repository <i class="bi bi-github" aria-hidden="true"></i>
+                                    </a>
+                                @endif
+                            </div>
+                        </div>
+                    </article>
+
+                    <div class="modal fade project-detail-modal" id="projectDetailModal{{ $project->id }}" tabindex="-1"
+                        aria-labelledby="projectDetailModalLabel{{ $project->id }}" aria-hidden="true">
+                        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+                            <div class="modal-content">
+                                <button type="button" class="btn-close project-detail-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+                                @if ($project->gambar)
+                                    <img src="{{ asset('images/projects/' . $project->gambar) }}" alt="Pratinjau {{ $project->nama_project }}"
+                                        class="project-detail-cover" loading="lazy">
+                                @endif
+                                <div class="project-detail-body">
+                                    <p class="portfolio-label">{{ $project->kategori ?? 'Proyek' }}</p>
+                                    <h3 id="projectDetailModalLabel{{ $project->id }}">{{ $project->nama_project }}</h3>
+                                    <p>{{ $project->deskripsi }}</p>
+                                    @if ($technologies->isNotEmpty())
+                                        <ul class="portfolio-technologies" aria-label="Teknologi">
+                                            @foreach ($technologies as $technology)
+                                                <li>{{ $technology }}</li>
+                                            @endforeach
+                                        </ul>
                                     @endif
-                                    @if ($project->link_repository)
-                                        <a class="portfolio-text-link" href="{{ $project->link_repository }}" target="_blank" rel="noopener noreferrer">
-                                            Repository <i class="bi bi-github" aria-hidden="true"></i>
-                                        </a>
-                                    @endif
+                                    <div class="portfolio-actions">
+                                        @if ($project->link_demo)
+                                            <a class="portfolio-text-link" href="{{ $project->link_demo }}" target="_blank" rel="noopener noreferrer">
+                                                Demo <i class="bi bi-arrow-up-right" aria-hidden="true"></i>
+                                            </a>
+                                        @endif
+                                        @if ($project->link_repository)
+                                            <a class="portfolio-text-link" href="{{ $project->link_repository }}" target="_blank" rel="noopener noreferrer">
+                                                Repository <i class="bi bi-github" aria-hidden="true"></i>
+                                            </a>
+                                        @endif
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            @empty
-                <p class="portfolio-empty">Belum ada proyek yang ditampilkan.</p>
-            @endforelse
+                @empty
+                    <p class="portfolio-empty">Belum ada proyek yang ditampilkan.</p>
+                @endforelse
+            </div>
         </div>
     </section>
 
