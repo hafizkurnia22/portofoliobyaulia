@@ -28,16 +28,19 @@
 
     <!-- Custom CSS -->
     <link rel="stylesheet" href="{{ asset('css/style.css') }}?v={{ filemtime(public_path('css/style.css')) }}">
-    <link rel="stylesheet" href="{{ asset('css/portfolio-intro.css') }}?v={{ filemtime(public_path('css/portfolio-intro.css')) }}">
     <link rel="stylesheet" href="{{ asset('css/color-system.css') }}?v={{ filemtime(public_path('css/color-system.css')) }}">
     <link rel="stylesheet" href="{{ asset('css/type-system.css') }}?v={{ filemtime(public_path('css/type-system.css')) }}">
+    @if (request()->is('/'))
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap">
+        <link rel="stylesheet" href="{{ asset('css/portfolio-editorial.css') }}?v={{ filemtime(public_path('css/portfolio-editorial.css')) }}">
+    @endif
 </head>
 
 @php
     $isTryoutExam = request()->is('tryout') && request('mode') === 'ujian';
 @endphp
 
-<body id="page-top" @class(['tryout-exam-page' => $isTryoutExam])>
+<body id="page-top" @class(['tryout-exam-page' => $isTryoutExam, 'portfolio-page' => request()->is('/')])>
 
     @if (!request()->is('admin/*') && !$isTryoutExam)
         @include('components.navbar')
@@ -150,10 +153,6 @@
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    @if (request()->is('/'))
-        <script src="{{ asset('js/portfolio-carousel.js') }}?v={{ filemtime(public_path('js/portfolio-carousel.js')) }}"></script>
-    @endif
-
     <!-- SweetAlert -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 

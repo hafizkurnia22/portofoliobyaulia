@@ -2,13 +2,20 @@
     $availabilityText = trim($tentangSaya->status ?? 'Open for Collaboration');
 @endphp
 
-<nav class="navbar navbar-expand-xxl custom-navbar fixed-top" data-aos="fade-down">
+<nav @class(['navbar custom-navbar fixed-top', 'navbar-expand-lg' => request()->is('/'), 'navbar-expand-xxl' => !request()->is('/')])
+    @unless (request()->is('/')) data-aos="fade-down" @endunless>
     <div class="container">
-        <a class="navbar-brand brand-premium" href="{{ url('/') }}" aria-label="Hafiz’s Portofolio — Beranda">
-            <svg class="brand-logo-lockup" viewBox="525 260 1030 228" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
-                <image href="{{ asset('images/logo-mhk-premium.png') }}" width="2073" height="758" />
-            </svg>
-        </a>
+        @if (request()->is('/'))
+            <a class="navbar-brand portfolio-wordmark" href="{{ url('/') }}" aria-label="Portofolio Hafiz, beranda">
+                <strong aria-hidden="true">MHK</strong> Portofolio
+            </a>
+        @else
+            <a class="navbar-brand brand-premium" href="{{ url('/') }}" aria-label="Hafiz’s Portofolio — Beranda">
+                <svg class="brand-logo-lockup" viewBox="525 260 1030 228" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+                    <image href="{{ asset('images/logo-mhk-premium.png') }}" width="2073" height="758" />
+                </svg>
+            </a>
+        @endif
 
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMenu"
             aria-controls="navbarMenu" aria-expanded="false" aria-label="Buka menu navigasi">
@@ -138,30 +145,30 @@
 
     });
 
-    const sections = document.querySelectorAll('section[id]');
-    const navLinks = document.querySelectorAll('.nav-scroll-link');
-    const moreToggle = document.querySelector('.nav-more-toggle');
+    document.addEventListener('DOMContentLoaded', function() {
+        const sections = document.querySelectorAll('main section[aria-labelledby][id]');
+        const navLinks = document.querySelectorAll('.nav-scroll-link');
+        const moreToggle = document.querySelector('.nav-more-toggle');
 
-    function setActiveNav() {
-        let currentSection = document.getElementById('home') ? 'home' : null;
+        function setActiveNav() {
+            let currentSection = document.getElementById('home') ? 'home' : null;
 
-        sections.forEach(function(section) {
-            const sectionTop = section.offsetTop - 140;
+            sections.forEach(function(section) {
+                if (section.getBoundingClientRect().top <= 100) {
+                    currentSection = section.id;
+                }
+            });
 
-            if (window.scrollY >= sectionTop) {
-                currentSection = section.getAttribute('id');
+            navLinks.forEach(function(link) {
+                link.classList.toggle('active', link.dataset.section === currentSection);
+            });
+
+            if (moreToggle) {
+                moreToggle.classList.toggle('active', ['pengalaman', 'skill', 'my-project', 'sertifikasi', 'tentang'].includes(currentSection));
             }
-        });
-
-        navLinks.forEach(function(link) {
-            link.classList.toggle('active', link.dataset.section === currentSection);
-        });
-
-        if (moreToggle) {
-            moreToggle.classList.toggle('active', ['pengalaman', 'skill', 'my-project', 'sertifikasi', 'tentang'].includes(currentSection));
         }
-    }
 
-    setActiveNav();
-    window.addEventListener('scroll', setActiveNav);
+        setActiveNav();
+        window.addEventListener('scroll', setActiveNav, { passive: true });
+    });
 </script>
