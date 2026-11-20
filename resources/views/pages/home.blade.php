@@ -273,6 +273,8 @@
             <header>
                 <h2 id="portfolio-certificates-title">Sertifikasi</h2>
                 <a href="{{ url('/sertifikasi') }}" class="portfolio-text-link">Lihat semua <i class="bi bi-arrow-up-right" aria-hidden="true"></i></a>
+                <img class="portfolio-certificates-art" src="{{ asset('images/portrait-study.webp') }}"
+                    alt="" width="1254" height="1254" loading="lazy" decoding="async">
             </header>
             <div>
                 @forelse ($sertifikasi as $item)
