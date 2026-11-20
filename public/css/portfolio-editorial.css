@@ -597,6 +597,24 @@ body.portfolio-page .custom-navbar.scrolled {
     width: min(100%, 22rem);
     height: auto;
     margin: 1.5rem auto 0 0;
+    transform-origin: 50% 85%;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    .portfolio-certificates-art {
+        animation: certificate-float 6s ease-in-out infinite;
+        transition: filter .35s ease;
+    }
+
+    .portfolio-certificates-art:is(:hover, :active) {
+        animation-play-state: paused;
+        filter: drop-shadow(0 12px 10px #24645626);
+    }
+
+    @keyframes certificate-float {
+        0%, 100% { transform: translateY(0) rotate(-1deg); }
+        50% { transform: translateY(-12px) rotate(1deg); }
+    }
 }
 
 @media (max-width: 767.98px) {
