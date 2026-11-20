@@ -572,6 +572,28 @@ body.portfolio-page .custom-navbar.scrolled {
 }
 
 .portfolio-skills { background: var(--tint); }
+.portfolio-skills .portfolio-section-grid {
+    grid-template-columns: minmax(0, 1.5fr) minmax(0, .83fr);
+}
+.portfolio-skills-heading { grid-column: 2; grid-row: 1; text-align: right; }
+.portfolio-skill-list { grid-column: 1; grid-row: 1; }
+.portfolio-skills-art {
+    display: block;
+    width: min(100%, 22rem);
+    height: auto;
+    margin: 1.5rem 0 0 auto;
+    transform-origin: 50% 85%;
+}
+.portfolio-skill { text-align: right; }
+.portfolio-skill > div:first-child { grid-column: 2; grid-row: 1; }
+.portfolio-skill-level { grid-column: 1; grid-row: 1; }
+
+@media (max-width: 767.98px) {
+    .portfolio-skills .portfolio-section-grid { grid-template-columns: minmax(0, 1fr); }
+    .portfolio-skills-heading, .portfolio-skill-list { grid-column: 1; grid-row: auto; }
+    .portfolio-skills-art { width: min(65%, 14rem); }
+}
+
 .portfolio-skill {
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(0, .9fr);
@@ -601,12 +623,12 @@ body.portfolio-page .custom-navbar.scrolled {
 }
 
 @media (prefers-reduced-motion: no-preference) {
-    .portfolio-certificates-art {
+    .portfolio-certificates-art, .portfolio-skills-art {
         animation: certificate-float 6s ease-in-out infinite;
         transition: filter .35s ease;
     }
 
-    .portfolio-certificates-art:is(:hover, :active) {
+    .portfolio-certificates-art:is(:hover, :active), .portfolio-skills-art:is(:hover, :active) {
         animation-play-state: paused;
         filter: drop-shadow(0 12px 10px #24645626);
     }

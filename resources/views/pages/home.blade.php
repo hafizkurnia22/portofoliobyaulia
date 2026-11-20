@@ -243,7 +243,11 @@
 
     <section id="skill" class="portfolio-skills portfolio-section" aria-labelledby="portfolio-skills-title">
         <div class="container portfolio-section-grid">
-            <header><h2 id="portfolio-skills-title">Keahlian</h2></header>
+            <header class="portfolio-skills-heading">
+                <h2 id="portfolio-skills-title">Keahlian</h2>
+                <img class="portfolio-skills-art" src="{{ asset('images/portrait-skills.webp') }}"
+                    alt="" width="1254" height="1254" loading="lazy" decoding="async">
+            </header>
             <div class="portfolio-skill-list">
                 @forelse ($skill as $item)
                     @php
