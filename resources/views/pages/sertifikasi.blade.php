@@ -1,61 +1,39 @@
 @extends('layouts.app')
 
-@section('title', 'Sertifikasi | Portfolio CV')
+@section('title', 'Sertifikasi | Portofolio')
 
 @section('content')
-
-    <section class="sertifikasi-page">
+    <section class="certification-library portfolio-section" aria-labelledby="certification-title">
         <div class="container">
+            <header class="certification-library-heading">
+                <h1 id="certification-title">Sertifikasi<span>.</span></h1>
+                <p>Sertifikat dan pelatihan yang pernah saya ikuti.</p>
+            </header>
 
-            <div class="sertifikasi-header text-center" data-aos="fade-up">
-                <span class="section-label">Sertifikasi</span>
-                <h1>Daftar Sertifikasi</h1>
-                <p>Kumpulan sertifikat, pelatihan, dan bukti keahlian yang pernah saya ikuti.</p>
-            </div>
-
-            <div class="row g-4 mt-5">
-                @forelse($sertifikasi as $item)
-                    <div class="col-md-6 col-lg-4" data-aos="fade-up">
-                        <div class="sertifikasi-card h-100">
-
-                            <div class="sertifikasi-icon">
-                                <i class="bi bi-award-fill"></i>
-                            </div>
-
-                            <h4>{{ $item->nama_sertifikat }}</h4>
-
-                            <p class="mb-1">
-                                <strong>Penyelenggara:</strong> {{ $item->penyelenggara }}
-                            </p>
-
-                            <span class="sertifikasi-year">
-                                {{ $item->tahun }}
-                            </span>
-
-                            <p class="sertifikasi-desc mt-3">
-                                {{ $item->deskripsi }}
-                            </p>
-
-                            @if ($item->file_pdf)
-                                <a href="{{ asset('sertifikat/' . $item->file_pdf) }}" target="_blank"
-                                    class="btn-sertifikasi">
-                                    <i class="bi bi-file-earmark-pdf"></i>
-                                    Lihat Sertifikat
-                                </a>
-                            @else
-                                <span class="text-muted">PDF belum tersedia</span>
+            <div class="certification-library-list">
+                @forelse ($sertifikasi as $item)
+                    <article class="certification-library-entry">
+                        <p class="portfolio-label">{{ $item->tahun ?? 'Tahun belum tersedia' }}</p>
+                        <div>
+                            <h2>{{ $item->nama_sertifikat }}</h2>
+                            <p class="certification-library-provider">{{ $item->penyelenggara }}</p>
+                            @if (!empty($item->deskripsi))
+                                <p class="certification-library-description">{{ $item->deskripsi }}</p>
                             @endif
-
                         </div>
-                    </div>
+                        @if ($item->file_pdf)
+                            <a href="{{ asset('sertifikat/' . $item->file_pdf) }}" target="_blank" rel="noopener noreferrer"
+                                class="portfolio-text-link" aria-label="Lihat sertifikat {{ $item->nama_sertifikat }} (PDF, tab baru)">
+                                Lihat PDF <i class="bi bi-arrow-up-right" aria-hidden="true"></i>
+                            </a>
+                        @else
+                            <p class="portfolio-pdf-unavailable">PDF belum tersedia</p>
+                        @endif
+                    </article>
                 @empty
-                    <div class="col-12 text-center">
-                        <p class="text-muted">Belum ada data sertifikasi.</p>
-                    </div>
+                    <p class="portfolio-empty">Belum ada data sertifikasi.</p>
                 @endforelse
             </div>
-
         </div>
     </section>
-
 @endsection

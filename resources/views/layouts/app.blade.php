@@ -1,6 +1,6 @@
 @php
     $isCvBuilder = request()->routeIs('cv.builder');
-    $usesPortfolioTheme = request()->is('/') || $isCvBuilder;
+    $usesPortfolioTheme = request()->is('/', 'sertifikasi') || $isCvBuilder;
     $isTryoutExam = request()->is('tryout') && request('mode') === 'ujian';
 @endphp
 <!DOCTYPE html>
