@@ -123,7 +123,7 @@
                     <a @class(['nav-link nav-link-feature', 'active' => $isCvBuilder]) href="{{ route('cv.builder') }}"
                         @if ($isCvBuilder) aria-current="page" @endif>
                         <i class="bi bi-file-earmark-richtext"></i>
-                        Buat CV
+                        CV Saya
                     </a>
                 </li>
 
