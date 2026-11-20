@@ -15,7 +15,7 @@ class ExampleTest extends TestCase
         $response = $this->get('/');
 
         $response->assertStatus(200);
-        $response->assertSee('Generate CV saya');
+        $response->assertSee('CV Saya');
         $response->assertDontSee('Download CV');
     }
 
@@ -24,7 +24,7 @@ class ExampleTest extends TestCase
         $response = $this->get('/cv-builder');
 
         $response->assertStatus(200);
-        $response->assertSee('Generate CV saya');
+        $response->assertSee('CV Saya');
     }
 
     public function test_cv_download_accepts_builder_options(): void

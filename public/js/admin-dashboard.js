@@ -4,56 +4,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     if (!adminDashboard) return;
 
-    function initTryoutScoringMode(root = document) {
-        root.querySelectorAll('.tryout-soal-form').forEach(form => {
-            if (form.dataset.scoringReady === 'true') return;
-
-            const categorySelect = form.querySelector('.tryout-kategori-select');
-            const answerGroup = form.querySelector('.tryout-answer-key-group');
-            const answerSelect = answerGroup ? answerGroup.querySelector('select[name="jawaban_benar"]') : null;
-            const scoreGroup = form.querySelector('.tryout-score-group');
-            const scoreInputs = form.querySelectorAll('.tryout-score-input');
-
-            if (!categorySelect) return;
-
-            form.dataset.scoringReady = 'true';
-
-            function selectedCategoryCode() {
-                const selectedOption = categorySelect.options[categorySelect.selectedIndex];
-                return selectedOption ? selectedOption.dataset.kode : '';
-            }
-
-            function applyScoringMode() {
-                const code = selectedCategoryCode();
-                const isTkp = code === 'TKP';
-
-                if (answerGroup && answerSelect) {
-                    answerGroup.classList.toggle('d-none', isTkp);
-                    answerSelect.disabled = isTkp;
-                    answerSelect.required = !isTkp;
-                }
-
-                if (scoreGroup) {
-                    scoreGroup.classList.toggle('d-none', !isTkp);
-                }
-
-                scoreInputs.forEach((input, index) => {
-                    input.disabled = !isTkp;
-                    input.required = isTkp;
-                    input.min = isTkp ? 1 : 0;
-                    input.max = 5;
-
-                    if (isTkp && (!input.value || Number(input.value) === 0)) {
-                        input.value = 5 - index;
-                    }
-                });
-            }
-
-            categorySelect.addEventListener('change', applyScoringMode);
-            applyScoringMode();
-        });
-    }
-
     function initRichEditors(root = document) {
         root.querySelectorAll('[data-rich-editor]').forEach(editor => {
             if (editor.dataset.editorReady === 'true') return;
@@ -149,7 +99,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 currentModalRoot.innerHTML = nextModalRoot.innerHTML;
             }
             updateAdminChrome(nextDoc);
-            initTryoutScoringMode(document);
             initRichEditors(document);
 
             if (pushState) {
@@ -240,7 +189,6 @@ document.addEventListener('DOMContentLoaded', function () {
         loadAdminPanel(window.location.href, false);
     });
 
-    initTryoutScoringMode();
     initRichEditors();
 
     const toggle = document.getElementById('darkModeToggle');

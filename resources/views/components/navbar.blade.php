@@ -110,14 +110,6 @@
                     </ul>
                 </li>
 
-                <li class="nav-item">
-                    <a class="nav-link {{ request()->routeIs('tryout.index', 'tryout.login', 'tryout.materi.show') ? 'active' : '' }}"
-                        href="{{ route('tryout.index') }}">
-                        <i class="bi bi-pc-display-horizontal"></i>
-                        Tryout CPNS
-                    </a>
-                </li>
-
                 {{-- Menu ini menggantikan download langsung agar pengunjung bisa memilih template CV dulu. --}}
                 <li class="nav-item">
                     <a @class(['nav-link nav-link-feature', 'active' => $isCvBuilder]) href="{{ route('cv.builder') }}"

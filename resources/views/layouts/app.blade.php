@@ -1,7 +1,6 @@
 @php
     $isCvBuilder = request()->routeIs('cv.builder');
     $usesPortfolioTheme = request()->is('/', 'sertifikasi') || $isCvBuilder;
-    $isTryoutExam = request()->is('tryout') && request('mode') === 'ujian';
 @endphp
 <!DOCTYPE html>
 <html lang="id">
@@ -45,9 +44,9 @@
     @endif
 </head>
 
-<body id="page-top" @class(['tryout-exam-page' => $isTryoutExam, 'portfolio-page' => $usesPortfolioTheme])>
+<body id="page-top" @class(['portfolio-page' => $usesPortfolioTheme])>
 
-    @if (!request()->is('admin/*') && !$isTryoutExam)
+    @if (!request()->is('admin/*'))
         @include('components.navbar')
     @endif
 
@@ -55,7 +54,7 @@
         @yield('content')
     </main>
 
-    @if (!request()->is('admin/*') && !$isTryoutExam)
+    @if (!request()->is('admin/*'))
         @php
             $contactName = trim($tentangSaya->nama ?? 'Hafiz');
             $contactRole = trim($tentangSaya->bidang ?? 'Web Developer');

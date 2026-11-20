@@ -8,14 +8,6 @@ use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\SertifikasiController;
 use App\Http\Controllers\SkillController;
 use App\Http\Controllers\TentangSayaController;
-use App\Http\Controllers\TryoutAuthController;
-use App\Http\Controllers\TryoutKategoriSoalController;
-use App\Http\Controllers\TryoutMateriController;
-use App\Http\Controllers\TryoutMateriProgressController;
-use App\Http\Controllers\TryoutPengaturanController;
-use App\Http\Controllers\TryoutPesertaController;
-use App\Http\Controllers\TryoutRiwayatController;
-use App\Http\Controllers\TryoutSoalController;
 
 /*
 |--------------------------------------------------------------------------
@@ -26,14 +18,6 @@ use App\Http\Controllers\TryoutSoalController;
 Route::get('/', [PengalamanController::class, 'index']);
 Route::get('/cv-builder', [CvBuilderController::class, 'index'])->name('cv.builder');
 Route::get('/download-cv', [CvBuilderController::class, 'download'])->name('cv.download');
-Route::get('/tryout/login', [TryoutAuthController::class, 'showLogin'])->name('tryout.login');
-Route::post('/tryout/login', [TryoutAuthController::class, 'login'])->name('tryout.login.submit');
-Route::post('/tryout/logout', [TryoutAuthController::class, 'logout'])->name('tryout.logout');
-Route::get('/tryout', [TryoutSoalController::class, 'index'])->name('tryout.index');
-Route::get('/tryout/materi/{materi}', [TryoutSoalController::class, 'materiDetail'])->name('tryout.materi.show');
-Route::post('/tryout/materi/{materi}/bookmark', [TryoutMateriProgressController::class, 'toggleBookmark'])->name('tryout.materi.bookmark');
-Route::post('/tryout/materi/{materi}/read', [TryoutMateriProgressController::class, 'markRead'])->name('tryout.materi.read');
-Route::post('/tryout/riwayat', [TryoutRiwayatController::class, 'store'])->name('tryout.riwayat.store');
 
 Route::get('/sertifikasi', function () {
     $sertifikasi = \App\Models\Sertifikasi::byLatestYear()->get();
@@ -75,12 +59,6 @@ Route::get('/admin/dashboard', function () {
         'skill',
         'project',
         'tentang',
-        'master-kategori-soal',
-        'master-materi-tryout',
-        'master-peserta-tryout',
-        'riwayat-tryout',
-        'master-soal',
-        'master-kelulusan',
     ];
 
     if (!in_array($activeTab, $allowedTabs, true)) {
@@ -116,44 +94,12 @@ Route::get('/admin/dashboard', function () {
         ? \App\Models\Project::latest()->paginate(5, ['*'], 'project_page')
         : $emptyPaginator('project_page', 5);
 
-    $tryoutKategoriSoal = $activeTab === 'master-kategori-soal'
-        ? \App\Models\TryoutKategoriSoal::orderBy('id')->paginate(5, ['*'], 'tryout_kategori_page')
-        : $emptyPaginator('tryout_kategori_page', 5);
-
-    $tryoutKategoriOptions = \App\Models\TryoutKategoriSoal::aktif()->orderBy('id')->get();
-    $tryoutPengaturan = \App\Models\TryoutPengaturan::current();
-
-    $tryoutPeserta = $activeTab === 'master-peserta-tryout'
-        ? \App\Models\TryoutPeserta::latest()->paginate(8, ['*'], 'tryout_peserta_page')
-        : $emptyPaginator('tryout_peserta_page', 8);
-
-    $tryoutRiwayatPeserta = $activeTab === 'riwayat-tryout'
-        ? \App\Models\TryoutPeserta::has('riwayats')
-            ->withCount('riwayats')
-            ->withMax('riwayats', 'finished_at')
-            ->orderByDesc('riwayats_max_finished_at')
-            ->paginate(10, ['*'], 'tryout_riwayat_page')
-        : $emptyPaginator('tryout_riwayat_page', 10);
-
-    $tryoutMateri = $activeTab === 'master-materi-tryout'
-        ? \App\Models\TryoutMateri::with('kategoriSoal')->latest()->paginate(8, ['*'], 'tryout_materi_page')
-        : $emptyPaginator('tryout_materi_page', 8);
-
-    $tryoutSoal = $activeTab === 'master-soal'
-        ? \App\Models\TryoutSoal::with('kategoriSoal')->latest()->paginate(8, ['*'], 'tryout_soal_page')
-        : $emptyPaginator('tryout_soal_page', 8);
-
     $tentangSaya = \App\Models\TentangSaya::first();
 
     $totalPengalaman = 0;
     $totalSertifikasi = 0;
     $totalSkill = 0;
     $totalProject = 0;
-    $totalTryoutSoal = 0;
-    $totalTryoutKategori = 0;
-    $totalTryoutPeserta = 0;
-    $totalTryoutRiwayat = 0;
-    $totalTryoutMateri = 0;
     $rataSkill = 0;
     $skillTertinggi = null;
     $sertifikasiTerbaru = null;
@@ -165,11 +111,6 @@ Route::get('/admin/dashboard', function () {
         $totalSertifikasi = \App\Models\Sertifikasi::count();
         $totalSkill = \App\Models\Skill::count();
         $totalProject = \App\Models\Project::count();
-        $totalTryoutSoal = \App\Models\TryoutSoal::count();
-        $totalTryoutKategori = \App\Models\TryoutKategoriSoal::count();
-        $totalTryoutPeserta = \App\Models\TryoutPeserta::count();
-        $totalTryoutRiwayat = \App\Models\TryoutRiwayat::count();
-        $totalTryoutMateri = \App\Models\TryoutMateri::count();
         $rataSkill = \App\Models\Skill::avg('persentase') ?? 0;
         $skillTertinggi = \App\Models\Skill::orderByDesc('persentase')->first();
         $sertifikasiTerbaru = \App\Models\Sertifikasi::byLatestYear()->first();
@@ -182,24 +123,12 @@ Route::get('/admin/dashboard', function () {
         'sertifikasi',
         'skill',
         'project',
-        'tryoutKategoriSoal',
-        'tryoutKategoriOptions',
-        'tryoutPengaturan',
-        'tryoutPeserta',
-        'tryoutRiwayatPeserta',
-        'tryoutMateri',
-        'tryoutSoal',
         'tentangSaya',
         'activeTab',
         'totalPengalaman',
         'totalSertifikasi',
         'totalSkill',
         'totalProject',
-        'totalTryoutSoal',
-        'totalTryoutKategori',
-        'totalTryoutPeserta',
-        'totalTryoutRiwayat',
-        'totalTryoutMateri',
         'rataSkill',
         'skillTertinggi',
         'sertifikasiTerbaru',
@@ -208,20 +137,6 @@ Route::get('/admin/dashboard', function () {
     ));
 });
 
-Route::get('/admin/tryout/riwayat/{peserta}', [TryoutRiwayatController::class, 'adminShow'])
-    ->name('admin.tryout.riwayat.show');
-Route::delete('/admin/tryout/riwayat/{peserta}', [TryoutRiwayatController::class, 'destroyForPeserta'])
-    ->name('admin.tryout.riwayat.destroy');
-
-Route::get('/admin/tryout/pengaturan', function () {
-    if (!session('admin_login')) {
-        return redirect('/admin/login');
-    }
-
-    $tryoutPengaturan = \App\Models\TryoutPengaturan::current();
-
-    return view('admin.tryout-settings', compact('tryoutPengaturan'));
-})->name('admin.tryout.settings');
 /*
 |--------------------------------------------------------------------------
 | PENGALAMAN
@@ -257,21 +172,3 @@ Route::delete('/hapus-project/{id}', [ProjectController::class, 'destroy']);
 
 /*Tentang Saya*/
 Route::post('/simpan-tentang-saya', [TentangSayaController::class, 'storeOrUpdate']);
-
-/* TRYOUT */
-Route::post('/simpan-tryout-soal', [TryoutSoalController::class, 'store']);
-Route::post('/import-tryout-soal', [TryoutSoalController::class, 'import']);
-Route::get('/template-import-tryout-soal', [TryoutSoalController::class, 'template']);
-Route::put('/update-tryout-soal/{id}', [TryoutSoalController::class, 'update']);
-Route::delete('/hapus-tryout-soal/{id}', [TryoutSoalController::class, 'destroy']);
-Route::post('/simpan-tryout-pengaturan', [TryoutPengaturanController::class, 'update']);
-Route::post('/simpan-tryout-kelulusan', [TryoutPengaturanController::class, 'updateKelulusan']);
-Route::post('/simpan-tryout-peserta', [TryoutPesertaController::class, 'store']);
-Route::put('/update-tryout-peserta/{id}', [TryoutPesertaController::class, 'update']);
-Route::delete('/hapus-tryout-peserta/{id}', [TryoutPesertaController::class, 'destroy']);
-Route::post('/simpan-tryout-kategori-soal', [TryoutKategoriSoalController::class, 'store']);
-Route::put('/update-tryout-kategori-soal/{id}', [TryoutKategoriSoalController::class, 'update']);
-Route::delete('/hapus-tryout-kategori-soal/{id}', [TryoutKategoriSoalController::class, 'destroy']);
-Route::post('/simpan-tryout-materi', [TryoutMateriController::class, 'store']);
-Route::put('/update-tryout-materi/{id}', [TryoutMateriController::class, 'update']);
-Route::delete('/hapus-tryout-materi/{id}', [TryoutMateriController::class, 'destroy']);
