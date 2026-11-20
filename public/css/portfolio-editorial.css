@@ -276,18 +276,6 @@ body.portfolio-page .custom-navbar.scrolled {
     pointer-events: none;
 }
 
-.portfolio-portrait-ink img {
-    filter: grayscale(1) contrast(1.12);
-}
-
-.portfolio-portrait-ink::after {
-    position: absolute;
-    inset: 0;
-    background: repeating-linear-gradient(135deg, transparent 0 3px, #fff5 3px 4px);
-    mix-blend-mode: overlay;
-    content: '';
-}
-
 @media (prefers-reduced-motion: no-preference) {
     .portfolio-portrait-mat { touch-action: pan-y pinch-zoom; }
 

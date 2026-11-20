@@ -29,7 +29,7 @@
                         <div class="portfolio-portrait-artwork">
                             <img src="{{ $photo }}" alt="Foto profil {{ $name }}" fetchpriority="high">
                             <div class="portfolio-portrait-ink" aria-hidden="true">
-                                <img src="{{ $photo }}" alt="">
+                                <img src="{{ asset('images/portrait-vector-style.webp') }}" alt="">
                             </div>
                         </div>
                     </div>
